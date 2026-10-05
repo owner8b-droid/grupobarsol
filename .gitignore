@@ -13,6 +13,9 @@ supabase/.temp/
 # Las versiones procesadas viven en src/assets/ (ADR-003).
 insumos/
 
+# Docs internos con datos sensibles del cliente: el repo es público (ADR-010)
+docs/privado/
+
 # Herramientas locales
 .claude/settings.local.json
 .impeccable/config.local.json

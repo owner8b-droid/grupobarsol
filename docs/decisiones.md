@@ -82,3 +82,13 @@ con el GATE indicado.
 - Alternativas consideradas: ajustar el territorio B; copiar la referencia más de cerca (descartado: §2.2 y riesgo legal).
 - Consecuencias: el movimiento pasa a nivel cercano a Signature (secciones fijadas). Se valida contra el presupuesto
   premium de JS en la F4, y se registra un ADR si hace falta subir de nivel.
+
+## ADR-010 · Repo público con docs sensibles fuera de git
+- Fecha: 2026-10-05 · Estado: aceptada (elección del usuario: GitHub Pages con repo público)
+- Contexto: el repo `owner8b-droid/grupobarsol` es público y la preview sale de GitHub Pages. Pendientes y
+  auditoría contienen datos sensibles del cliente (afirmaciones sin respaldo, fotos por verificar, competidores).
+- Decisión: esos docs viven en `docs/privado/` (en `.gitignore`). Antes del primer push se sacaron del historial
+  local con `git filter-branch`; el respaldo previo está en un bundle fuera del repo. Se publica solo `main`.
+- Alternativas consideradas: repo privado con Cloudflare Pages; repo privado con GitHub Pages pago.
+- Consecuencias: un colaborador o una sesión en la nube no reciben `docs/privado/`; hay que compartirlo aparte.
+  Queda `refs/original` local con el historial viejo hasta que el usuario lo borre; nunca usar `push --all`.

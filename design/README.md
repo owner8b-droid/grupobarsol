@@ -26,7 +26,7 @@ del canvas. Se elige en el GATE 3.
 
 Ninguno de los tres convenció del todo (el B fue el más cercano); el usuario pidió parecerse a mcaninchcorp.com.
 D toma su estructura, su hero y su scroll y los expresa con la identidad de Barsol. Detalle en
-[docs/01-auditoria.md](../docs/01-auditoria.md) y en ADR-009.
+docs/privado/01-auditoria.md (privado, fuera de git) y en ADR-009.
 
 | Archivos | Qué toma de McAninch | Qué es de Barsol |
 |---|---|---|

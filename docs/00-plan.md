@@ -1,7 +1,7 @@
 # 00 · Plan del proyecto · Grupo Barsol
 
 > Fase 0 · 2026-10-04 · Estado: **GATE 0 aprobado** el 2026-10-05 («continuemos», junto con la elección de la dirección D)
-> Fuentes: [BRIEF.md](../BRIEF.md) · [PRODUCT.md](../PRODUCT.md) · [decisiones](decisiones.md) · [pendientes](pendientes.md)
+> Fuentes: [BRIEF.md](../BRIEF.md) · [PRODUCT.md](../PRODUCT.md) · [decisiones](decisiones.md) · [pendientes](privado/pendientes.md) (privado, fuera de git)
 
 ## 1. Resumen
 
@@ -103,7 +103,7 @@ Cada GATE espera tu aprobación explícita. Si uno se atrasa, el resto del calen
 
 | Riesgo | Impacto | Mitigación |
 |---|---|---|
-| Faltan inventario de la flota, proyectos con datos, testimonios y las pruebas de "10 años" y del CFIA | El prototipo lleva `PENDIENTE` visibles y la v1 no puede salir así | Pedir esta semana la lista de alta prioridad de [pendientes.md](pendientes.md) |
+| Faltan inventario de la flota, proyectos con datos, testimonios y las pruebas de "10 años" y del CFIA | El prototipo lleva `PENDIENTE` visibles y la v1 no puede salir así | Pedir esta semana la lista de alta prioridad de [pendientes.md](privado/pendientes.md) |
 | Las 13 fotos vienen de redes: 941–1994 px, compresión de Facebook y 8 con el logo sobreimpreso | Hero a 1920 px suave; 8 fotos no sirven tal cual | Pedir originales sin logo; recortes que eviten la marca; `docs/shotlist.md` si no hay originales |
 | Los 2 videos son grabaciones de pantalla (una a 1090 × 608, con el cursor visible) | No sirven para un hero de video | Hero con foto (además, mejor LCP); pedir el archivo original del dron |
 | El logo solo existe como JPG de 828 px | Sin nitidez en header, favicon ni imágenes OG | Pedir el vector a quien lo diseñó; si no existe, vectorizarlo fiel al original con aprobación del cliente (sin rediseñarlo) |
@@ -116,7 +116,7 @@ Cada GATE espera tu aprobación explícita. Si uno se atrasa, el resto del calen
 
 ## 7. Lo que se necesita del cliente
 
-La lista completa, con su estado, está en [pendientes.md](pendientes.md). Para el prototipo importa sobre todo:
+La lista completa, con su estado, está en [pendientes.md](privado/pendientes.md). Para el prototipo importa sobre todo:
 
 1. **Inventario de la flota:** tipo, marca, modelo, capacidad, si va con operador y una foto de cada unidad.
 2. **3–6 proyectos:** nombre, ubicación, año, alcance, cliente (con permiso) y fotos de antes y después.
@@ -170,4 +170,4 @@ Los plugins nuevos cargan al abrir una sesión nueva de Claude Code en esta carp
 3. **Antes del miércoles (F4):** cómo publicar la preview, dado que el repo es público: (a) público + GitHub Pages,
    sacando del repo lo sensible del cliente; (b) repo privado + otra plataforma de preview; o (c) repo privado +
    GitHub Pages con plan pago.
-4. **Enviar al cliente** la lista de alta prioridad de [pendientes.md](pendientes.md).
+4. **Enviar al cliente** la lista de alta prioridad de [pendientes.md](privado/pendientes.md).

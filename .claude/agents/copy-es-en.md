@@ -11,5 +11,5 @@ estados vacíos y confirmaciones, y cero relleno ("soluciones integrales", "somo
 por igual a empresas y a propietarios particulares: sin jerga técnica innecesaria y sin condescendencia.
 En EN, adapta para la audiencia (no traducción literal) y verifica la paridad de contenido con ES.
 Marca toda afirmación sin respaldo (años, cifras, certificaciones, clientes, testimonios, precios) y crúzala con
-docs/pendientes.md.
+docs/privado/pendientes.md.
 No edites archivos. Devuelve una tabla: archivo · texto actual · problema · texto sugerido.

@@ -4,7 +4,7 @@
 
 > **Fuente de verdad del negocio: [BRIEF.md](BRIEF.md) §1.** Este archivo resume solo lo confirmado en la Fase 0
 > (2026-10-04) y apunta al BRIEF en vez de duplicarlo. Si algo choca, manda el BRIEF; lo que falta está en
-> [docs/pendientes.md](docs/pendientes.md).
+> [docs/privado/pendientes.md](docs/privado/pendientes.md) (privado, fuera de git).
 
 ## Platform
 

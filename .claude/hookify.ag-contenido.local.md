@@ -14,6 +14,6 @@ conditions:
 
 **Anti-genérico (BRIEF.md §6.3 y §2.2): relleno, emojis como íconos o componentes copiados.**
 
-- Nada de lorem ipsum: contenido real, o `PENDIENTE` registrado en `docs/pendientes.md`.
+- Nada de lorem ipsum: contenido real, o `PENDIENTE` registrado en `docs/privado/pendientes.md`.
 - Nada de emojis como íconos: un solo set de íconos o SVG propios.
 - Nada de componentes de Aceternity o Magic UI copiados tal cual: componentes propios con los tokens.
