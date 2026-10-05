@@ -68,3 +68,17 @@ con el GATE indicado.
 - Alternativas consideradas: esperar a que la F2 cierre el copy; un solo territorio.
 - Consecuencias: la F1 y la F2 pueden ajustar el copy y la estructura; el territorio elegido se consolida después en
   `docs/03-direccion-de-arte.md` y `src/styles/tokens.css`. Dos fotos quedan fuera hasta verificar que no sean de IA.
+
+## ADR-009 · Dirección D, basada en la estructura de McAninch
+- Fecha: 2026-10-05 · Estado: propuesta (GATE 3)
+- Contexto: ninguno de los territorios A, B y C convenció; el B fue el más cercano. El usuario pidió parecerse a
+  mcaninchcorp.com, en línea con §1.4 (tomar estructura, hero y scroll).
+- Decisión: la dirección D toma de McAninch la estructura por pantallas completas, el hero con video y frase que rota,
+  los títulos de una palabra con franja de color, las fotos en diagonal con capa de color, los puntos de progreso, la
+  pestaña fija de cotización y las tarjetas de proyecto. La identidad es de Barsol: su lema, la línea ocre y el brazo
+  de la excavadora del logo, sus colores, Urbanist, y su propio video y fotos. No se copian textos, fotos, logo ni código (§2.2).
+- Cambios frente a la referencia: snap suave en lugar de scroll secuestrado; video pausable y liviano (1,5 MB);
+  foto fija con reduced-motion; formulario con consentimiento (Ley 8968).
+- Alternativas consideradas: ajustar el territorio B; copiar la referencia más de cerca (descartado: §2.2 y riesgo legal).
+- Consecuencias: el movimiento pasa a nivel cercano a Signature (secciones fijadas). Se valida contra el presupuesto
+  premium de JS en la F4, y se registra un ADR si hace falta subir de nivel.
