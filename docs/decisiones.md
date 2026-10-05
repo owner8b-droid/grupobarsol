@@ -92,3 +92,21 @@ con el GATE indicado.
 - Alternativas consideradas: repo privado con Cloudflare Pages; repo privado con GitHub Pages pago.
 - Consecuencias: un colaborador o una sesión en la nube no reciben `docs/privado/`; hay que compartirlo aparte.
   Queda `refs/original` local con el historial viejo hasta que el usuario lo borre; nunca usar `push --all`.
+
+## ADR-011 · H1 concreto y lema como display en el hero
+- Fecha: 2026-10-05 · Estado: propuesta (GATE 2)
+- Contexto: §M01 pide un H1 con propuesta concreta (qué, dónde, para quién), no un eslogan. La dirección D usa el lema
+  como palabra enorme.
+- Decisión: el H1 es la línea corta superior («Movimiento de tierras, maquinaria y obra civil en Cartago»); el lema
+  («Construyendo caminos / oportunidades / futuro») queda como texto de display, con el texto completo disponible
+  para lectores de pantalla.
+- Alternativas consideradas: lema como H1 (débil para SEO y para M01); H1 grande con la frase de servicios (pierde la
+  fuerza visual de la referencia).
+- Consecuencias: SEO local y M01 cumplidos sin cambiar la imagen del hero.
+
+## ADR-012 · Venta de agregados dentro de Acarreo
+- Fecha: 2026-10-05 · Estado: aceptada (respuesta del usuario)
+- Contexto: el perfil de Facebook menciona venta de agregados; no estaba entre los 4 servicios confirmados.
+- Decisión: sin página propia; la página pasa a «Acarreo y agregados» (`/servicios/acarreo-y-agregados/`) y el
+  cotizador ofrece «Acarreo o agregados».
+- Consecuencias: falta el detalle de materiales y modalidad (pendiente #7b).

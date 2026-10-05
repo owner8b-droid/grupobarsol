@@ -1,6 +1,9 @@
 # 00 · Plan del proyecto · Grupo Barsol
 
 > Fase 0 · 2026-10-04 · Estado: **GATE 0 aprobado** el 2026-10-05 («continuemos», junto con la elección de la dirección D)
+> Avance al 2026-10-05: F1 completa (salvo trazas móviles) · F2 en [02-estrategia.md](02-estrategia.md) · F3
+> consolidada en [03-direccion-de-arte.md](03-direccion-de-arte.md) con pantallas clave · **esperando GATE 1+2+3**.
+> Preview: GitHub Pages con repo público y docs sensibles en `docs/privado/` (ADR-010).
 > Fuentes: [BRIEF.md](../BRIEF.md) · [PRODUCT.md](../PRODUCT.md) · [decisiones](decisiones.md) · [pendientes](privado/pendientes.md) (privado, fuera de git)
 
 ## 1. Resumen
