@@ -70,7 +70,7 @@ con el GATE indicado.
   `docs/03-direccion-de-arte.md` y `src/styles/tokens.css`. Dos fotos quedan fuera hasta verificar que no sean de IA.
 
 ## ADR-009 · Dirección D, basada en la estructura de McAninch
-- Fecha: 2026-10-05 · Estado: propuesta (GATE 3)
+- Fecha: 2026-10-05 · Estado: aceptada como base («el D está excelente como base», 2026-10-05)
 - Contexto: ninguno de los territorios A, B y C convenció; el B fue el más cercano. El usuario pidió parecerse a
   mcaninchcorp.com, en línea con §1.4 (tomar estructura, hero y scroll).
 - Decisión: la dirección D toma de McAninch la estructura por pantallas completas, el hero con video y frase que rota,

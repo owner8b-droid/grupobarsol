@@ -1,6 +1,6 @@
 # 00 · Plan del proyecto · Grupo Barsol
 
-> Fase 0 · 2026-10-04 · Estado: **esperando GATE 0**
+> Fase 0 · 2026-10-04 · Estado: **GATE 0 aprobado** el 2026-10-05 («continuemos», junto con la elección de la dirección D)
 > Fuentes: [BRIEF.md](../BRIEF.md) · [PRODUCT.md](../PRODUCT.md) · [decisiones](decisiones.md) · [pendientes](pendientes.md)
 
 ## 1. Resumen

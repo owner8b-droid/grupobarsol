@@ -46,4 +46,5 @@ npm run dev | dev:bg | build | preview | test:e2e | test:a11y | lint:design | lh
   los assets procesados van a src/assets/.
 
 ## Flujo
-Fases y GATES: BRIEF.md §9; calendario en docs/00-plan.md. Fase actual: 0, esperando el GATE 0.
+Fases y GATES: BRIEF.md §9; calendario en docs/00-plan.md. GATE 0 aprobado. Dirección de arte: D · Frente de obra
+(ADR-009, design/home-territorios/). Fase actual: 1–2 (auditoría y estrategia) + consolidación de la F3.
