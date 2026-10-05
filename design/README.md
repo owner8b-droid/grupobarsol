@@ -21,3 +21,16 @@ estas copias no se ven fuera de él.
 
 El detalle de cada territorio (paleta en OKLCH, fotografía, movimiento, momento firma y riesgos) está en las notas
 del canvas. Se elige en el GATE 3.
+
+### Ronda 2 · D · Frente de obra (2026-10-05)
+
+Ninguno de los tres convenció del todo (el B fue el más cercano); el usuario pidió parecerse a mcaninchcorp.com.
+D toma su estructura, su hero y su scroll y los expresa con la identidad de Barsol. Detalle en
+[docs/01-auditoria.md](../docs/01-auditoria.md) y en ADR-009.
+
+| Archivos | Qué toma de McAninch | Qué es de Barsol |
+|---|---|---|
+| `D-escritorio.dc.html`, `D-movil.dc.html` | Pantallas completas por sección; hero con video, palabra enorme y frase que rota; títulos de una palabra con franja; fotos en diagonal con capa de color; puntos de progreso; pestaña fija para cotizar; tarjetas de proyecto | El lema real en el hero; la franja sale de la línea ocre del logo; las diagonales siguen el brazo de la excavadora; colores del logo; Urbanist; video y fotos propias |
+
+En el canvas, D está en la página «Ronda 2» y el canvas abre directo en su versión de escritorio. A, B y C quedaron
+en «Ronda 1».

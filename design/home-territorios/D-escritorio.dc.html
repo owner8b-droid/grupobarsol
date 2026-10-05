@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Grupo Barsol · D Frente de obra · escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400..900;1,700..900&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-snap-type:y proximity}
+@media (prefers-reduced-motion: no-preference){html{scroll-behavior:smooth}}
+body{margin:0;background:#141210}
+*,*::before,*::after{box-sizing:border-box}
+img,video{display:block;max-width:100%}
+a{color:#141210}a:hover{color:#4A4541}
+</style>
+</helmet>
+<div style="background: #FBFAF7; color: #141210; font-family: 'Urbanist', system-ui, sans-serif; font-size: 18px; line-height: 1.55;">
+
+<header style="position: fixed; top: 0; left: 0; right: 0; z-index: 40; background: {{headerBg}}; transition: background-color 320ms cubic-bezier(0.16, 1, 0.3, 1);">
+<div style="max-width: 1440px; margin: 0 auto; padding: 14px clamp(20px, 4.4vw, 64px); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 30px;">
+<a href="#inicio" aria-label="Grupo Barsol, inicio" style="display: flex; align-items: center; gap: 14px; color: #FBFAF7; text-decoration: none;">
+<img src="/_blob/371e3743b706ef3dab80efc945324d5c" alt="" style="width: 64px; height: 64px; border-radius: 50%; box-shadow: 0 0 0 3px rgba(251, 250, 247, 0.9);">
+<span style="display: flex; flex-direction: column; gap: 3px;">
+<span style="font-size: 23px; font-weight: 900; letter-spacing: -0.02em; line-height: 1;">Grupo Barsol</span>
+<span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.16em; line-height: 1.2; text-transform: uppercase; color: #E4DFD7;">Constructora y maquinaria</span>
+</span>
+</a>
+<nav aria-label="Principal" style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px 30px; font-size: 17px; font-weight: 600;">
+<a href="#tierra" style="color: #FBFAF7; text-decoration: none;">Servicios</a>
+<a href="#maquinaria" style="color: #FBFAF7; text-decoration: none;">Flota</a>
+<a href="#proyectos" style="color: #FBFAF7; text-decoration: none;">Proyectos</a>
+<a href="#nosotros" style="color: #FBFAF7; text-decoration: none;">Nosotros</a>
+<a href="#cotizar" style="color: #FBFAF7; text-decoration: none;">Contacto</a>
+</nav>
+<a href="https://wa.me/50688808799" style="display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 18px; border: 2px solid {{acento}}; border-radius: 4px; color: #FBFAF7; text-decoration: none; font-size: 16px; font-weight: 800;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A7.5 7.5 0 1 1 8.3 18.4z" /></svg>WhatsApp</a>
+</div>
+</header>
+
+<nav aria-label="Secciones" style="position: fixed; left: 18px; top: 270px; z-index: 35; display: flex; flex-direction: column; gap: 6px; padding: 8px 0; border-left: 2px solid rgba(251, 250, 247, 0.35);">
+<sc-for list="{{puntos}}" as="p" hint-placeholder-count="7">
+<a href="{{p.href}}" aria-label="{{p.label}}" aria-current="{{p.actual}}" style="width: 28px; height: 28px; margin-left: -15px; display: flex; align-items: center; justify-content: center;"><span style="width: {{p.size}}; height: {{p.size}}; border-radius: 50%; background: {{p.color}}; box-shadow: 0 0 0 3px rgba(20, 18, 16, 0.35);"></span></a>
+</sc-for>
+</nav>
+
+<a href="#cotizar" style="position: fixed; right: 0; top: 330px; z-index: 35; display: flex; align-items: center; gap: 12px; padding: 30px 15px; border-radius: 0 10px 10px 0; background: {{acento}}; color: {{sobreAcento}}; writing-mode: vertical-rl; transform: rotate(180deg); font-size: 17px; font-weight: 800; letter-spacing: 0.01em; text-decoration: none; box-shadow: 0 8px 24px rgba(20, 18, 16, 0.28);">Pre-cotizá tu obra</a>
+
+<section id="inicio" aria-labelledby="d-h1" style="position: relative; height: 900px; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #141210; color: #FBFAF7; text-align: center; scroll-snap-align: start;">
+<sc-if value="{{conVideo}}" hint-placeholder-val="{{ true }}">
+<video ref="{{setVideo}}" src="/_blob/81ba98adef1f2fc5b48adf2ed16245fe" poster="/_blob/07a44f1f88801683592cd3a9bad2ad91" autoplay="" muted="" loop="" playsinline="" preload="auto" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;"></video>
+</sc-if>
+<sc-if value="{{sinVideo}}" hint-placeholder-val="{{ false }}">
+<img src="/_blob/07a44f1f88801683592cd3a9bad2ad91" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+</sc-if>
+<div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20, 18, 16, 0.62) 0%, rgba(20, 18, 16, 0.42) 40%, rgba(20, 18, 16, 0.58) 100%);"></div>
+<div style="position: relative; z-index: 2; padding: 0 24px;">
+<p style="margin: 0 0 22px; font-size: 14px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #E4DFD7;">Constructora y maquinaria · Cartago, Costa Rica</p>
+<h1 id="d-h1" style="position: relative; margin: 0; font-weight: 900; line-height: 0.9; letter-spacing: -0.045em;">
+<span style="display: block; font-size: clamp(64px, 10.6vw, 160px);">Construyendo</span>
+<span aria-hidden="true" style="display: block; margin-top: 14px; font-size: clamp(30px, 3.6vw, 54px); font-weight: 500; letter-spacing: -0.02em;">{{frase}}</span>
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;">caminos, oportunidades y futuro</span>
+</h1>
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 44px;">
+<a href="#tierra" style="display: inline-flex; align-items: center; justify-content: center; min-width: 150px; min-height: 52px; padding: 0 26px; border: 2px solid {{acento}}; border-radius: 4px; background: rgba(20, 18, 16, 0.45); color: #FBFAF7; text-decoration: none; font-size: 18px; font-weight: 800;">Ver servicios</a>
+<a href="#cotizar" style="display: inline-flex; align-items: center; justify-content: center; min-width: 150px; min-height: 52px; padding: 0 26px; border: 2px solid {{acento}}; border-radius: 4px; background: {{acento}}; color: {{sobreAcento}}; text-decoration: none; font-size: 18px; font-weight: 800;">Pre-cotizá tu obra</a>
+</div>
+</div>
+<button type="button" onClick="{{togglePausa}}" aria-label="{{pausaLabel}}" style="position: absolute; right: 96px; bottom: 36px; z-index: 3; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; padding: 0; border-radius: 50%; border: 2px solid rgba(251, 250, 247, 0.85); background: rgba(20, 18, 16, 0.4); color: #FBFAF7; cursor: pointer;">
+<sc-if value="{{enMarcha}}" hint-placeholder-val="{{ true }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" /></svg></sc-if>
+<sc-if value="{{pausado}}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5l11 7-11 7z" /></svg></sc-if>
+</button>
+<p aria-hidden="true" style="position: absolute; left: 50%; bottom: 30px; z-index: 2; margin: 0; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #E4DFD7;">Bajá<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6" /></svg></p>
+</section>
+
+<section id="tierra" aria-labelledby="d-tierra" style="position: relative; display: flex; flex-wrap: wrap; min-height: 900px; overflow: hidden; background: #FBFAF7; scroll-snap-align: start;">
+<div style="position: relative; z-index: 2; flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 150px 40px 100px clamp(28px, 11vw, 190px);">
+<p style="margin: 0 0 18px; font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #4A4541;">01 · Movimiento de tierras y acarreo</p>
+<h2 id="d-tierra" style="position: relative; align-self: flex-start; margin: 0 0 34px; font-size: clamp(64px, 7.6vw, 116px); line-height: 0.92; font-weight: 900; letter-spacing: -0.045em;"><span aria-hidden="true" style="position: absolute; left: -60vw; right: 22%; bottom: -0.06em; height: 0.2em; background: {{acento}}; clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);"></span><span style="position: relative;">Tierra</span></h2>
+<p style="margin: 0 0 12px; font-size: 24px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em;">Movemos lo que tu obra necesita.</p>
+<p style="margin: 0 0 30px; max-width: 520px; color: #4A4541;">Excavación, cortes, rellenos, conformación y compactación de terrenos, y acarreo de tierra, lastre, piedra y escombro en vagoneta.</p>
+<ul style="list-style: none; margin: 0; padding: 0; max-width: 440px; border-top: 2px solid #141210;">
+<li style="border-bottom: 2px solid #141210;"><a href="#cotizar" style="display: flex; align-items: center; gap: 16px; min-height: 58px; color: #141210; text-decoration: none; font-size: 20px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 20px; height: 22px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Movimiento de tierras</a></li>
+<li style="border-bottom: 2px solid #141210;"><a href="#cotizar" style="display: flex; align-items: center; gap: 16px; min-height: 58px; color: #141210; text-decoration: none; font-size: 20px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 20px; height: 22px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Acarreo de materiales</a></li>
+</ul>
+</div>
+<div style="position: relative; flex: 1 1 560px; min-width: 0; min-height: 600px;">
+<div style="position: absolute; top: 0; right: 0; width: 100%; height: 68%; clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%);"><img src="/_blob/842727bfc4b0fe357dc1219daf9de138" alt="Vista aérea de un lote en conformación con motoniveladora, excavadora y vagonetas" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 65%;"></div>
+<div style="position: absolute; bottom: 0; right: 0; width: 62%; height: 46%; clip-path: polygon(41% 0, 100% 0, 100% 100%, 0 100%); background: {{acento}};"><img src="/_blob/8bfb0bdcdb2a28c0550c2108a2ebc4d4" alt="" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode: multiply;"></div>
+<div style="position: absolute; bottom: 0; left: 0; width: 52%; height: 30%; clip-path: polygon(0 0, 100% 0, 68% 100%, 0 100%);"><img src="/_blob/3c73752dfb99e08e108c8908c1eb0347" alt="Excavadora cargando tierra en una vagoneta" style="width: 100%; height: 100%; object-fit: cover; object-position: 35% 45%;"></div>
+</div>
+</section>
+
+<section id="maquinaria" aria-labelledby="d-maq" style="position: relative; display: flex; flex-wrap: wrap; min-height: 900px; overflow: hidden; background: #141210; color: #FBFAF7; scroll-snap-align: start;">
+<div style="position: relative; flex: 1 1 560px; min-width: 0; min-height: 600px;">
+<div style="position: absolute; top: 0; left: 0; width: 100%; height: 64%; clip-path: polygon(0 0, 100% 0, 62% 100%, 0 100%);"><img src="/_blob/9af8a730f03796e2e75a6259499abe9e" alt="Excavadora sobre una carreta durante un traslado nocturno" style="width: 100%; height: 100%; object-fit: cover; object-position: 62% 50%;"></div>
+<div style="position: absolute; bottom: 0; left: 0; width: 72%; height: 50%; clip-path: polygon(0 0, 100% 0, 66% 100%, 0 100%); background: {{acento}};"><img src="/_blob/2ae88f7139f5012ced55f246de3c37a6" alt="" style="width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode: multiply;"></div>
+</div>
+<div style="position: relative; z-index: 2; flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 150px clamp(28px, 9vw, 160px) 100px 40px;">
+<p style="margin: 0 0 18px; font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #B9B1A6;">02 · Alquiler de maquinaria</p>
+<h2 id="d-maq" style="position: relative; align-self: flex-start; margin: 0 0 34px; font-size: clamp(64px, 7.6vw, 116px); line-height: 0.92; font-weight: 900; letter-spacing: -0.045em;"><span aria-hidden="true" style="position: absolute; left: -10%; right: -40vw; bottom: -0.06em; height: 0.2em; background: {{acento}}; clip-path: polygon(0.12em 0, 100% 0, 100% 100%, 0 100%);"></span><span style="position: relative;">Maquinaria</span></h2>
+<p style="margin: 0 0 12px; font-size: 24px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em;">Equipo pesado cuando lo necesitás.</p>
+<p style="margin: 0 0 30px; max-width: 520px; color: #B9B1A6;">Alquiler por hora, día o proyecto, para obras grandes y para lotes particulares.</p>
+<ul style="list-style: none; margin: 0; padding: 14px 24px; max-width: 460px; background: {{acento}}; color: {{sobreAcento}};">
+<li style="border-bottom: 1.5px solid {{sobreAcento}};"><a href="#cotizar" style="display: flex; align-items: center; gap: 14px; min-height: 52px; color: {{sobreAcento}}; text-decoration: none; font-size: 19px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 18px; height: 20px; background: {{sobreAcento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Excavadoras</a></li>
+<li style="border-bottom: 1.5px solid {{sobreAcento}};"><a href="#cotizar" style="display: flex; align-items: center; gap: 14px; min-height: 52px; color: {{sobreAcento}}; text-decoration: none; font-size: 19px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 18px; height: 20px; background: {{sobreAcento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Compactadoras</a></li>
+<li style="border-bottom: 1.5px solid {{sobreAcento}};"><a href="#cotizar" style="display: flex; align-items: center; gap: 14px; min-height: 52px; color: {{sobreAcento}}; text-decoration: none; font-size: 19px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 18px; height: 20px; background: {{sobreAcento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Niveladoras</a></li>
+<li><a href="#cotizar" style="display: flex; align-items: center; gap: 14px; min-height: 52px; color: {{sobreAcento}}; text-decoration: none; font-size: 19px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 18px; height: 20px; background: {{sobreAcento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Vagonetas</a></li>
+</ul>
+<a href="#maquinaria" style="display: inline-flex; align-items: center; gap: 10px; align-self: flex-start; min-height: 48px; margin-top: 18px; color: #FBFAF7; text-decoration: none; font-size: 18px; font-weight: 800;">Ver toda la flota <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg></a>
+</div>
+</section>
+
+<section id="obra" aria-labelledby="d-obra" style="position: relative; display: flex; flex-wrap: wrap; min-height: 900px; overflow: hidden; background: #FBFAF7; scroll-snap-align: start;">
+<div style="position: relative; z-index: 2; flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 150px 40px 100px clamp(28px, 11vw, 190px);">
+<p style="margin: 0 0 18px; font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #4A4541;">03 · Obra civil</p>
+<h2 id="d-obra" style="position: relative; align-self: flex-start; margin: 0 0 34px; font-size: clamp(64px, 7.6vw, 116px); line-height: 0.92; font-weight: 900; letter-spacing: -0.045em;"><span aria-hidden="true" style="position: absolute; left: -60vw; right: 22%; bottom: -0.06em; height: 0.2em; background: {{acento}}; clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);"></span><span style="position: relative;">Obra</span></h2>
+<p style="margin: 0 0 12px; font-size: 24px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em;">De la terraza a la calle terminada.</p>
+<p style="margin: 0 0 30px; max-width: 520px; color: #4A4541;">Obra civil para desarrolladores, empresas y familias: calles, urbanizaciones, cimentaciones e infraestructura.</p>
+<ul style="list-style: none; margin: 0; padding: 0; max-width: 440px; border-top: 2px solid #141210;">
+<li style="border-bottom: 2px solid #141210;"><a href="#cotizar" style="display: flex; align-items: center; gap: 16px; min-height: 58px; color: #141210; text-decoration: none; font-size: 20px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 20px; height: 22px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Cotizá tu obra civil</a></li>
+<li style="border-bottom: 2px solid #141210;"><a href="#proyectos" style="display: flex; align-items: center; gap: 16px; min-height: 58px; color: #141210; text-decoration: none; font-size: 20px; font-weight: 800;"><span aria-hidden="true" style="flex: 0 0 auto; width: 20px; height: 22px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Ver proyectos</a></li>
+</ul>
+</div>
+<div style="position: relative; flex: 1 1 560px; min-width: 0; min-height: 600px;">
+<div style="position: absolute; top: 0; right: 0; width: 100%; height: 70%; clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);"><img src="/_blob/7afab60a0e1d8ca316a4946b30971d66" alt="Calle de concreto recién terminada en un condominio" style="width: 100%; height: 100%; object-fit: cover; object-position: 45% 55%;"></div>
+<div style="position: absolute; bottom: 0; right: 0; width: 58%; height: 48%; clip-path: polygon(44% 0, 100% 0, 100% 100%, 0 100%); background: {{acento}};"><img src="/_blob/a786b3a731a9a1caae1818c93bb51f8c" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; filter: grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode: multiply;"></div>
+<div style="position: absolute; bottom: 0; left: 0; width: 50%; height: 28%; clip-path: polygon(0 0, 100% 0, 70% 100%, 0 100%);"><img src="/_blob/f745ec16b775774fbc9018ce24736fe7" alt="Pavimentadora y vagoneta trabajando de noche" style="width: 100%; height: 100%; object-fit: cover; object-position: 40% 60%;"></div>
+</div>
+</section>
+
+<section id="nosotros" aria-labelledby="d-equipo" style="position: relative; min-height: 1000px; overflow: hidden; background: #FBFAF7; scroll-snap-align: start;">
+<div aria-hidden="true" style="display: flex; height: 300px; margin-left: 38%; padding-top: 0;">
+<div style="flex: 1 1 0; margin-left: -4%; clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);"><img src="/_blob/bcd7988ec284716b1e76283d32243851" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: 12% 50%;"></div>
+<div style="flex: 1 1 0; margin-left: -4%; clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);"><img src="/_blob/bcd7988ec284716b1e76283d32243851" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: 52% 50%;"></div>
+<div style="flex: 1 1 0; margin-left: -4%; clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%);"><img src="/_blob/bcd7988ec284716b1e76283d32243851" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: 92% 50%;"></div>
+</div>
+<div style="display: flex; flex-wrap: wrap; min-height: 700px;">
+<div style="position: relative; z-index: 2; flex: 1 1 520px; min-width: 0; display: flex; flex-direction: column; justify-content: center; padding: 60px 40px 100px clamp(28px, 11vw, 190px);">
+<p style="margin: 0 0 18px; font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #4A4541;">04 · Nosotros</p>
+<h2 id="d-equipo" style="position: relative; align-self: flex-start; margin: 0 0 34px; font-size: clamp(64px, 7.6vw, 116px); line-height: 0.92; font-weight: 900; letter-spacing: -0.045em;"><span aria-hidden="true" style="position: absolute; left: -60vw; right: 22%; bottom: -0.06em; height: 0.2em; background: {{acento}}; clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);"></span><span style="position: relative;">Equipo</span></h2>
+<p style="margin: 0 0 12px; font-size: 24px; line-height: 1.25; font-weight: 800; letter-spacing: -0.01em;">La gente detrás de cada obra.</p>
+<p style="margin: 0 0 30px; max-width: 520px; color: #4A4541;">[Historia de Grupo Barsol: desde cuándo trabajan, quién la dirige y cómo empezó. Se publica solo con datos confirmados.]</p>
+<a href="#nosotros" style="display: inline-flex; align-items: center; justify-content: center; align-self: flex-start; min-height: 52px; padding: 0 26px; border: 2px solid #141210; border-radius: 4px; color: #141210; text-decoration: none; font-size: 18px; font-weight: 800;">Conocé al equipo</a>
+</div>
+<div style="position: relative; flex: 1 1 560px; min-width: 0; min-height: 520px;">
+<div style="position: absolute; top: 0; right: 0; bottom: 0; width: 100%; clip-path: polygon(36% 0, 100% 0, 100% 100%, 0 100%); background: {{acento}};"><img src="/_blob/ceae72f177d251fed058f910034dd697" alt="Trabajadores de Grupo Barsol armando formaleta para cimientos" style="width: 100%; height: 100%; object-fit: cover; object-position: 60% 50%; filter: grayscale(1) contrast(1.15) brightness(1.05); mix-blend-mode: multiply;"></div>
+</div>
+</div>
+</section>
+
+<section id="proyectos" aria-labelledby="d-proy" style="position: relative; min-height: 900px; overflow: hidden; background: {{acento}}; color: {{sobreAcento}}; scroll-snap-align: start;">
+<img src="/_blob/07a44f1f88801683592cd3a9bad2ad91" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1) brightness(1.15); mix-blend-mode: multiply; opacity: 0.75;">
+<div aria-hidden="true" style="position: absolute; top: 0; left: 0; width: 46%; height: 100%; background: #FBFAF7; clip-path: polygon(0 0, 100% 0, 0 78%);"></div>
+<div style="position: relative; z-index: 2; max-width: 1440px; margin: 0 auto; padding: 150px clamp(28px, 6vw, 120px) 110px clamp(28px, 11vw, 190px);">
+<p style="margin: 0 0 18px; font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #141210;">05 · Proyectos</p>
+<h2 id="d-proy" style="position: relative; display: inline-block; margin: 0 0 48px; font-size: clamp(64px, 7.6vw, 116px); line-height: 0.92; font-weight: 900; letter-spacing: -0.045em; color: #141210;"><span aria-hidden="true" style="position: absolute; left: -60vw; right: 22%; bottom: -0.06em; height: 0.2em; background: #141210; clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);"></span><span style="position: relative;">Proyectos</span></h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 28px;">
+<article style="display: flex; flex-wrap: wrap; gap: 22px; padding: 18px; border-radius: 6px; background: rgba(251, 250, 247, 0.94); color: #141210;">
+<img src="/_blob/8bfb0bdcdb2a28c0550c2108a2ebc4d4" alt="Vista aérea de una terraza conformada junto a una rotonda" style="flex: 0 0 auto; width: 200px; height: 250px; border-radius: 4px; object-fit: cover; object-position: 55% 50%;">
+<div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+<h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 900; letter-spacing: -0.01em;">Terraza para [Proyecto]</h3>
+<dl style="margin: 0; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.35;">
+<div><dt style="font-weight: 800;">Tipo de proyecto</dt><dd style="margin: 0; color: #4A4541;">Movimiento de tierras · Acarreo</dd></div>
+<div><dt style="font-weight: 800;">Cliente</dt><dd style="margin: 0; color: #4A4541;">[Por confirmar]</dd></div>
+<div><dt style="font-weight: 800;">Ubicación</dt><dd style="margin: 0; color: #4A4541;">[Lugar]</dd></div>
+</dl>
+<a href="#proyectos" style="display: inline-flex; align-items: center; justify-content: center; align-self: flex-start; min-height: 46px; margin-top: auto; padding: 0 20px; border-radius: 4px; background: #141210; color: #FBFAF7; text-decoration: none; font-size: 16px; font-weight: 800;">Ver detalles</a>
+</div>
+</article>
+<article style="display: flex; flex-wrap: wrap; gap: 22px; padding: 18px; border-radius: 6px; background: rgba(251, 250, 247, 0.94); color: #141210;">
+<img src="/_blob/a786b3a731a9a1caae1818c93bb51f8c" alt="Zanja para cimentación dentro de una nave industrial en construcción" style="flex: 0 0 auto; width: 200px; height: 250px; border-radius: 4px; object-fit: cover; object-position: 50% 40%;">
+<div style="flex: 1 1 200px; min-width: 0; display: flex; flex-direction: column; gap: 10px;">
+<h3 style="margin: 0; font-size: 22px; line-height: 1.15; font-weight: 900; letter-spacing: -0.01em;">Zanja en nave industrial</h3>
+<dl style="margin: 0; display: flex; flex-direction: column; gap: 6px; font-size: 16px; line-height: 1.35;">
+<div><dt style="font-weight: 800;">Tipo de proyecto</dt><dd style="margin: 0; color: #4A4541;">Obra civil · Maquinaria</dd></div>
+<div><dt style="font-weight: 800;">Cliente</dt><dd style="margin: 0; color: #4A4541;">[Por confirmar]</dd></div>
+<div><dt style="font-weight: 800;">Ubicación</dt><dd style="margin: 0; color: #4A4541;">[Lugar]</dd></div>
+</dl>
+<a href="#proyectos" style="display: inline-flex; align-items: center; justify-content: center; align-self: flex-start; min-height: 46px; margin-top: auto; padding: 0 20px; border-radius: 4px; background: #141210; color: #FBFAF7; text-decoration: none; font-size: 16px; font-weight: 800;">Ver detalles</a>
+</div>
+</article>
+</div>
+</div>
+</section>
+
+<section id="cotizar" aria-labelledby="d-cot" style="position: relative; min-height: 960px; overflow: hidden; background: #141210; color: #FBFAF7; scroll-snap-align: start;">
+<div aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 34%; height: 46%; background: {{acento}}; clip-path: polygon(62% 0, 100% 0, 100% 100%, 0 100%);"></div>
+<div style="position: relative; z-index: 2; max-width: 1440px; margin: 0 auto; padding: 150px clamp(28px, 6vw, 120px) 100px clamp(28px, 11vw, 190px); display: flex; flex-wrap: wrap; gap: 56px 80px;">
+<div style="flex: 1 1 560px; min-width: 0;">
+<p style="margin: 0 0 18px; font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #B9B1A6;">06 · Pre-cotización</p>
+<h2 id="d-cot" style="position: relative; display: inline-block; margin: 0 0 30px; font-size: clamp(64px, 7.6vw, 116px); line-height: 0.92; font-weight: 900; letter-spacing: -0.045em;"><span aria-hidden="true" style="position: absolute; left: -60vw; right: 22%; bottom: -0.06em; height: 0.2em; background: {{acento}}; clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);"></span><span style="position: relative;">Cotizá</span></h2>
+<p style="margin: 0 0 30px; font-size: 24px; line-height: 1.25; font-weight: 800;">Contanos qué necesitás y seguimos por WhatsApp.</p>
+<form aria-label="Pre-cotización" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 18px 20px; max-width: 720px;">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 800; color: #E4DFD7;">Nombre<input type="text" name="nombre" autocomplete="name" required="" style="min-height: 52px; padding: 0 14px; border: 1.5px solid #4A4541; border-radius: 4px; background: #1E1B18; color: #FBFAF7; font: inherit; font-weight: 500;"></label>
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 800; color: #E4DFD7;">Teléfono o WhatsApp<input type="tel" name="telefono" autocomplete="tel" required="" style="min-height: 52px; padding: 0 14px; border: 1.5px solid #4A4541; border-radius: 4px; background: #1E1B18; color: #FBFAF7; font: inherit; font-weight: 500;"></label>
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 800; color: #E4DFD7;">¿Qué necesitás?<select name="servicio" style="min-height: 52px; padding: 0 14px; border: 1.5px solid #4A4541; border-radius: 4px; background: #1E1B18; color: #FBFAF7; font: inherit; font-weight: 500;"><option>Movimiento de tierras</option><option>Alquiler de maquinaria</option><option>Acarreo de materiales</option><option>Obra civil</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 800; color: #E4DFD7;">¿Dónde es la obra?<input type="text" name="ubicacion" placeholder="Cantón o distrito" style="min-height: 52px; padding: 0 14px; border: 1.5px solid #4A4541; border-radius: 4px; background: #1E1B18; color: #FBFAF7; font: inherit; font-weight: 500;"></label>
+<label style="grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 800; color: #E4DFD7;">Contanos un poco más<textarea name="mensaje" rows="3" style="padding: 12px 14px; border: 1.5px solid #4A4541; border-radius: 4px; background: #1E1B18; color: #FBFAF7; font: inherit; font-weight: 500; resize: vertical;"></textarea></label>
+<label style="grid-column: 1 / -1; display: flex; align-items: flex-start; gap: 12px; font-size: 15px; line-height: 1.45; color: #B9B1A6;"><input type="checkbox" name="consentimiento" required="" style="flex: 0 0 auto; width: 22px; height: 22px; margin: 1px 0 0; accent-color: #D5A63C;">Acepto que Grupo Barsol use estos datos solo para responder mi consulta (Ley 8968).</label>
+<button type="submit" style="grid-column: 1 / -1; justify-self: start; display: inline-flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 28px; border: 0; border-radius: 4px; background: {{acento}}; color: {{sobreAcento}}; font: inherit; font-size: 18px; font-weight: 800; cursor: pointer;">Enviar y seguir por WhatsApp <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg></button>
+</form>
+</div>
+<dl style="flex: 1 1 300px; min-width: 0; max-width: 400px; align-self: flex-end; margin: 0; display: flex; flex-direction: column; gap: 22px;">
+<div><dt style="font-size: 13px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #B9B1A6;">Oficina</dt><dd style="margin: 6px 0 0; font-size: 19px; font-weight: 700;">Cartago, Avenida 4, Calle 12<br><a href="https://maps.app.goo.gl/vVK5VVziTTzRJDcHA" style="color: #FBFAF7; font-size: 16px; font-weight: 600;">Ver en Google Maps</a></dd></div>
+<div><dt style="font-size: 13px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #B9B1A6;">Horario</dt><dd style="margin: 6px 0 0; font-size: 19px; font-weight: 700;">Lunes a viernes, 8:00 a. m. a 5:00 p. m.</dd></div>
+<div><dt style="font-size: 13px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #B9B1A6;">Teléfono y WhatsApp</dt><dd style="margin: 6px 0 0; font-size: 19px; font-weight: 700;"><a href="tel:+50688808799" style="color: #FBFAF7;">+506 8880-8799</a></dd></div>
+<div><dt style="font-size: 13px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #B9B1A6;">Correo</dt><dd style="margin: 6px 0 0; font-size: 19px; font-weight: 700;"><a href="mailto:grupobarsol@outlook.com" style="color: #FBFAF7;">grupobarsol@outlook.com</a></dd></div>
+</dl>
+</div>
+</section>
+
+<footer style="background: #1E1B18; color: #B9B1A6; font-size: 15px;">
+<div style="max-width: 1440px; margin: 0 auto; padding: 44px clamp(28px, 6vw, 120px) 28px clamp(28px, 11vw, 190px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 48px;">
+<div style="display: flex; align-items: center; gap: 14px;">
+<img src="/_blob/371e3743b706ef3dab80efc945324d5c" alt="Grupo Barsol" style="width: 52px; height: 52px; border-radius: 50%;">
+<span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 19px; font-weight: 900; color: #FBFAF7;">Grupo Barsol</span><span>Seguimos construyendo caminos, oportunidades y futuro.</span></span>
+</div>
+<nav aria-label="Pie de página" style="display: flex; flex-wrap: wrap; gap: 8px 26px; font-weight: 700;">
+<a href="https://www.instagram.com/grupobarsol33/" style="color: #FBFAF7; text-decoration: none;">Instagram</a>
+<a href="https://www.facebook.com/profile.php?id=61551545677276" style="color: #FBFAF7; text-decoration: none;">Facebook</a>
+<a href="#" style="color: #FBFAF7; text-decoration: none;">Privacidad</a>
+<a href="#" style="color: #FBFAF7; text-decoration: none;">Términos del cotizador</a>
+</nav>
+<p style="flex: 1 1 100%; margin: 0; padding-top: 18px; border-top: 1px solid #2E2A26; font-size: 13px;">© 2026 Grupo Barsol · ES · <a href="#" style="color: #B9B1A6;">EN</a> · Sitio por Structura</p>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#D5A63C","options":["#D5A63C","#AE3A1E","#A83238"]},"$preview":{"width":1440,"height":6600}}'>
+class Component extends DCLogic {
+  constructor() {
+    super(...arguments);
+    this.state = { i: 0, solido: false, pausado: false, reduce: false, activa: 0 };
+    this.secciones = ['inicio', 'tierra', 'maquinaria', 'obra', 'nosotros', 'proyectos', 'cotizar'];
+    this.nombres = ['Inicio', 'Tierra', 'Maquinaria', 'Obra', 'Equipo', 'Proyectos', 'Cotizá'];
+  }
+  componentDidMount() {
+    var self = this;
+    var reduce = false;
+    try { reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+    if (reduce) {
+      this.setState({ reduce: true });
+    } else {
+      this.timer = setInterval(function () { self.setState({ i: (self.state.i + 1) % 3 }); }, 2800);
+    }
+    this.onScroll = function () {
+      var solido = (window.scrollY || 0) > 600;
+      var activa = 0;
+      for (var k = 0; k < self.secciones.length; k++) {
+        var el = document.getElementById(self.secciones[k]);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.4) { activa = k; }
+      }
+      if (solido !== self.state.solido || activa !== self.state.activa) { self.setState({ solido: solido, activa: activa }); }
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+  }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    window.removeEventListener('scroll', this.onScroll);
+  }
+  renderVals() {
+    var self = this;
+    var acento = this.props.acento ?? '#D5A63C';
+    var oscuroSobre = String(acento).toUpperCase() === '#D5A63C';
+    var frases = ['caminos.', 'oportunidades.', 'futuro.'];
+    var reproduciendo = !this.state.pausado && !this.state.reduce;
+    var puntos = this.secciones.map(function (id, k) {
+      var actual = k === self.state.activa;
+      return { href: '#' + id, label: self.nombres[k], actual: actual ? 'true' : 'false', size: actual ? '14px' : '8px', color: acento };
+    });
+    return {
+      acento: acento,
+      sobreAcento: oscuroSobre ? '#141210' : '#FBFAF7',
+      frase: this.state.reduce ? 'caminos, oportunidades y futuro.' : frases[this.state.i],
+      headerBg: this.state.solido ? 'rgba(20, 18, 16, 0.96)' : 'rgba(20, 18, 16, 0)',
+      conVideo: reproduciendo,
+      sinVideo: !reproduciendo,
+      pausado: this.state.pausado,
+      enMarcha: !this.state.pausado,
+      pausaLabel: this.state.pausado ? 'Reproducir video' : 'Pausar video',
+      togglePausa: function () { self.setState({ pausado: !self.state.pausado }); },
+      setVideo: function (el) { if (el) { el.muted = true; var p = el.play && el.play(); if (p && p.catch) { p.catch(function () {}); } } },
+      puntos: puntos
+    };
+  }
+}
+</script>
+</body>
+</html>
