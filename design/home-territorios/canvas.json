@@ -1,0 +1,38 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-05T06:00:00Z" },
+  "title": "Grupo Barsol · Home · 3 territorios",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 6300, "title": "A · Curvas de nivel — escritorio", "expand": "fill" },
+    "A-movil.dc.html": { "x": 1520, "y": 0, "w": 390, "h": 3700, "title": "A · Curvas de nivel — móvil" },
+    "B-escritorio.dc.html": { "x": 0, "y": 6700, "w": 1440, "h": 7000, "title": "B · Peso pesado — escritorio", "expand": "fill" },
+    "B-movil.dc.html": { "x": 1520, "y": 6700, "w": 390, "h": 4400, "title": "B · Peso pesado — móvil" },
+    "C-escritorio.dc.html": { "x": 0, "y": 14100, "w": 1440, "h": 6150, "title": "C · Caminos — escritorio", "expand": "fill" },
+    "C-movil.dc.html": { "x": 1520, "y": 14100, "w": 390, "h": 3400, "title": "C · Caminos — móvil" }
+  },
+  "order": ["Main.dc.html", "A-movil.dc.html", "B-escritorio.dc.html", "B-movil.dc.html", "C-escritorio.dc.html", "C-movil.dc.html"],
+  "notes": {
+    "leer": {
+      "x": 0, "y": -780, "w": 1100, "maxH": 360, "size": "m", "fill": "gray",
+      "text": "Cómo leer este canvas · Fase 3 adelantada, antes de la auditoría y la estrategia (Fases 1–2). Tres territorios distintos en forma para el home de Grupo Barsol, cada uno en escritorio (1440 px) y móvil (390 px).\n\nLos textos son provisionales: el copy final sale de la Fase 2. Lo que va entre [corchetes] es un dato que tiene que entregar el cliente. Las fotos son reales del cliente, recortadas para quitar el logo sobreimpreso; descarté dos (el atardecer y el trabajador de espaldas) porque parecen generadas con IA.\n\nEn el GATE 3 se elige un territorio, o se combinan rasgos de varios."
+    },
+    "tA": { "x": 0, "y": -300, "text": "A · Curvas de nivel", "kind": "title1", "maxW": 1910 },
+    "nA": {
+      "x": 1990, "y": 0, "w": 540, "maxH": 1200, "size": "s", "fill": "gray",
+      "text": "A · Curvas de nivel\n\nIdea: el terreno es el plano. El sitio se lee como un levantamiento topográfico: curvas de nivel, cotas, estaciones y láminas.\n\nPor qué encaja: es lo que Grupo Barsol hace (mover y nivelar tierra) y habla el idioma de ingenieros y desarrolladores sin perder claridad para un dueño de lote.\n\nPaleta: papel de dibujo oklch(0.956 0.003 220) · tinta oklch(0.223 0.010 53) · óxido del logo oklch(0.512 0.157 35) para la acción · ocre oklch(0.750 0.132 84) solo como marcador.\n\nTipografía: Archivo expandida (titulares) + IBM Plex Mono (cotas y etiquetas).\n\nFotografía: aéreas en color natural, con curvas de nivel superpuestas. El tweak «curvas» las muestra u oculta.\n\nMovimiento: preciso y lineal; las líneas se dibujan y las cotas cuentan.\n\nMomento firma, «Corte y relleno»: al bajar, las curvas sobre la foto aérea se dibujan y se aplanan hasta quedar como una terraza nivelada. Con reduced-motion, las líneas aparecen ya niveladas y quietas.\n\nRiesgos: puede sentirse frío para particulares; depende de buenas fotos aéreas (hay 3 utilizables)."
+    },
+    "tB": { "x": 0, "y": 6400, "text": "B · Peso pesado", "kind": "title1", "maxW": 1910 },
+    "nB": {
+      "x": 1990, "y": 6700, "w": 540, "maxH": 1200, "size": "s", "fill": "gray",
+      "text": "B · Peso pesado\n\nIdea: la escala de la máquina, contada con tipografía. Letras del tamaño de una excavadora, de noche, con el ocre del logo como luz de trabajo.\n\nPor qué encaja: pone la flota y la capacidad al frente (alquiler y acarreo) y se separa de las plantillas de construcción claras y genéricas.\n\nPaleta: asfalto oklch(0.197 0.007 78) · cal oklch(0.945 0.013 82) · ocre del logo oklch(0.760 0.133 84) como único acento (botones, barras y números).\n\nTipografía: Big Shoulders Display (titulares), su versión Stencil (números) + Hanken Grotesk (texto).\n\nFotografía: nocturna y de alto contraste, a sangre, con un velo oscuro para leer el texto. El tweak «foto» alterna la portada.\n\nMovimiento: con peso; máscaras que suben como una tolva, barras ocre que cargan y la flota en horizontal.\n\nMomento firma, «El convoy»: al bajar, la flota pasa en horizontal, cada unidad con su placa de specs. Con reduced-motion, grilla estática.\n\nRiesgos: el amarillo y negro de obra es un cliché si se abusa (nada de cinta de peligro); lo oscuro puede sentirse duro para particulares."
+    },
+    "tC": { "x": 0, "y": 13800, "text": "C · Caminos", "kind": "title1", "maxW": 1910 },
+    "nC": {
+      "x": 1990, "y": 14100, "w": 540, "maxH": 1200, "size": "s", "fill": "gray",
+      "text": "C · Caminos\n\nIdea: «Seguimos construyendo caminos», el lema que la marca ya usa en redes, como concepto. El sitio es una ruta: una línea amarilla de carretera une las secciones como kilómetros.\n\nPor qué encaja: humano y local (equipo, Cartago, obra terminada); le habla igual a una desarrolladora que a una familia con un lote.\n\nPaleta: concreto oklch(0.937 0.006 85) · carmesí del logo oklch(0.496 0.154 22) para bloques y acción · tinta oklch(0.230 0.016 12) · ocre oklch(0.750 0.132 84) solo para la línea de ruta.\n\nTipografía: Overpass (inspirada en la señalética vial Highway Gothic) + Overpass Mono (kilómetros).\n\nFotografía: documental, con personas y obra terminada; esquinas redondeadas como curvas de camino. El tweak «portada» alterna calle y equipo.\n\nMovimiento: continuo; la línea se dibuja con el scroll y cada kilómetro se enciende al llegar.\n\nMomento firma, «La ruta»: la línea amarilla avanza con la lectura y se curva en el proceso, de la pre-cotización a la obra. Con reduced-motion, la línea aparece completa y quieta.\n\nRiesgos: es el más cercano a lo esperable en el sector; el carmesí en bloques grandes pide disciplina para no cansar."
+    }
+  },
+  "designSystems": []
+}
