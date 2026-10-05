@@ -34,3 +34,14 @@ docs/privado/01-auditoria.md (privado, fuera de git) y en ADR-009.
 
 En el canvas, D está en la página «Ronda 2» y el canvas abre directo en su versión de escritorio. A, B y C quedaron
 en «Ronda 1».
+
+### Pantallas clave con el sistema D (GATE 3)
+
+| Archivo | Pantalla | Interactiva |
+|---|---|---|
+| `Flota-escritorio.dc.html` | Flota con filtro por tipo | Sí: filtro y conteo anunciado |
+| `Ficha-escritorio.dc.html` | Ficha de máquina | Sí: galería con miniaturas |
+| `Cotizador-escritorio.dc.html`, `Cotizador-movil.dc.html` | Pre-cotización en 5 pasos | Sí: validación y salida a WhatsApp |
+
+Reglas del sistema: [docs/03-direccion-de-arte.md](../docs/03-direccion-de-arte.md) · tokens:
+[src/styles/tokens.css](../src/styles/tokens.css).

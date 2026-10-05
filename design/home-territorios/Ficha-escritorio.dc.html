@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Grupo Barsol · Ficha de máquina · escritorio</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400..900;1,700..900&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#1E1B18}
+*,*::before,*::after{box-sizing:border-box}
+img{display:block;max-width:100%}
+a{color:#141210}a:hover{color:#4A4541}
+</style>
+</helmet>
+<div style="background: #FBFAF7; color: #141210; font-family: 'Urbanist', system-ui, sans-serif; font-size: 18px; line-height: 1.55;">
+
+<header style="position: sticky; top: 0; z-index: 40; background: #141210;">
+<div style="max-width: 1440px; margin: 0 auto; padding: 12px clamp(20px, 4.4vw, 64px); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 30px;">
+<a href="#" aria-label="Grupo Barsol, inicio" style="display: flex; align-items: center; gap: 14px; color: #FBFAF7; text-decoration: none;">
+<img src="/_blob/371e3743b706ef3dab80efc945324d5c" alt="" style="width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 0 0 3px rgba(251, 250, 247, 0.9);">
+<span style="display: flex; flex-direction: column; gap: 3px;"><span style="font-size: 21px; font-weight: 900; letter-spacing: -0.02em; line-height: 1;">Grupo Barsol</span><span style="font-size: 11px; font-weight: 700; letter-spacing: 0.16em; line-height: 1.2; text-transform: uppercase; color: #E4DFD7;">Constructora y maquinaria</span></span>
+</a>
+<nav aria-label="Principal" style="margin-left: auto; display: flex; flex-wrap: wrap; gap: 6px 30px; font-size: 17px; font-weight: 600;">
+<a href="#" style="color: #FBFAF7; text-decoration: none;">Servicios</a>
+<a href="#" aria-current="page" style="color: #FBFAF7; text-decoration: none; box-shadow: inset 0 -3px 0 {{acento}}; padding-bottom: 4px;">Flota</a>
+<a href="#" style="color: #FBFAF7; text-decoration: none;">Proyectos</a>
+<a href="#" style="color: #FBFAF7; text-decoration: none;">Nosotros</a>
+<a href="#" style="color: #FBFAF7; text-decoration: none;">Contacto</a>
+</nav>
+<a href="https://wa.me/50688808799" style="display: inline-flex; align-items: center; gap: 10px; min-height: 46px; padding: 0 18px; border: 2px solid {{acento}}; border-radius: 4px; color: #FBFAF7; text-decoration: none; font-size: 16px; font-weight: 800;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A7.5 7.5 0 1 1 8.3 18.4z" /></svg>WhatsApp</a>
+</div>
+</header>
+
+<main style="max-width: 1440px; margin: 0 auto; padding: 32px clamp(28px, 6vw, 120px) 96px clamp(28px, 11vw, 190px);">
+<nav aria-label="Ruta" style="margin: 0 0 28px; font-size: 15px; font-weight: 700; color: #4A4541;"><a href="#">Inicio</a> <span aria-hidden="true" style="padding: 0 6px;">/</span> <a href="#">Flota</a> <span aria-hidden="true" style="padding: 0 6px;">/</span> <a href="#">Excavadoras</a> <span aria-hidden="true" style="padding: 0 6px;">/</span> <span aria-current="page">Excavadora [Marca y modelo]</span></nav>
+<div style="display: flex; flex-wrap: wrap; gap: 40px 64px;">
+<section aria-label="Fotos de la unidad" style="flex: 1 1 560px; min-width: 0;">
+<div style="position: relative; height: 520px; overflow: hidden; border-radius: 6px; background: #E4DFD7;">
+<div style="position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 100% 86%, 82% 100%, 0 100%);"><img src="{{foto.src}}" alt="{{foto.alt}}" style="width: 100%; height: 100%; object-fit: cover; object-position: {{foto.pos}};"></div>
+<span aria-hidden="true" style="position: absolute; right: 0; bottom: 0; width: 26%; height: 18%; background: {{acento}}; clip-path: polygon(70% 0, 100% 0, 100% 100%, 0 100%);"></span>
+<p style="position: absolute; left: 16px; bottom: 16px; margin: 0; padding: 6px 12px; border-radius: 4px; background: rgba(20, 18, 16, 0.75); color: #FBFAF7; font-size: 14px; font-weight: 700;">{{fotoTexto}}</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 12px;">
+<sc-for list="{{miniaturas}}" as="m" hint-placeholder-count="4">
+<button type="button" onClick="{{m.on}}" aria-label="{{m.label}}" aria-pressed="{{m.pressed}}" style="height: 96px; padding: 0; overflow: hidden; border: 3px solid {{m.border}}; border-radius: 6px; background: #E4DFD7; cursor: pointer;"><img src="{{m.src}}" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: {{m.pos}};"></button>
+</sc-for>
+</div>
+</section>
+<section aria-labelledby="fi-h1" style="flex: 1 1 420px; min-width: 0;">
+<p style="margin: 0 0 14px; font-size: 13px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; color: #4A4541;">Excavadoras · Alquiler</p>
+<h1 id="fi-h1" style="position: relative; margin: 0 0 22px; font-size: clamp(40px, 3.8vw, 56px); line-height: 1; font-weight: 900; letter-spacing: -0.035em;"><span aria-hidden="true" style="position: absolute; left: -40vw; right: 40%; bottom: -0.1em; height: 0.18em; background: {{acento}}; clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);"></span><span style="position: relative;">Excavadora [Marca y modelo]</span></h1>
+<p style="display: flex; align-items: center; gap: 8px; margin: 0 0 16px; font-size: 16px; font-weight: 700; color: #4A4541;"><span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 50%; background: {{acento}};"></span>Consultá disponibilidad</p>
+<p style="margin: 0 0 24px; color: #4A4541;">[Descripción corta de la unidad: año, estado y para qué obras rinde mejor.]</p>
+<dl style="margin: 0 0 28px; border-top: 2px solid #141210;">
+<div style="display: grid; grid-template-columns: 210px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E4DFD7;"><dt style="font-weight: 800;">Peso operativo</dt><dd style="margin: 0; color: #4A4541;">[Por confirmar]</dd></div>
+<div style="display: grid; grid-template-columns: 210px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E4DFD7;"><dt style="font-weight: 800;">Capacidad del balde</dt><dd style="margin: 0; color: #4A4541;">[Por confirmar]</dd></div>
+<div style="display: grid; grid-template-columns: 210px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E4DFD7;"><dt style="font-weight: 800;">Profundidad de excavación</dt><dd style="margin: 0; color: #4A4541;">[Por confirmar]</dd></div>
+<div style="display: grid; grid-template-columns: 210px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E4DFD7;"><dt style="font-weight: 800;">Potencia</dt><dd style="margin: 0; color: #4A4541;">[Por confirmar]</dd></div>
+<div style="display: grid; grid-template-columns: 210px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E4DFD7;"><dt style="font-weight: 800;">Alquiler</dt><dd style="margin: 0; color: #4A4541;">Por hora, día o proyecto</dd></div>
+<div style="display: grid; grid-template-columns: 210px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E4DFD7;"><dt style="font-weight: 800;">Operador</dt><dd style="margin: 0; color: #4A4541;">[Confirmar si se incluye]</dd></div>
+<div style="display: grid; grid-template-columns: 210px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E4DFD7;"><dt style="font-weight: 800;">Traslado a la obra</dt><dd style="margin: 0; color: #4A4541;">[Confirmar condiciones]</dd></div>
+</dl>
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 480px;">
+<a href="#" style="display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 24px; border-radius: 4px; background: {{acento}}; color: {{sobre}}; text-decoration: none; font-size: 18px; font-weight: 800;">Cotizar esta máquina <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg></a>
+<a href="https://wa.me/50688808799" style="display: flex; align-items: center; gap: 10px; min-height: 56px; padding: 0 24px; border: 2px solid #141210; border-radius: 4px; color: #141210; text-decoration: none; font-size: 18px; font-weight: 800;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 19.5l1.2-3.6A7.5 7.5 0 1 1 8.3 18.4z" /></svg>Preguntar por WhatsApp</a>
+<p style="margin: 4px 0 0; font-size: 15.5px; color: #4A4541;">El precio depende de la duración y del lugar de la obra: te lo damos al pre-cotizar.</p>
+</div>
+</section>
+</div>
+</main>
+
+<section aria-labelledby="fi-usos" style="position: relative; overflow: hidden; background: #141210; color: #FBFAF7;">
+<span aria-hidden="true" style="position: absolute; top: 0; right: 0; width: 28%; height: 100%; background: {{acento}}; clip-path: polygon(64% 0, 100% 0, 100% 100%, 30% 100%);"></span>
+<div style="position: relative; max-width: 1440px; margin: 0 auto; padding: 80px clamp(28px, 6vw, 120px) 80px clamp(28px, 11vw, 190px);">
+<h2 id="fi-usos" style="margin: 0 0 28px; font-size: clamp(36px, 3.6vw, 52px); line-height: 1; font-weight: 900; letter-spacing: -0.03em;">Para qué sirve</h2>
+<ul style="list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 0 40px; max-width: 900px; border-top: 2px solid #FBFAF7;">
+<li style="display: flex; align-items: center; gap: 14px; min-height: 60px; border-bottom: 1px solid #3A3530; font-size: 19px; font-weight: 700;"><span aria-hidden="true" style="flex: 0 0 auto; width: 16px; height: 18px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Zanjas para tuberías y cimientos</li>
+<li style="display: flex; align-items: center; gap: 14px; min-height: 60px; border-bottom: 1px solid #3A3530; font-size: 19px; font-weight: 700;"><span aria-hidden="true" style="flex: 0 0 auto; width: 16px; height: 18px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Carga de vagonetas</li>
+<li style="display: flex; align-items: center; gap: 14px; min-height: 60px; border-bottom: 1px solid #3A3530; font-size: 19px; font-weight: 700;"><span aria-hidden="true" style="flex: 0 0 auto; width: 16px; height: 18px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Cortes y conformación de taludes</li>
+<li style="display: flex; align-items: center; gap: 14px; min-height: 60px; border-bottom: 1px solid #3A3530; font-size: 19px; font-weight: 700;"><span aria-hidden="true" style="flex: 0 0 auto; width: 16px; height: 18px; background: {{acento}}; clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);"></span>Excavación y nivelación de lotes</li>
+</ul>
+</div>
+</section>
+
+<section aria-labelledby="fi-otras" style="max-width: 1440px; margin: 0 auto; padding: 88px clamp(28px, 6vw, 120px) 104px clamp(28px, 11vw, 190px);">
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 40px; margin-bottom: 32px;">
+<h2 id="fi-otras" style="margin: 0; font-size: clamp(36px, 3.6vw, 52px); line-height: 1; font-weight: 900; letter-spacing: -0.03em;">Otras máquinas</h2>
+<a href="#" style="display: inline-flex; align-items: center; gap: 8px; min-height: 48px; font-size: 17px; font-weight: 800;">Ver toda la flota<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6" /></svg></a>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 24px;">
+<a href="#" style="display: flex; flex-direction: column; overflow: hidden; border: 1.5px solid #E4DFD7; border-radius: 6px; background: #FFFDF9; color: #141210; text-decoration: none;"><div style="height: 190px; clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%);"><img src="/_blob/9af8a730f03796e2e75a6259499abe9e" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: 66% 50%;"></div><span style="padding: 14px 20px 20px;"><span style="display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #4A4541;">Excavadoras</span><span style="display: block; margin-top: 4px; font-size: 21px; font-weight: 900;">Excavadora [Marca y modelo]</span></span></a>
+<a href="#" style="display: flex; flex-direction: column; overflow: hidden; border: 1.5px solid #E4DFD7; border-radius: 6px; background: #FFFDF9; color: #141210; text-decoration: none;"><div style="height: 190px; clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%);"><img src="/_blob/2ae88f7139f5012ced55f246de3c37a6" alt="" style="width: 100%; height: 100%; object-fit: cover; object-position: 26% 55%;"></div><span style="padding: 14px 20px 20px;"><span style="display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #4A4541;">Vagonetas</span><span style="display: block; margin-top: 4px; font-size: 21px; font-weight: 900;">Vagoneta [Marca y modelo]</span></span></a>
+<a href="#" style="display: flex; flex-direction: column; overflow: hidden; border: 1.5px solid #E4DFD7; border-radius: 6px; background: #FFFDF9; color: #141210; text-decoration: none;"><div role="img" aria-label="Foto de la unidad pendiente" style="height: 190px; display: flex; align-items: center; justify-content: center; background: #E4DFD7; clip-path: polygon(0 0, 100% 0, 100% 82%, 0 100%);"><span style="padding: 6px 12px; border-radius: 4px; background: #FBFAF7; font-size: 14px; font-weight: 700; color: #4A4541;">[Foto de la unidad]</span></div><span style="padding: 14px 20px 20px;"><span style="display: block; font-size: 12.5px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #4A4541;">Compactadoras</span><span style="display: block; margin-top: 4px; font-size: 21px; font-weight: 900;">Compactadora [Marca y modelo]</span></span></a>
+</div>
+</section>
+
+<footer style="background: #1E1B18; color: #B9B1A6; font-size: 15px;">
+<div style="max-width: 1440px; margin: 0 auto; padding: 40px clamp(28px, 6vw, 120px) 28px clamp(28px, 11vw, 190px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 48px;">
+<div style="display: flex; align-items: center; gap: 14px;"><img src="/_blob/371e3743b706ef3dab80efc945324d5c" alt="Grupo Barsol" style="width: 48px; height: 48px; border-radius: 50%;"><span style="display: flex; flex-direction: column; gap: 2px;"><span style="font-size: 18px; font-weight: 900; color: #FBFAF7;">Grupo Barsol</span><span>Seguimos construyendo caminos, oportunidades y futuro.</span></span></div>
+<p style="margin: 0; font-size: 13px;">© 2026 Grupo Barsol · <a href="#" style="color: #B9B1A6;">Privacidad</a> · ES · <a href="#" style="color: #B9B1A6;">EN</a> · Sitio por Structura</p>
+</div>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"acento":{"editor":"color","default":"#D5A63C","options":["#D5A63C","#AE3A1E","#A83238"]},"$preview":{"width":1440,"height":2150}}'>
+class Component extends DCLogic {
+  constructor() {
+    super(...arguments);
+    this.state = { idx: 0 };
+  }
+  renderVals() {
+    var self = this;
+    var acento = this.props.acento ?? '#D5A63C';
+    var sobre = String(acento).toUpperCase() === '#D5A63C' ? '#141210' : '#FBFAF7';
+    var FOTOS = [
+      { src: '/_blob/3c73752dfb99e08e108c8908c1eb0347', alt: 'Excavadora cargando tierra en una vagoneta', pos: '30% 45%' },
+      { src: '/_blob/9af8a730f03796e2e75a6259499abe9e', alt: 'Excavadora sobre una carreta durante un traslado', pos: '64% 50%' },
+      { src: '/_blob/a786b3a731a9a1caae1818c93bb51f8c', alt: 'Excavadora abriendo una zanja en una nave industrial', pos: '50% 38%' },
+      { src: '/_blob/07a44f1f88801683592cd3a9bad2ad91', alt: 'Excavadora cargando una vagoneta junto a una carretera', pos: '40% 45%' }
+    ];
+    var i = this.state.idx;
+    var miniaturas = FOTOS.map(function (f, k) {
+      var on = k === i;
+      return { src: f.src, pos: f.pos, label: 'Ver foto ' + (k + 1) + ' de ' + FOTOS.length, pressed: on ? 'true' : 'false', border: on ? acento : 'transparent', on: function () { self.setState({ idx: k }); } };
+    });
+    return {
+      acento: acento,
+      sobre: sobre,
+      foto: FOTOS[i],
+      fotoTexto: 'Foto ' + (i + 1) + ' de ' + FOTOS.length + ' · [Fotos de la unidad por confirmar]',
+      miniaturas: miniaturas
+    };
+  }
+}
+</script>
+</body>
+</html>

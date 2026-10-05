@@ -1,51 +1,259 @@
 {
   "v": 3,
-  "createdOnFiles": { "v": 1, "at": "2026-10-05T06:00:00Z" },
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-05T06:00:00Z"
+  },
   "title": "Grupo Barsol · Home · Dirección de arte",
-  "launch": { "view": "focused", "file": "D-escritorio.dc.html" },
+  "launch": {
+    "view": "focused",
+    "file": "D-escritorio.dc.html"
+  },
   "pages": [
-    { "id": "r2", "name": "Ronda 2 · Referencia McAninch" },
-    { "id": "r1", "name": "Ronda 1 · Tres territorios" }
+    {
+      "id": "r2",
+      "name": "Ronda 2 · Referencia McAninch"
+    },
+    {
+      "id": "r1",
+      "name": "Ronda 1 · Tres territorios"
+    }
   ],
   "boards": {
-    "Main.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 6300, "title": "A · Curvas de nivel — escritorio", "expand": "fill", "page": "r1" },
-    "A-movil.dc.html": { "x": 1520, "y": 0, "w": 390, "h": 3700, "title": "A · Curvas de nivel — móvil", "page": "r1" },
-    "B-escritorio.dc.html": { "x": 0, "y": 6700, "w": 1440, "h": 7000, "title": "B · Peso pesado — escritorio", "expand": "fill", "page": "r1" },
-    "B-movil.dc.html": { "x": 1520, "y": 6700, "w": 390, "h": 4400, "title": "B · Peso pesado — móvil", "page": "r1" },
-    "C-escritorio.dc.html": { "x": 0, "y": 14100, "w": 1440, "h": 6150, "title": "C · Caminos — escritorio", "expand": "fill", "page": "r1" },
-    "C-movil.dc.html": { "x": 1520, "y": 14100, "w": 390, "h": 3400, "title": "C · Caminos — móvil", "page": "r1" },
-    "D-escritorio.dc.html": { "x": 0, "y": 0, "w": 1440, "h": 6600, "title": "D · Frente de obra — escritorio", "expand": "fill", "is_interactive": true, "page": "r2" },
-    "D-movil.dc.html": { "x": 1520, "y": 0, "w": 390, "h": 6400, "title": "D · Frente de obra — móvil", "is_interactive": true, "page": "r2" }
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 6300,
+      "title": "A · Curvas de nivel — escritorio",
+      "expand": "fill",
+      "page": "r1"
+    },
+    "A-movil.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 390,
+      "h": 3700,
+      "title": "A · Curvas de nivel — móvil",
+      "page": "r1"
+    },
+    "B-escritorio.dc.html": {
+      "x": 0,
+      "y": 6700,
+      "w": 1440,
+      "h": 7000,
+      "title": "B · Peso pesado — escritorio",
+      "expand": "fill",
+      "page": "r1"
+    },
+    "B-movil.dc.html": {
+      "x": 1520,
+      "y": 6700,
+      "w": 390,
+      "h": 4400,
+      "title": "B · Peso pesado — móvil",
+      "page": "r1"
+    },
+    "C-escritorio.dc.html": {
+      "x": 0,
+      "y": 14100,
+      "w": 1440,
+      "h": 6150,
+      "title": "C · Caminos — escritorio",
+      "expand": "fill",
+      "page": "r1"
+    },
+    "C-movil.dc.html": {
+      "x": 1520,
+      "y": 14100,
+      "w": 390,
+      "h": 3400,
+      "title": "C · Caminos — móvil",
+      "page": "r1"
+    },
+    "D-escritorio.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 6600,
+      "title": "D · Frente de obra — escritorio",
+      "expand": "fill",
+      "is_interactive": true,
+      "page": "r2"
+    },
+    "D-movil.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 390,
+      "h": 6400,
+      "title": "D · Frente de obra — móvil",
+      "is_interactive": true,
+      "page": "r2"
+    },
+    "Flota-escritorio.dc.html": {
+      "x": 0,
+      "y": 7000,
+      "w": 1440,
+      "h": 2500,
+      "title": "Flota — escritorio",
+      "expand": "fill",
+      "is_interactive": true,
+      "page": "r2"
+    },
+    "Ficha-escritorio.dc.html": {
+      "x": 1520,
+      "y": 7000,
+      "w": 1440,
+      "h": 2200,
+      "title": "Ficha de máquina — escritorio",
+      "expand": "fill",
+      "is_interactive": true,
+      "page": "r2"
+    },
+    "Cotizador-escritorio.dc.html": {
+      "x": 3040,
+      "y": 7000,
+      "w": 1440,
+      "h": 1180,
+      "title": "Pre-cotización — escritorio",
+      "expand": "fill",
+      "is_interactive": true,
+      "page": "r2"
+    },
+    "Cotizador-movil.dc.html": {
+      "x": 4560,
+      "y": 7000,
+      "w": 390,
+      "h": 1320,
+      "title": "Pre-cotización — móvil",
+      "is_interactive": true,
+      "page": "r2"
+    }
   },
-  "order": ["Main.dc.html", "A-movil.dc.html", "B-escritorio.dc.html", "B-movil.dc.html", "C-escritorio.dc.html", "C-movil.dc.html", "D-escritorio.dc.html", "D-movil.dc.html"],
+  "order": [
+    "Main.dc.html",
+    "A-movil.dc.html",
+    "B-escritorio.dc.html",
+    "B-movil.dc.html",
+    "C-escritorio.dc.html",
+    "C-movil.dc.html",
+    "D-escritorio.dc.html",
+    "D-movil.dc.html",
+    "Flota-escritorio.dc.html",
+    "Ficha-escritorio.dc.html",
+    "Cotizador-escritorio.dc.html",
+    "Cotizador-movil.dc.html"
+  ],
   "notes": {
     "r2leer": {
-      "x": 0, "y": -800, "w": 1100, "maxH": 420, "size": "m", "fill": "gray", "page": "r2",
+      "x": 0,
+      "y": -800,
+      "w": 1100,
+      "maxH": 420,
+      "size": "m",
+      "fill": "gray",
+      "page": "r2",
       "text": "Ronda 2 · Después de tu comentario: ninguno de los tres convenció, el B era el más cercano y la meta es parecerse a mcaninchcorp.com.\n\nLa dirección D toma la estructura, el hero y el scroll de McAninch y los expresa con la identidad de Grupo Barsol. Para recorrerla como sitio, abrir el artboard de escritorio en pantalla completa: el video corre, la frase rota, el encabezado se vuelve negro al bajar y los puntos de la izquierda siguen la sección.\n\nTextos provisionales; lo que va entre [corchetes] lo tiene que entregar el cliente. La ronda 1 (A, B y C) quedó en la otra página del canvas."
     },
-    "tD": { "x": 0, "y": -300, "text": "D · Frente de obra", "kind": "title1", "maxW": 2550, "page": "r2" },
+    "tD": {
+      "x": 0,
+      "y": -300,
+      "text": "D · Frente de obra",
+      "kind": "title1",
+      "maxW": 2550,
+      "page": "r2"
+    },
     "nD": {
-      "x": 1990, "y": 0, "w": 560, "maxH": 1500, "size": "s", "fill": "gray", "page": "r2",
-      "text": "D · Frente de obra (referencia: mcaninchcorp.com)\n\nQué toma de McAninch: el home en pantallas completas que avanzan una por una; el hero con video a pantalla completa, una palabra enorme y una frase que rota; títulos de una sola palabra con franja de color; recortes diagonales de fotos, algunas teñidas con el color de marca; puntos de progreso a la izquierda; una pestaña fija para cotizar; tarjetas de proyecto con tipo, cliente y ubicación.\n\nQué es de Barsol: el lema real («Seguimos construyendo caminos, oportunidades y futuro») en el hero; la franja de los títulos sale de la línea ocre del logo; las diagonales siguen el ángulo del brazo de la excavadora; los colores del logo sobre negro y blanco cálido; Urbanist, geométrica como las letras del logo; video y fotos propias. No se copian textos, fotos, logo ni código de McAninch.\n\nTweak «acento»: ocre del logo (por defecto), rojo óxido o carmesí. Cambia franjas, botones, capas de color y la pestaña.\n\nMovimiento previsto: snap suave por secciones, sin secuestrar el scroll; fotos diagonales que entran siguiendo su ángulo; la franja se dibuja bajo cada título; la frase del hero rota. Con reduced-motion: foto fija en lugar de video, frase completa y scroll normal.\n\nAccesibilidad: botón para pausar el video (WCAG 2.2.2), contraste AA medido y objetivos táctiles de 44 px.\n\nPendiente: el video sale de una grabación de pantalla (recortado a 1600 px). Para producción hace falta el archivo original."
+      "x": 1990,
+      "y": 0,
+      "w": 560,
+      "maxH": 1500,
+      "size": "s",
+      "fill": "gray",
+      "page": "r2",
+      "text": "D · Frente de obra (referencia: mcaninchcorp.com)\n\nQué toma de McAninch: el home en pantallas completas que avanzan una por una; el hero con video a pantalla completa, una palabra enorme y una frase que rota; títulos de una sola palabra con franja de color; recortes diagonales de fotos, algunas teñidas con el color de marca; puntos de progreso a la izquierda; una pestaña fija para cotizar; tarjetas de proyecto con tipo, cliente y ubicación.\n\nQué es de Barsol: el lema real («Seguimos construyendo caminos, oportunidades y futuro») en el hero; la franja de los títulos sale de la línea ocre del logo; las diagonales siguen el ángulo del brazo de la excavadora; los colores del logo sobre negro y blanco cálido; Urbanist, geométrica como las letras del logo; video y fotos propias. No se copian textos, fotos, logo ni código de McAninch.\n\nFase 2: el H1 dice qué, dónde y para quién («Movimiento de tierras, maquinaria y obra civil en Cartago»); el lema queda como texto grande de display.\n\nTweak «acento»: ocre del logo (por defecto), rojo óxido o carmesí. Cambia franjas, botones, capas de color y la pestaña.\n\nMovimiento previsto: snap suave por secciones, sin secuestrar el scroll; fotos diagonales que entran siguiendo su ángulo; la franja se dibuja bajo cada título; la frase del hero rota. Con reduced-motion: foto fija en lugar de video, frase completa y scroll normal.\n\nAccesibilidad: botón para pausar el video (WCAG 2.2.2), contraste AA medido y objetivos táctiles de 44 px.\n\nPendiente: el video sale de una grabación de pantalla (recortado a 1600 px). Para producción hace falta el archivo original."
     },
     "leer": {
-      "x": 0, "y": -780, "w": 1100, "maxH": 360, "size": "m", "fill": "gray", "page": "r1",
+      "x": 0,
+      "y": -780,
+      "w": 1100,
+      "maxH": 360,
+      "size": "m",
+      "fill": "gray",
+      "page": "r1",
       "text": "Cómo leer este canvas · Fase 3 adelantada, antes de la auditoría y la estrategia (Fases 1–2). Tres territorios distintos en forma para el home de Grupo Barsol, cada uno en escritorio (1440 px) y móvil (390 px).\n\nLos textos son provisionales: el copy final sale de la Fase 2. Lo que va entre [corchetes] es un dato que tiene que entregar el cliente. Las fotos son reales del cliente, recortadas para quitar el logo sobreimpreso; descarté dos (el atardecer y el trabajador de espaldas) porque parecen generadas con IA.\n\nEn el GATE 3 se elige un territorio, o se combinan rasgos de varios."
     },
-    "tA": { "x": 0, "y": -300, "text": "A · Curvas de nivel", "kind": "title1", "maxW": 1910, "page": "r1" },
+    "tA": {
+      "x": 0,
+      "y": -300,
+      "text": "A · Curvas de nivel",
+      "kind": "title1",
+      "maxW": 1910,
+      "page": "r1"
+    },
     "nA": {
-      "x": 1990, "y": 0, "w": 540, "maxH": 1200, "size": "s", "fill": "gray", "page": "r1",
+      "x": 1990,
+      "y": 0,
+      "w": 540,
+      "maxH": 1200,
+      "size": "s",
+      "fill": "gray",
+      "page": "r1",
       "text": "A · Curvas de nivel\n\nIdea: el terreno es el plano. El sitio se lee como un levantamiento topográfico: curvas de nivel, cotas, estaciones y láminas.\n\nPor qué encaja: es lo que Grupo Barsol hace (mover y nivelar tierra) y habla el idioma de ingenieros y desarrolladores sin perder claridad para un dueño de lote.\n\nPaleta: papel de dibujo oklch(0.956 0.003 220) · tinta oklch(0.223 0.010 53) · óxido del logo oklch(0.512 0.157 35) para la acción · ocre oklch(0.750 0.132 84) solo como marcador.\n\nTipografía: Archivo expandida (titulares) + IBM Plex Mono (cotas y etiquetas).\n\nFotografía: aéreas en color natural, con curvas de nivel superpuestas. El tweak «curvas» las muestra u oculta.\n\nMovimiento: preciso y lineal; las líneas se dibujan y las cotas cuentan.\n\nMomento firma, «Corte y relleno»: al bajar, las curvas sobre la foto aérea se dibujan y se aplanan hasta quedar como una terraza nivelada. Con reduced-motion, las líneas aparecen ya niveladas y quietas.\n\nRiesgos: puede sentirse frío para particulares; depende de buenas fotos aéreas (hay 3 utilizables)."
     },
-    "tB": { "x": 0, "y": 6400, "text": "B · Peso pesado", "kind": "title1", "maxW": 1910, "page": "r1" },
+    "tB": {
+      "x": 0,
+      "y": 6400,
+      "text": "B · Peso pesado",
+      "kind": "title1",
+      "maxW": 1910,
+      "page": "r1"
+    },
     "nB": {
-      "x": 1990, "y": 6700, "w": 540, "maxH": 1200, "size": "s", "fill": "gray", "page": "r1",
+      "x": 1990,
+      "y": 6700,
+      "w": 540,
+      "maxH": 1200,
+      "size": "s",
+      "fill": "gray",
+      "page": "r1",
       "text": "B · Peso pesado\n\nIdea: la escala de la máquina, contada con tipografía. Letras del tamaño de una excavadora, de noche, con el ocre del logo como luz de trabajo.\n\nPor qué encaja: pone la flota y la capacidad al frente (alquiler y acarreo) y se separa de las plantillas de construcción claras y genéricas.\n\nPaleta: asfalto oklch(0.197 0.007 78) · cal oklch(0.945 0.013 82) · ocre del logo oklch(0.760 0.133 84) como único acento (botones, barras y números).\n\nTipografía: Big Shoulders Display (titulares), su versión Stencil (números) + Hanken Grotesk (texto).\n\nFotografía: nocturna y de alto contraste, a sangre, con un velo oscuro para leer el texto. El tweak «foto» alterna la portada.\n\nMovimiento: con peso; máscaras que suben como una tolva, barras ocre que cargan y la flota en horizontal.\n\nMomento firma, «El convoy»: al bajar, la flota pasa en horizontal, cada unidad con su placa de specs. Con reduced-motion, grilla estática.\n\nRiesgos: el amarillo y negro de obra es un cliché si se abusa (nada de cinta de peligro); lo oscuro puede sentirse duro para particulares."
     },
-    "tC": { "x": 0, "y": 13800, "text": "C · Caminos", "kind": "title1", "maxW": 1910, "page": "r1" },
+    "tC": {
+      "x": 0,
+      "y": 13800,
+      "text": "C · Caminos",
+      "kind": "title1",
+      "maxW": 1910,
+      "page": "r1"
+    },
     "nC": {
-      "x": 1990, "y": 14100, "w": 540, "maxH": 1200, "size": "s", "fill": "gray", "page": "r1",
+      "x": 1990,
+      "y": 14100,
+      "w": 540,
+      "maxH": 1200,
+      "size": "s",
+      "fill": "gray",
+      "page": "r1",
       "text": "C · Caminos\n\nIdea: «Seguimos construyendo caminos», el lema que la marca ya usa en redes, como concepto. El sitio es una ruta: una línea amarilla de carretera une las secciones como kilómetros.\n\nPor qué encaja: humano y local (equipo, Cartago, obra terminada); le habla igual a una desarrolladora que a una familia con un lote.\n\nPaleta: concreto oklch(0.937 0.006 85) · carmesí del logo oklch(0.496 0.154 22) para bloques y acción · tinta oklch(0.230 0.016 12) · ocre oklch(0.750 0.132 84) solo para la línea de ruta.\n\nTipografía: Overpass (inspirada en la señalética vial Highway Gothic) + Overpass Mono (kilómetros).\n\nFotografía: documental, con personas y obra terminada; esquinas redondeadas como curvas de camino. El tweak «portada» alterna calle y equipo.\n\nMovimiento: continuo; la línea se dibuja con el scroll y cada kilómetro se enciende al llegar.\n\nMomento firma, «La ruta»: la línea amarilla avanza con la lectura y se curva en el proceso, de la pre-cotización a la obra. Con reduced-motion, la línea aparece completa y quieta.\n\nRiesgos: es el más cercano a lo esperable en el sector; el carmesí en bloques grandes pide disciplina para no cansar."
+    },
+    "tP": {
+      "x": 0,
+      "y": 6700,
+      "text": "D · Pantallas clave",
+      "kind": "title1",
+      "maxW": 4950,
+      "page": "r2"
+    },
+    "nP": {
+      "x": 3040,
+      "y": 8320,
+      "w": 1100,
+      "maxH": 700,
+      "size": "s",
+      "fill": "gray",
+      "page": "r2",
+      "text": "Pantallas clave del GATE 3 (§6.1), con el sistema de D. Las tres funcionan con Play.\n\nFlota: filtro por tipo de máquina (radios accesibles) y conteo anunciado con aria-live. En el sitio, el filtro se refleja en la URL (?tipo=excavadoras).\n\nFicha: galería con miniaturas, ficha técnica, «Cotizar esta máquina» (abre el cotizador con la unidad preseleccionada) y otras máquinas.\n\nPre-cotización: 5 pasos (servicio → detalles según el servicio → lugar y fecha → contacto → resumen), validación con mensajes en voseo y un enlace final a WhatsApp con el resumen ya escrito. Sin precios (modo pre-cotización, ADR-002).\n\nLas unidades, sus datos y sus fotos son de muestra hasta tener el inventario real de la flota."
     }
   },
   "designSystems": []
