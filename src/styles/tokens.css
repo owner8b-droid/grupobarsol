@@ -1,0 +1,70 @@
+/* src/styles/tokens.css · Dirección D «Frente de obra» (docs/03-direccion-de-arte.md)
+   Fuente única de color, tipografía, espacio, forma y movimiento. Los componentes solo usan var(--…). */
+@layer tokens {
+  :root {
+    /* Color: neutrales tintados con el matiz cálido de la marca (nunca #000 ni #fff) */
+    --c-ink: oklch(0.184 0.005 67);            /* #141210 · texto y fondos oscuros */
+    --c-ink-2: oklch(0.224 0.007 67);          /* #1E1B18 · pie y campos sobre oscuro */
+    --c-line-dark: oklch(0.288 0.009 67);      /* #2E2A26 · divisores sobre oscuro */
+    --c-paper: oklch(0.985 0.004 91);          /* #FBFAF7 · fondo claro */
+    --c-paper-2: oklch(0.994 0.006 85);        /* #FFFDF9 · tarjetas y campos */
+    --c-line: oklch(0.905 0.012 80);           /* #E4DFD7 · divisores sobre claro */
+    --c-chip-border: oklch(0.817 0.016 77);    /* #C9C2B8 · borde decorativo (el radio interno identifica el control) */
+    --c-field-border: oklch(0.615 0.018 70);   /* #8C8379 · borde de campos sobre claro: 3,67:1 (WCAG 1.4.11) */
+    --c-field-border-dark: oklch(0.529 0.016 67); /* #726A62 · borde de campos sobre oscuro: 3,23:1 */
+    --c-muted: oklch(0.394 0.010 61);          /* #4A4541 · texto secundario sobre claro: 9,1:1 */
+    --c-muted-dark: oklch(0.764 0.018 76);     /* #B9B1A6 · texto secundario sobre oscuro: 8,8:1 */
+    --c-paper-dim: oklch(0.905 0.012 80);      /* #E4DFD7 · texto terciario sobre oscuro */
+
+    --c-accent: oklch(0.750 0.132 84);         /* #D5A63C · ocre del brazo del logo: franjas, botones, capas */
+    --c-on-accent: var(--c-ink);               /* tinta sobre ocre: 8,3:1 */
+    --c-brand: oklch(0.512 0.157 35);          /* #AE3A1E · óxido del anillo del logo (acento alterno) */
+    --c-brand-2: oklch(0.496 0.154 22);        /* #A83238 · carmesí del nombre (acento alterno) */
+    --c-on-brand: var(--c-paper);              /* cal sobre óxido 5,9:1 · sobre carmesí 6,3:1 */
+
+    --c-error: oklch(0.400 0.118 35);          /* #7A2914 · texto de error: 8,1:1 sobre su fondo */
+    --c-error-bg: oklch(0.938 0.018 43);       /* #F6E7E1 */
+    --c-error-line: var(--c-brand);
+    --c-scrim: oklch(0.184 0.005 67 / 0.5);    /* velo sobre video y fotos con texto encima */
+    --c-focus: var(--c-accent);
+
+    /* Tipografía: una sola familia (Urbanist, geométrica como las letras del logo) */
+    --font-text: var(--font-urbanist, 'Urbanist'), system-ui, sans-serif;
+    --step--1: clamp(0.83rem, 0.80rem + 0.15vw, 0.90rem);   /* etiquetas, notas */
+    --step-0:  clamp(1.03rem, 0.98rem + 0.25vw, 1.13rem);   /* texto */
+    --step-1:  clamp(1.25rem, 1.15rem + 0.50vw, 1.50rem);   /* bajadas */
+    --step-2:  clamp(1.56rem, 1.35rem + 1.00vw, 2.10rem);
+    --step-3:  clamp(2.25rem, 1.80rem + 2.00vw, 3.25rem);   /* títulos de bloque, pasos del cotizador */
+    --step-4:  clamp(4.00rem, 2.40rem + 4.80vw, 7.25rem);   /* títulos de una palabra (Tierra, Obra…) */
+    --step-5:  clamp(4.00rem, 1.80rem + 8.20vw, 10rem);     /* display del hero */
+    --weight-text: 500; --weight-strong: 800; --weight-display: 900;
+    --leading-tight: 0.92; --leading-snug: 1.2; --leading-body: 1.55;
+    --tracking-display: -0.045em; --tracking-eyebrow: 0.18em;
+
+    /* Espacio */
+    --space-xs: clamp(0.5rem, 0.45rem + 0.25vw, 0.75rem);
+    --space-s:  clamp(1rem, 0.90rem + 0.50vw, 1.5rem);
+    --space-m:  clamp(2rem, 1.70rem + 1.50vw, 3rem);
+    --space-l:  clamp(4rem, 3.20rem + 4.00vw, 7rem);
+    --gutter-start: clamp(1.75rem, 11vw, 11.875rem);        /* margen izquierdo de las columnas de texto */
+    --gutter-end: clamp(1.75rem, 6vw, 7.5rem);
+
+    /* Forma y medios */
+    --radius-s: 4px;      /* botones y campos */
+    --radius-m: 6px;      /* tarjetas */
+    --radius-pill: 999px; /* chips de filtro y opciones */
+    --section-min: min(100svh, 62.5rem);                   /* pantallas completas del home en escritorio */
+    --slope: 0.46;        /* corte diagonal: avance horizontal por unidad de alto (≈ 65°, el brazo de la excavadora) */
+    --bar-height: 0.2em;  /* franja bajo los títulos (la línea ocre del logo) */
+    --bar-offset: -0.06em;
+    --target-min: 44px;
+
+    /* Movimiento (BRIEF.md §4.6) */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-press: cubic-bezier(0.2, 0, 0, 1);
+    --dur-1: 160ms; --dur-2: 320ms; --dur-3: 640ms; --dur-4: 1100ms;
+    --phrase-interval: 2800ms;  /* rotación de la frase del hero */
+    --stagger: 80ms;
+  }
+}
