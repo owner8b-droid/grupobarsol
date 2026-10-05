@@ -58,3 +58,13 @@ con el GATE indicado.
   25 casos con el motor de hookify.
 - Alternativas consideradas: `action: block` (frena excepciones legítimas, como el negro en una máscara).
 - Consecuencias: el aviso aparece en cada edición; la decisión final sigue en la revisión y en `lint:design`.
+
+## ADR-008 · Exploración de territorios antes de las Fases 1–2
+- Fecha: 2026-10-05 · Estado: aceptada (pedido del usuario con `/design`); el territorio se elige en el GATE 3
+- Contexto: el usuario pidió explorar el home en 3 territorios antes de la auditoría y la estrategia.
+- Decisión: canvas de Claude Design con A · Curvas de nivel, B · Peso pesado y C · Caminos, en escritorio y móvil,
+  con fotos reales del cliente (recortadas sin el logo sobreimpreso) y textos provisionales. Copia de referencia en
+  `design/home-territorios/`.
+- Alternativas consideradas: esperar a que la F2 cierre el copy; un solo territorio.
+- Consecuencias: la F1 y la F2 pueden ajustar el copy y la estructura; el territorio elegido se consolida después en
+  `docs/03-direccion-de-arte.md` y `src/styles/tokens.css`. Dos fotos quedan fuera hasta verificar que no sean de IA.
