@@ -54,6 +54,25 @@ test.describe('con movimiento', () => {
   });
 });
 
+test.describe('con movimiento, sin hacer scroll', () => {
+  test('el teclado y los lectores de pantalla alcanzan lo que todavía no se reveló', async ({ page }) => {
+    await page.goto('');
+    await expect(page.locator('html')).toHaveClass(/motion-ready/);
+    // Los títulos de sección siguen en el árbol de accesibilidad antes de entrar en pantalla
+    for (const nombre of ['Tierra', 'Maquinaria', 'Obra', 'Equipo', 'Proyectos', 'Cotizá']) {
+      await expect(page.getByRole('heading', { level: 2, name: nombre, exact: true })).toBeAttached();
+    }
+    // Con Tab se llega a los enlaces de 01 · Tierra, y al enfocarlos la sección se revela
+    const enlace = page.locator('#tierra').getByRole('link', { name: 'Movimiento de tierras' });
+    for (let i = 0; i < 25 && !(await enlace.evaluate((el) => el === document.activeElement)); i++) {
+      await page.keyboard.press('Tab');
+    }
+    await expect(enlace).toBeFocused();
+    // Margen amplio: en CI corren cuatro navegadores en paralelo y la entrada dura 1,1 s
+    await expect(page.locator('#tierra [data-reveal]').first()).toHaveClass(/is-in/, { timeout: 10_000 });
+  });
+});
+
 test.describe('con reduced-motion', () => {
   test.use({ reducedMotion: 'reduce' });
 
