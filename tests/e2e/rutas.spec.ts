@@ -20,6 +20,8 @@ for (const ruta of RUTAS) {
     expect(descripcion?.length ?? 0).toBeLessThanOrEqual(160);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', /^https:\/\/.+\/$/);
     await expect(page.locator('html')).toHaveAttribute('lang', /^es/);
+    // La build normal es indexable; solo la preview publicada lleva noindex (PUBLIC_PREVIEW, ADR-013)
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(0);
 
     const desborde = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(desborde).toBeLessThanOrEqual(0);

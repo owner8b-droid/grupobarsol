@@ -18,6 +18,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_PREVIEW: 'true' # preview sin indexar (ADR-013): se quita al lanzar con el dominio del cliente
     steps:
       - uses: actions/checkout@v7
       - uses: withastro/action@v6
