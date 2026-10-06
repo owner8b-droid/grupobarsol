@@ -88,7 +88,8 @@ con el GATE indicado.
 - Contexto: el repo `owner8b-droid/grupobarsol` es público y la preview sale de GitHub Pages. Pendientes y
   auditoría contienen datos sensibles del cliente (afirmaciones sin respaldo, fotos por verificar, competidores).
 - Decisión: esos docs viven en `docs/privado/` (en `.gitignore`). Antes del primer push se sacaron del historial
-  local con `git filter-branch`; el respaldo previo está en un bundle fuera del repo. Se publica solo `main`.
+  local con `git filter-branch`; el respaldo previo queda en `refs/original` (el bundle que se había hecho en una
+  carpeta temporal se perdió al limpiarse esa carpeta). Se publica solo `main`.
 - Alternativas consideradas: repo privado con Cloudflare Pages; repo privado con GitHub Pages pago.
 - Consecuencias: un colaborador o una sesión en la nube no reciben `docs/privado/`; hay que compartirlo aparte.
   Queda `refs/original` local con el historial viejo hasta que el usuario lo borre; nunca usar `push --all`.
@@ -110,3 +111,30 @@ con el GATE indicado.
 - Decisión: sin página propia; la página pasa a «Acarreo y agregados» (`/servicios/acarreo-y-agregados/`) y el
   cotizador ofrece «Acarreo o agregados».
 - Consecuencias: falta el detalle de materiales y modalidad (pendiente #7b).
+
+## ADR-013 · Preview en GitHub Pages con `base` y EN sin generar
+- Fecha: 2026-10-05 · Estado: aceptada (deriva de ADR-010 y del alcance de ADR-001)
+- Contexto: no hay dominio todavía; la preview sale de `https://owner8b-droid.github.io/grupobarsol/`. El inglés
+  se hace después de validar el español.
+- Decisión: `site` = dominio de GitHub Pages y `base: '/grupobarsol/'`; todos los enlaces pasan por `ruta()` y
+  `conBase()`, así que el cambio a dominio propio es solo `site`, quitar `base` y agregar `public/CNAME`. El mapa
+  de rutas ES↔EN (`src/i18n/routes.ts`) y el `hreflang` existen desde ya, pero las páginas `/en/` no se generan
+  hasta tener el texto aprobado: no se publica un inglés provisional.
+- Consecuencias: el canonical, el sitemap y el Open Graph apuntan a GitHub Pages hasta el cambio de dominio.
+  Los tests y Lighthouse CI corren contra `/grupobarsol/`.
+
+## ADR-014 · Orden de carga: CSS en línea; motor y video después del primer pintado
+- Fecha: 2026-10-05 · Estado: aceptada (evidencia de la Fase 4)
+- Contexto: con Slow 4G el CSS externo (~4,5 KB gzip en dos hojas) costaba un viaje de red antes del primer
+  pintado (LCP 1,38 s en traza). En Lighthouse CI (throttling simulado) el LCP del home daba 2,21 s, sobre el
+  presupuesto premium de 2,0 s: `requestIdleCallback` corría antes de que se presentara el primer frame, así que
+  GSAP (53 KB gzip) y el video (1,4 MB) arrancaban antes del FCP y entraban en la estimación.
+- Decisión: `build.inlineStylesheets: 'always'` (HTML del home: 13,6 KB gzip). El motor de movimiento y el video
+  del hero arrancan con `trasElPrimerPintado()` (`src/lib/tiempo.ts`): esperan la entrada real de
+  `first-contentful-paint` y luego reposo, con respaldo a los 1,5 s si no hay paint timing; el video además espera
+  al evento `load`.
+- Alternativas consideradas: `throttlingMethod: devtools` en Lighthouse CI (descartada: maquilla la medición
+  en vez de corregir el orden de carga); diferir las fotos de las secciones (descartada: llegan a baja prioridad
+  y conviene tenerlas listas al bajar).
+- Consecuencias: LCP del home 0,90 s en traza (Slow 4G, CPU ×4) y 1,43 s en Lighthouse CI; Performance 100.
+  El CSS no se cachea entre páginas, lo que con este peso es más barato que el viaje de red.

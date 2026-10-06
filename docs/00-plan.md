@@ -1,9 +1,10 @@
 # 00 · Plan del proyecto · Grupo Barsol
 
 > Fase 0 · 2026-10-04 · Estado: **GATE 0 aprobado** el 2026-10-05 («continuemos», junto con la elección de la dirección D)
-> Avance al 2026-10-05: F1 completa (salvo trazas móviles) · F2 en [02-estrategia.md](02-estrategia.md) · F3
-> consolidada en [03-direccion-de-arte.md](03-direccion-de-arte.md) con pantallas clave · **esperando GATE 1+2+3**.
-> Preview: GitHub Pages con repo público y docs sensibles en `docs/privado/` (ADR-010).
+> Avance al 2026-10-05: F1 completa · F2 en [02-estrategia.md](02-estrategia.md) · F3 consolidada en
+> [03-direccion-de-arte.md](03-direccion-de-arte.md) · GATE 1+2+3 aprobado («continua», acento ocre) ·
+> **F4 base técnica lista, esperando GATE 4** (y el permiso para el primer push y para activar GitHub Pages).
+> Preview: GitHub Pages con repo público y docs sensibles en `docs/privado/` (ADR-010, ADR-013).
 > Fuentes: [BRIEF.md](../BRIEF.md) · [PRODUCT.md](../PRODUCT.md) · [decisiones](decisiones.md) · [pendientes](privado/pendientes.md) (privado, fuera de git)
 
 ## 1. Resumen
@@ -55,7 +56,8 @@ vea qué le toca entregar. En producción no queda ninguno (§2.2 y §10.5).
 
 ## 4. Mapa de páginas preliminar
 
-Se cierra en la Fase 2. Las rutas EN se crean en la Fase 4; su texto llega después de validar el ES.
+Se cierra en la Fase 2. El mapa de rutas EN existe desde la Fase 4; las páginas `/en/` se generan cuando su texto
+esté aprobado, después de validar el ES (ADR-013).
 
 | Página | Ruta ES | Ruta EN | Módulos | Conversión |
 |---|---|---|---|---|
