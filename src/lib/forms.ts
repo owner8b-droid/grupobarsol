@@ -1,8 +1,18 @@
 // Formularios: validación accesible y salida a WhatsApp con el resumen escrito (ADR-002).
 // modern-web-guidance: validate-input-after-interaction + accessible-error-announcement.
+// Los formularios llevan novalidate: solo se ven nuestros mensajes (voseo, junto al campo), nunca la burbuja
+// nativa del navegador. Al enviar con errores se marcan todos y el foco va al primero.
 import { track } from './analytics';
 
 const CAMPOS = 'input, textarea, select';
+
+// Servicios que se pueden precargar desde la URL (?servicio=) o desde un enlace (data-servicio): lista cerrada
+const SERVICIOS: Record<string, string> = {
+  tierra: 'Movimiento de tierras',
+  alquiler: 'Alquiler de maquinaria',
+  acarreo: 'Acarreo o agregados',
+  obra: 'Obra civil',
+};
 
 // aria-invalid y el mensaje de error en aria-describedby solo mientras el campo es inválido
 // (aria-errormessage se mantiene, pero su soporte en lectores de pantalla es parcial).
@@ -19,13 +29,37 @@ function marcar(el: HTMLElement, invalido: boolean) {
   else el.removeAttribute('aria-describedby');
 }
 
+const esValido = (el: Element) => !(el as HTMLInputElement).checkValidity || (el as HTMLInputElement).checkValidity();
+
+// Un campo ya marcado sigue marcado mientras siga inválido (aunque no se haya tocado);
+// uno sin marcar solo se marca después de que la persona interactuó con él (:user-invalid).
 function sincronizarAria(el: Element | null) {
   if (!(el instanceof HTMLElement) || !el.matches(CAMPOS)) return;
-  marcar(el, el.matches(':user-invalid'));
+  const yaMarcado = el.getAttribute('aria-invalid') === 'true';
+  marcar(el, yaMarcado ? !esValido(el) : el.matches(':user-invalid'));
+}
+
+// Teléfono de Costa Rica: 8 dígitos, con o sin espacios, guiones, paréntesis o el prefijo 506
+function digitosTelefono(valor: string): string {
+  const digitos = valor.replace(/\D/g, '');
+  return digitos.length === 11 && digitos.startsWith('506') ? digitos.slice(3) : digitos;
+}
+function validarTelefono(el: HTMLInputElement) {
+  // Vacío de verdad lo resuelve «required»; cualquier otra cosa (también solo espacios) tiene que dar 8 dígitos
+  const vacio = el.value === '';
+  const mensaje = document.getElementById(el.getAttribute('aria-errormessage') ?? '')?.textContent ?? 'Teléfono inválido';
+  el.setCustomValidity(vacio || digitosTelefono(el.value).length === 8 ? '' : mensaje);
+}
+
+function precargarServicio(form: HTMLFormElement, clave: string | null | undefined) {
+  const valor = clave ? SERVICIOS[clave] : undefined;
+  const select = form.querySelector<HTMLSelectElement>('select[name="servicio"]');
+  if (valor && select && [...select.options].some((o) => o.value === valor)) select.value = valor;
 }
 
 export function initValidacionAccesible(): void {
-  // Un intento de envío con campos inválidos no dispara "submit" sino "invalid" en cada campo (no burbujea)
+  document.querySelectorAll<HTMLInputElement>('input[data-validar="telefono"]').forEach(validarTelefono);
+  // Un envío por requestSubmit sin novalidate dispara «invalid» en cada campo (no burbujea)
   document.addEventListener(
     'invalid',
     (e) => {
@@ -35,7 +69,8 @@ export function initValidacionAccesible(): void {
   );
   document.addEventListener('blur', (e) => sincronizarAria(e.target as Element), true);
   document.addEventListener('input', (e) => {
-    const el = e.target as Element;
+    const el = e.target;
+    if (el instanceof HTMLInputElement && el.dataset.validar === 'telefono') validarTelefono(el);
     if (el instanceof HTMLElement && el.getAttribute('aria-invalid') === 'true') sincronizarAria(el);
   });
 }
@@ -71,12 +106,25 @@ async function copiaPorCorreo(clave: string, asunto: string, datos: Record<strin
 }
 
 export function initFormulariosWhatsApp(): void {
-  document.querySelectorAll<HTMLFormElement>('form[data-whatsapp]').forEach((form) => {
+  const formularios = [...document.querySelectorAll<HTMLFormElement>('form[data-whatsapp]')];
+  if (!formularios.length) return;
+
+  // Precarga del servicio: desde la URL (?servicio=obra) o desde un enlace que baja al formulario
+  const desdeUrl = new URLSearchParams(window.location.search).get('servicio');
+  formularios.forEach((form) => precargarServicio(form, desdeUrl));
+  document.addEventListener('click', (e) => {
+    const enlace = (e.target as Element).closest<HTMLAnchorElement>('a[data-servicio]');
+    if (enlace) formularios.forEach((form) => precargarServicio(form, enlace.dataset.servicio));
+  });
+
+  formularios.forEach((form) => {
     form.addEventListener('submit', async (evento) => {
       evento.preventDefault();
+      form.querySelectorAll<HTMLInputElement>('input[data-validar="telefono"]').forEach(validarTelefono);
       if (!form.checkValidity()) {
-        form.reportValidity();
-        form.querySelectorAll(CAMPOS).forEach(sincronizarAria);
+        const invalidos = [...form.querySelectorAll<HTMLElement>(CAMPOS)].filter((c) => !esValido(c));
+        invalidos.forEach((c) => marcar(c, true));
+        invalidos[0]?.focus();
         return;
       }
       // Honeypot: si un bot lo llenó, se descarta en silencio
@@ -98,6 +146,9 @@ export function initFormulariosWhatsApp(): void {
         const saludo = confirmacion.querySelector<HTMLElement>('[data-saludo-nombre]');
         if (saludo) saludo.textContent = nombre ? `¡Listo, ${nombre}!` : '¡Listo!';
         confirmacion.hidden = false;
+        // Al volver de WhatsApp, la confirmación (con el enlace de respaldo) está a la vista y enfocada
+        confirmacion.scrollIntoView({ block: 'center' });
+        confirmacion.focus({ preventScroll: true });
       }
 
       const clave = form.dataset.web3forms;

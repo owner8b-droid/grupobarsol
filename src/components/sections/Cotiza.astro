@@ -1,11 +1,13 @@
 ---
 // Sección «Cotizá» del home: formulario corto que abre WhatsApp con el resumen y datos de contacto.
 // Copia por correo con Web3Forms solo cuando exista la access key (pendiente #19).
+import { Picture } from 'astro:assets';
 import TitleWord from '../ui/TitleWord.astro';
 import Field from '../ui/Field.astro';
 import Button from '../ui/Button.astro';
 import { site } from '../../data/site';
 import { enlaceWhatsApp, ruta } from '../../i18n/utils';
+import capaFoto from '../../assets/img/carga-vagoneta.jpg';
 
 interface Props {
   eyebrow?: string;
@@ -23,7 +25,11 @@ const servicios = [
 ---
 
 <section id="cotizar" class="cotiza" aria-labelledby="cotizar-titulo" data-snap data-entrada>
-  <span class="cotiza__corte" aria-hidden="true"></span>
+  <div class="cotiza__corte" aria-hidden="true">
+    <div class="cotiza__capa">
+      <Picture src={capaFoto} alt="" formats={['avif', 'webp']} widths={[480, 800]} sizes="(min-width: 64rem) 34vw, 40vw" loading="lazy" />
+    </div>
+  </div>
   <div class="cotiza__fila">
     <div class="cotiza__formulario">
       <p class="eyebrow cotiza__eyebrow" data-reveal="up">{eyebrow}</p>
@@ -39,6 +45,7 @@ const servicios = [
       </noscript>
       <form
         class="formulario"
+        novalidate
         data-whatsapp={site.whatsapp}
         data-web3forms={site.web3formsKey || undefined}
         data-formulario="home"
@@ -53,7 +60,7 @@ const servicios = [
           required
           autocomplete="tel"
           inputmode="tel"
-          pattern="(\+506)?[0-9 ]{8,}"
+          validar="telefono"
           pista="8 dígitos, por ejemplo 8888 8888"
           tono="oscuro"
           etiqueta="Teléfono"
@@ -77,17 +84,19 @@ const servicios = [
           <input id="c-sitio" name="sitio" type="text" tabindex="-1" autocomplete="off" data-trampa />
         </div>
         <label class="formulario__permiso">
-          <input type="checkbox" name="consentimiento" required />
+          <input type="checkbox" id="c-permiso" name="consentimiento" required aria-errormessage="c-permiso-error" />
           <span>
             Acepto que Grupo Barsol use estos datos solo para responder mi consulta (Ley 8968).{' '}
             <a href={ruta('privacidad')}>Política de privacidad</a>
           </span>
         </label>
+        <span id="c-permiso-error" class="formulario__permiso-error">Necesitamos tu permiso para usar estos datos.</span>
+        <p class="formulario__aviso">La pre-cotización no tiene costo ni compromiso. El precio se define cuando conversemos el alcance.</p>
         <div class="formulario__enviar">
           <Button type="submit" tamano="l" icono="flecha" iconoAlFinal>Enviar y seguir por WhatsApp</Button>
         </div>
-        <p class="formulario__confirmacion" data-confirmacion role="status" hidden>
-          <strong data-saludo-nombre>¡Listo!</strong> Abrimos WhatsApp con tu resumen. ¿No se abrió?
+        <p class="formulario__confirmacion" data-confirmacion role="status" tabindex="-1" hidden>
+          <strong data-saludo-nombre>¡Listo!</strong> Abrimos WhatsApp con tu resumen. ¿No se abrió?{' '}
           <a href="#">Tocá aquí para abrirlo</a>. Te respondemos de lunes a viernes, de 8:00&nbsp;a.&nbsp;m. a 5:00&nbsp;p.&nbsp;m.
         </p>
         <p class="formulario__error" data-error-correo role="alert" hidden>
@@ -125,24 +134,44 @@ const servicios = [
   @layer components {
     .cotiza {
       position: relative;
+      display: flex;
+      flex-direction: column;
       overflow: hidden;
       --c-focus: var(--c-accent);
       background: var(--c-ink);
       color: var(--c-paper);
     }
-    /* Esquina de acento: su borde izquierdo es la diagonal del brazo a cualquier alto (sesgo, no clip-path en %) */
+    /* Esquina con capa de acento (foto en gris multiplicada, regla §2: ninguna diagonal decorativa sin foto). El
+       corte avanza --slope × alto de la esquina (cqh), así el ángulo es el del brazo a cualquier tamaño. */
     .cotiza__corte {
       position: absolute;
       top: 0;
-      left: 66%;
-      right: -50%;
+      right: 0;
+      width: 34%;
       height: 46%;
-      background: var(--c-accent);
-      transform: skewX(calc(-1 * atan(var(--slope))));
-      transform-origin: 0 100%;
+      container-type: size;
     }
+    .cotiza__capa {
+      position: absolute;
+      inset: 0;
+      background: var(--c-accent);
+      clip-path: polygon(calc(var(--slope) * 100cqh) 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .cotiza__capa :global(picture),
+    .cotiza__capa :global(img) {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .cotiza__capa :global(img) {
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.15) brightness(1.05);
+      mix-blend-mode: multiply;
+    }
+    /* La fila llena el alto: sin JS (formulario oculto) el contacto queda abajo y no se monta sobre la esquina */
     .cotiza__fila {
       position: relative;
+      flex: 1;
       display: flex;
       flex-wrap: wrap;
       gap: 3.5rem 5rem;
@@ -195,6 +224,26 @@ const servicios = [
       color: var(--c-muted-dark);
       font-size: 0.9375rem;
       line-height: 1.45;
+    }
+    .formulario__permiso-error {
+      display: none;
+      grid-column: 1 / -1;
+      margin-top: -0.5rem;
+      padding: 0.4rem 0.7rem;
+      border: 2px solid var(--c-error-line);
+      border-radius: var(--radius-s);
+      background: var(--c-error-bg);
+      color: var(--c-error);
+      font-size: 0.9375rem;
+      font-weight: var(--weight-strong);
+    }
+    .formulario__permiso:has(input:is(:user-invalid, [aria-invalid='true'])) + .formulario__permiso-error {
+      display: block;
+    }
+    .formulario__aviso {
+      grid-column: 1 / -1;
+      color: var(--c-muted-dark);
+      font-size: 0.9375rem;
     }
     .formulario__permiso input {
       flex: none;
@@ -249,10 +298,26 @@ const servicios = [
         min-height: var(--section-min);
       }
     }
+    /* Laptops de hasta 920 px de alto: al llegar (#cotizar) el botón de envío tiene que verse sin bajar */
+    @media (min-width: 64rem) and (max-height: 57.5rem) {
+      .cotiza__fila {
+        padding-top: 3.5rem;
+      }
+      .cotiza__formulario :global(.palabra) {
+        font-size: var(--step-3);
+      }
+      .cotiza__bajada {
+        margin: 1.25rem 0 1.25rem;
+      }
+      .formulario :global(textarea) {
+        min-height: 4.25rem;
+        height: 4.25rem;
+      }
+    }
     @media (max-width: 63.99rem) {
       /* Una columna: el corte queda como esquina sobre el título y no pasa por detrás de los campos */
       .cotiza__corte {
-        left: 60%;
+        width: 40%;
         height: 7rem;
       }
     }

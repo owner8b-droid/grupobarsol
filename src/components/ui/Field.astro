@@ -23,6 +23,8 @@ interface Props {
   etiqueta?: string;
   completo?: boolean;
   filas?: number;
+  // Validación propia (lib/forms.ts): «telefono» acepta 8 dígitos con espacios, guiones o el prefijo 506
+  validar?: 'telefono';
 }
 const {
   id,
@@ -41,6 +43,7 @@ const {
   etiqueta,
   completo = false,
   filas = 3,
+  validar,
 } = Astro.props;
 const idPista = pista ? `${id}-pista` : undefined;
 const idError = error ? `${id}-error` : undefined;
@@ -82,6 +85,7 @@ const idError = error ? `${id}-error` : undefined;
         aria-describedby={idPista}
         aria-errormessage={idError}
         data-etiqueta={etiqueta}
+        data-validar={validar}
       />
     )
   }
@@ -140,18 +144,29 @@ const idError = error ? `${id}-error` : undefined;
       background: var(--c-ink-2);
       color: var(--c-paper);
     }
+    /* El gris por defecto del navegador queda en 3,7:1 sobre el campo oscuro: los textos secundarios del sistema dan
+       9,1:1 (claro) y 8,8:1 (oscuro) */
+    .campo--claro :is(input, textarea)::placeholder {
+      color: var(--c-muted);
+      opacity: 1;
+    }
+    .campo--oscuro :is(input, textarea)::placeholder {
+      color: var(--c-muted-dark);
+      opacity: 1;
+    }
     :is(input, select, textarea):focus-visible {
       border-color: var(--c-accent);
       outline: 3px solid var(--c-focus);
       outline-offset: 2px;
     }
-    :is(input, select, textarea):user-invalid {
+    /* Error: tras interactuar (:user-invalid) o al enviar con errores (aria-invalid, lib/forms.ts; el form es novalidate) */
+    :is(input, select, textarea):is(:user-invalid, [aria-invalid='true']) {
       border-color: var(--c-error-line);
       background: var(--c-error-bg);
       color: var(--c-ink);
     }
     /* Sobre oscuro el campo conserva su fondo; el borde y el mensaje marcan el error */
-    .campo--oscuro :is(input, select, textarea):user-invalid {
+    .campo--oscuro :is(input, select, textarea):is(:user-invalid, [aria-invalid='true']) {
       border-color: var(--c-error-line);
     }
     .campo__error {
@@ -164,7 +179,7 @@ const idError = error ? `${id}-error` : undefined;
       font-size: 0.9375rem;
       font-weight: var(--weight-strong);
     }
-    :is(input, select, textarea):user-invalid ~ .campo__error {
+    :is(input, select, textarea):is(:user-invalid, [aria-invalid='true']) ~ .campo__error {
       display: block;
     }
   }
