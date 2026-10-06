@@ -1,27 +1,34 @@
-/* src/styles/motion.css · estados iniciales del motor (BRIEF.md §4.6).
-   Solo aplican con JS, sin reduced-motion y mientras el motor no marque .is-in.
-   Si el motor no carga, .motion-fallback (Base.astro y lib/site.ts) deja todo visible.
-   Solo opacidad, nunca visibility: hidden. Lo que todavía no entró en pantalla sigue en el árbol de
-   accesibilidad y recibe el foco (al enfocarlo, el navegador lo trae a la vista y el reveal se dispara). */
+/* src/styles/motion.css · estados iniciales del motor (BRIEF.md §4.6 · docs/03-direccion-de-arte.md §7).
+   Solo aplican cuando el motor ya arrancó (.motion-ready) y sin reduced-motion: sin JS, con red lenta antes de que
+   llegue el motor o si algo falla, todo se ve. El motor marca .is-in lo que ya estaba a la vista al arrancar.
+   Solo opacidad y transform, nunca visibility: hidden. Lo que todavía no entró sigue en el árbol de
+   accesibilidad y recibe el foco (al enfocarlo, el navegador lo trae a la vista y la entrada se dispara). */
 @media (prefers-reduced-motion: no-preference) {
-  .js:not(.motion-fallback) [data-reveal]:not(.is-in) {
+  .motion-ready [data-reveal]:not(.is-in) {
     opacity: 0;
   }
-  .js:not(.motion-fallback) [data-reveal='up']:not(.is-in) {
+  .motion-ready [data-reveal='up']:not(.is-in) {
     transform: translateY(2.5rem);
   }
-  .js:not(.motion-fallback) [data-barra]:not(.is-in) {
+  .motion-ready [data-barra]:not(.is-in) {
     transform: scaleX(0);
   }
-  .js:not(.motion-fallback) [data-panel]:not(.is-in),
-  .js:not(.motion-fallback) [data-split]:not(.is-in) {
-    opacity: 0;
+  /* La pasada del brazo: una cortina del color de la sección tapa los paneles hasta que barre */
+  .motion-ready [data-cortina]:not(.is-in) {
+    display: block;
   }
 }
 
-/* Máscara de los títulos que parte el motor (SplitText, data-split): aire arriba y abajo para que la
-   interlínea apretada de los títulos no recorte tildes ni descendentes; el margen negativo no mueve el layout. */
+/* Títulos que parte el motor (SplitText, data-split): las líneas son <span> en bloque. La máscara solo recorta en
+   vertical (la subida); en horizontal deja pasar palabras largas («Maquinaria» a 360 px). El aire arriba y abajo
+   deja tildes y descendentes enteros, y el margen negativo no mueve el layout. */
+[data-split] .linea,
 [data-split] .linea-mask {
+  display: block;
+}
+[data-split] .linea-mask {
+  overflow-x: visible !important; /* SplitText pone overflow: clip en línea */
+  overflow-y: clip !important;
   padding-block: 0.18em 0.24em;
   margin-block: -0.18em -0.24em;
 }

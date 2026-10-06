@@ -28,10 +28,6 @@ const { title, description, sobreHero = false, noindex = false, imagen, jsonLd }
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script is:inline>
       document.documentElement.classList.add('js');
-      // Respaldo: si el motor de movimiento no arranca, todo queda visible (lib/site.ts)
-      window.__respaldoMovimiento = window.setTimeout(function () {
-        document.documentElement.classList.add('motion-fallback');
-      }, 6000);
     </script>
     <Font cssVariable="--font-urbanist" preload />
     <Seo title={title} description={description} noindex={noindex} imagen={imagen} jsonLd={jsonLd} />
@@ -39,11 +35,11 @@ const { title, description, sobreHero = false, noindex = false, imagen, jsonLd }
   <body>
     <a class="skip-link" href="#contenido">{t('es', 'skip')}</a>
     <Header sobreHero={sobreHero} />
+    <SideTab />
     <main id="contenido" tabindex="-1">
       <slot />
     </main>
     <Footer />
-    <SideTab />
     <script>
       import { initSite } from '../lib/site';
       import { site } from '../data/site';

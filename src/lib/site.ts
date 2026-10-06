@@ -1,5 +1,5 @@
 // Arranque del sitio. Lo crítico es liviano y va primero; el motor de movimiento (GSAP + Lenis)
-// se carga después del primer pintado y en reposo para no competir con el LCP (BRIEF.md §4.6).
+// se carga después del primer pintado y en reposo para no competir con el LCP (BRIEF.md §4.6, ADR-014).
 import { initHeader, initMenu } from './header';
 import { initFraseRotante, initHeroVideo } from './hero-video';
 import { initScrollspy } from './scrollspy';
@@ -18,14 +18,11 @@ export function initSite(opciones: { ga4?: string } = {}): void {
   initEventosDeClic();
   initAnalytics(opciones.ga4 ?? '');
 
-  // Si el motor no carga, el respaldo (definido en Base.astro) deja todo visible.
-  const respaldo = (window as Window & { __respaldoMovimiento?: number }).__respaldoMovimiento;
+  // Si el motor no carga, nada queda oculto: los estados iniciales solo existen con .motion-ready (motion.css).
+  // motion-fallback queda como marca para diagnóstico y tests.
   const arrancarMovimiento = () =>
     import('./motion')
-      .then((m) => {
-        m.initMotion();
-        window.clearTimeout(respaldo);
-      })
+      .then((m) => m.initMotion())
       .catch(() => document.documentElement.classList.add('motion-fallback'));
   trasElPrimerPintado(arrancarMovimiento);
 }

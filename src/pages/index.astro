@@ -7,6 +7,7 @@ import ProyectosHome from '../components/sections/ProyectosHome.astro';
 import ProgressDots from '../components/global/ProgressDots.astro';
 import DiagonalPanels from '../components/ui/DiagonalPanels.astro';
 import ChevronList from '../components/ui/ChevronList.astro';
+import TiraDiagonal from '../components/ui/TiraDiagonal.astro';
 import ArrowLink from '../components/ui/ArrowLink.astro';
 import Button from '../components/ui/Button.astro';
 import Pendiente from '../components/ui/Pendiente.astro';
@@ -123,11 +124,8 @@ const cotizador = ruta('cotizador');
       <Pendiente texto="Historia de Grupo Barsol: desde cuándo trabajan, quién la dirige y cómo empezó" />
     </p>
     <Button href={ruta('nosotros')} variante="borde">Conocé al equipo</Button>
-    <DiagonalPanels
-      slot="visual"
-      principal={{ img: equipo, alt: 'Cuadrilla de Grupo Barsol con cascos y chalecos en una obra', posicion: '50% 60%' }}
-      capa={{ img: cimientos, alt: '' }}
-    />
+    <TiraDiagonal slot="tira" img={equipo} alt="Cuadrilla de Grupo Barsol con cascos y chalecos en una obra" />
+    <DiagonalPanels slot="visual" variante="capa" capa={{ img: cimientos, alt: '', posicion: '60% 50%' }} />
   </Frente>
 
   <ProyectosHome />

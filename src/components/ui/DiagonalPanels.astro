@@ -1,6 +1,9 @@
 ---
 // Bloque visual de paneles diagonales: foto principal, panel con capa de acento y foto secundaria.
-// Los cortes siguen el ángulo del brazo (pendiente 0,46, dirección «/»). Momento firma: data-diagonal.
+// Los cortes siguen el ángulo del brazo (pendiente --slope, dirección «/») en cualquier ancho: el avance horizontal
+// del corte se calcula sobre el alto del bloque (unidades cqh), no sobre el ancho de cada panel.
+// Momento firma «La pasada del brazo» (data-diagonal + data-cortina): una cortina del color de la sección, con el
+// borde al ángulo del brazo, barre y destapa los paneles. Sin JS o con reduced-motion la cortina no existe.
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -10,41 +13,68 @@ interface Panel {
   posicion?: string;
 }
 interface Props {
-  principal: Panel;
+  principal?: Panel;
   capa?: Panel;
   secundaria?: Panel;
   lado?: 'derecha' | 'izquierda';
+  // «capa»: un solo panel de capa de acento a todo el bloque (artboard D, «04 · Equipo», junto a la tira)
+  variante?: 'paneles' | 'capa';
 }
-const { principal, capa, secundaria, lado = 'derecha' } = Astro.props;
+const { principal, capa, secundaria, lado = 'derecha', variante = 'paneles' } = Astro.props;
 const sizes = '(min-width: 64rem) 50vw, 100vw';
 ---
 
 <div class:list={['diagonal', `diagonal--${lado}`]} data-diagonal>
-  <div class="panel panel--principal" data-panel style={principal.posicion ? `--pos: ${principal.posicion}` : undefined}>
-    <Picture src={principal.img} alt={principal.alt} formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes={sizes} loading="lazy" />
-  </div>
   {
-    capa && (
+    variante === 'capa' && capa && (
+      <div class="panel panel--capa panel--completa" data-panel aria-hidden="true" style={capa.posicion ? `--pos: ${capa.posicion}` : undefined}>
+        <Picture src={capa.img} alt="" formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes={sizes} loading="lazy" />
+      </div>
+    )
+  }
+  {
+    variante === 'paneles' && principal && (
+      <div class="panel panel--principal" data-panel style={principal.posicion ? `--pos: ${principal.posicion}` : undefined}>
+        <Picture src={principal.img} alt={principal.alt} formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes={sizes} loading="lazy" />
+      </div>
+    )
+  }
+  {
+    variante === 'paneles' && capa && (
       <div class="panel panel--capa" data-panel aria-hidden="true" style={capa.posicion ? `--pos: ${capa.posicion}` : undefined}>
         <Picture src={capa.img} alt="" formats={['avif', 'webp']} widths={[480, 800]} sizes="(min-width: 64rem) 30vw, 60vw" loading="lazy" />
       </div>
     )
   }
   {
-    secundaria && (
+    variante === 'paneles' && secundaria && (
       <div class="panel panel--secundaria" data-panel style={secundaria.posicion ? `--pos: ${secundaria.posicion}` : undefined}>
         <Picture src={secundaria.img} alt={secundaria.alt} formats={['avif', 'webp']} widths={[480, 800]} sizes="(min-width: 64rem) 26vw, 50vw" loading="lazy" />
       </div>
     )
   }
+  <span class="diagonal__cortina" data-cortina aria-hidden="true"></span>
 </div>
 
 <style>
   @layer components {
     .diagonal {
       position: relative;
+      container-type: size;
+      overflow: hidden;
       min-height: 26rem;
       height: 100%;
+    }
+    @media (max-width: 63.99rem) {
+      /* Apilado bajo el texto, el padre no tiene alto definido: sin alto explícito, cqh valdría 0 y no habría corte */
+      .diagonal {
+        height: 26rem;
+      }
+      /* El panel de capa solo es textura: en móvil, una franja baja */
+      .diagonal:has(.panel--completa) {
+        min-height: 0;
+        height: 12rem;
+      }
     }
     .panel {
       position: absolute;
@@ -67,27 +97,28 @@ const sizes = '(min-width: 64rem) 50vw, 100vw';
       mix-blend-mode: multiply;
     }
 
-    /* Lado derecho (texto a la izquierda): diagonales «/» */
+
+    /* Lado derecho (texto a la izquierda): diagonales «/». El corte avanza --slope × alto del panel. */
     .diagonal--derecha .panel--principal {
       top: 0;
       right: 0;
       width: 100%;
       height: 68%;
-      clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%);
+      clip-path: polygon(calc(var(--slope) * 68cqh) 0, 100% 0, 100% 100%, 0 100%);
     }
     .diagonal--derecha .panel--capa {
       right: 0;
       bottom: 0;
       width: 62%;
       height: 46%;
-      clip-path: polygon(41% 0, 100% 0, 100% 100%, 0 100%);
+      clip-path: polygon(calc(var(--slope) * 46cqh) 0, 100% 0, 100% 100%, 0 100%);
     }
     .diagonal--derecha .panel--secundaria {
       bottom: 0;
       left: 0;
       width: 52%;
       height: 30%;
-      clip-path: polygon(0 0, 100% 0, 68% 100%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--slope) * 30cqh) 100%, 0 100%);
     }
 
     /* Lado izquierdo (texto a la derecha) */
@@ -96,21 +127,48 @@ const sizes = '(min-width: 64rem) 50vw, 100vw';
       left: 0;
       width: 100%;
       height: 64%;
-      clip-path: polygon(0 0, 100% 0, 62% 100%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--slope) * 64cqh) 100%, 0 100%);
     }
     .diagonal--izquierda .panel--capa {
       bottom: 0;
       left: 0;
       width: 72%;
       height: 50%;
-      clip-path: polygon(0 0, 100% 0, 66% 100%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--slope) * 50cqh) 100%, 0 100%);
     }
     .diagonal--izquierda .panel--secundaria {
       right: 0;
       bottom: 0;
       width: 40%;
       height: 26%;
-      clip-path: polygon(46% 0, 100% 0, 100% 100%, 0 100%);
+      clip-path: polygon(calc(var(--slope) * 26cqh) 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    /* Panel de capa a todo el bloque: un solo corte, del lado del texto (más específico que .panel--capa) */
+    .diagonal .panel--capa.panel--completa {
+      inset: 0;
+      width: auto;
+      height: auto;
+    }
+    .diagonal--derecha .panel--capa.panel--completa {
+      clip-path: polygon(calc(var(--slope) * 100cqh) 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .diagonal--izquierda .panel--capa.panel--completa {
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--slope) * 100cqh) 100%, 0 100%);
+    }
+
+    /* Cortina de la pasada del brazo: cubre el bloque con el color de la sección y su borde izquierdo es la
+       diagonal del brazo (skew). El motor la corre hacia la derecha (xPercent) y la oculta al terminar. */
+    .diagonal__cortina {
+      position: absolute;
+      inset-block: 0;
+      left: calc(-1 * var(--slope) * 100cqh - 2px);
+      z-index: 2;
+      display: none;
+      width: calc(100% + var(--slope) * 100cqh + 4px);
+      background: var(--superficie, var(--c-paper));
+      transform-origin: 0 100%;
+      transform: skewX(calc(-1 * atan(var(--slope))));
     }
   }
 </style>

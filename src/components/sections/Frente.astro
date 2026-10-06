@@ -14,7 +14,14 @@ interface Props {
 const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astro.props;
 ---
 
-<section id={id} class:list={['frente', `frente--${tono}`, { 'frente--invertida': invertida }]} aria-labelledby={`${id}-titulo`} data-snap>
+<section id={id} class:list={['frente', `frente--${tono}`, { 'frente--invertida': invertida }]} aria-labelledby={`${id}-titulo`} data-snap data-entrada>
+  {
+    Astro.slots.has('tira') && (
+      <div class="frente__tira">
+        <slot name="tira" />
+      </div>
+    )
+  }
   <div class="frente__texto">
     <p class="eyebrow frente__eyebrow" data-reveal="up">{eyebrow}</p>
     <TitleWord texto={palabra} id={`${id}-titulo`} tono={tono} desde={invertida ? 'derecha' : 'izquierda'} />
@@ -32,13 +39,24 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
       flex-wrap: wrap;
       overflow: hidden;
     }
+    /* --superficie: color de la cortina de la pasada del brazo (DiagonalPanels) */
     .frente--claro {
+      --superficie: var(--c-paper);
       background: var(--c-paper);
       color: var(--c-ink);
     }
     .frente--oscuro {
+      --superficie: var(--c-ink);
+      --c-focus: var(--c-accent); /* anillo ocre sobre tinta: 8,3:1 */
       background: var(--c-ink);
       color: var(--c-paper);
+    }
+    /* Tira de cortes arriba (04 · Equipo): fila propia; en escritorio arranca al 38 %, como el artboard */
+    .frente__tira {
+      flex: 0 0 100%;
+    }
+    .frente:has(.frente__tira) .frente__texto {
+      padding-top: clamp(2.5rem, 4vw, 4rem);
     }
     .frente__texto {
       position: relative;
@@ -89,6 +107,9 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
     @media (min-width: 64rem) {
       .frente {
         min-height: var(--section-min);
+      }
+      .frente__tira {
+        padding-left: 38%;
       }
     }
     @media (max-width: 63.99rem) {
