@@ -45,7 +45,12 @@ test.describe('con movimiento', () => {
       await page.evaluate((destino) => window.scrollTo(0, destino), y);
       await page.waitForTimeout(60);
     }
-    await expect(page.locator('[data-reveal]:not(.is-in), [data-panel]:not(.is-in)')).toHaveCount(0);
+    await expect(
+      page.locator('[data-reveal]:not(.is-in), [data-panel]:not(.is-in), [data-barra]:not(.is-in), [data-split]:not(.is-in)'),
+    ).toHaveCount(0);
+    // Los títulos subieron con máscara y quedaron en su lugar
+    await expect(page.locator('#tierra .linea-mask')).toHaveCount(1);
+    await expect(page.locator('#tierra .linea')).toHaveCSS('transform', /none|matrix\(1, 0, 0, 1, 0, 0\)/);
   });
 });
 
@@ -61,11 +66,23 @@ test.describe('con reduced-motion', () => {
 
     const ocultos = await page.evaluate(
       () =>
-        [...document.querySelectorAll('[data-reveal], [data-panel], [data-barra]')].filter((el) => {
+        [...document.querySelectorAll('[data-reveal], [data-panel], [data-barra], [data-split]')].filter((el) => {
           const estilo = getComputedStyle(el);
           return estilo.opacity === '0' || estilo.visibility === 'hidden';
         }).length,
     );
     expect(ocultos).toBe(0);
+  });
+});
+
+test.describe('05 · Proyectos', () => {
+  test('muestra dos proyectos destacados, el enlace a todos y su punto de progreso', async ({ page }) => {
+    await page.goto('');
+    const seccion = page.locator('#proyectos');
+    await expect(seccion.getByRole('heading', { level: 2, name: 'Proyectos' })).toBeAttached();
+    await expect(seccion.locator('article')).toHaveCount(2);
+    await expect(seccion.locator('article').first().locator('dt')).toHaveText(['Tipo de proyecto', 'Cliente', 'Ubicación']);
+    await expect(seccion.getByRole('link', { name: 'Ver todos los proyectos' })).toHaveAttribute('href', /\/proyectos\/$/);
+    await expect(page.locator('[data-scrollspy] a[href="#proyectos"]')).toHaveCount(1);
   });
 });

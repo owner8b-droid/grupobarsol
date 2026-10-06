@@ -12,7 +12,7 @@ for (const ruta of RUTAS) {
     await expect(page.locator('header nav[aria-label]')).toBeVisible();
     const ocultos = await page.evaluate(
       () =>
-        [...document.querySelectorAll('[data-reveal], [data-panel], [data-barra]')].filter((el) => {
+        [...document.querySelectorAll('[data-reveal], [data-panel], [data-barra], [data-split]')].filter((el) => {
           const estilo = getComputedStyle(el);
           return estilo.opacity === '0' || estilo.visibility === 'hidden';
         }).length,
