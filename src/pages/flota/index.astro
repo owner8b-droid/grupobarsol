@@ -5,7 +5,7 @@ import Base from '../../layouts/Base.astro';
 import PageHeader from '../../components/sections/PageHeader.astro';
 import Button from '../../components/ui/Button.astro';
 import Pendiente from '../../components/ui/Pendiente.astro';
-import { ruta } from '../../i18n/utils';
+import { ruta, rutaCotizar } from '../../i18n/utils';
 import { migas } from '../../lib/schema';
 import nocheLowboy from '../../assets/img/noche-lowboy.jpg';
 
@@ -58,7 +58,7 @@ const jsonLd = [migas([{ nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.si
                 <dt>Alquiler</dt>
                 <dd>{u.data.modalidades.map((m) => modalidad[m]).join(' · ')}</dd>
               </dl>
-              <Button href={`${ruta('cotizador')}?servicio=alquiler&item=${u.id.split('/').pop()}`} evento="cotizador_inicio" ubicacion="flota">
+              <Button href={rutaCotizar('alquiler')} evento="cotizador_inicio" ubicacion="flota">
                 Cotizar esta máquina
               </Button>
             </div>

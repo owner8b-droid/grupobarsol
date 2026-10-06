@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import PageHeader from '../../components/sections/PageHeader.astro';
 import Button from '../../components/ui/Button.astro';
 import Pendiente from '../../components/ui/Pendiente.astro';
-import { enlaceWhatsApp, ruta } from '../../i18n/utils';
+import { enlaceWhatsApp, ruta, rutaCotizar } from '../../i18n/utils';
 import { site } from '../../data/site';
 import { migas, servicio as esquemaServicio } from '../../lib/schema';
 
@@ -20,7 +20,7 @@ const { entrada } = Astro.props;
 const d = entrada.data;
 const url = new URL(Astro.url.pathname, Astro.site).href;
 const sitio = new URL(import.meta.env.BASE_URL, Astro.site);
-const cotizar = `${ruta('cotizador')}?servicio=${d.cotizadorServicio}`;
+const cotizar = rutaCotizar(d.cotizadorServicio);
 const jsonLd = [
   esquemaServicio(sitio, d.titulo, d.resumen, url),
   migas([

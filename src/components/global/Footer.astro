@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import logo from '../../assets/img/logo-barsol.jpg';
 import { site } from '../../data/site';
-import { ruta, t } from '../../i18n/utils';
+import { enlaceWhatsApp, ruta, t } from '../../i18n/utils';
 
 const anio = new Date().getFullYear();
 ---
@@ -32,6 +32,9 @@ const anio = new Date().getFullYear();
     </nav>
     <address class="pie__contacto">
       <a href={`tel:${site.telefono}`} data-evento="click_telefono">{site.telefonoVisible}</a>
+      <a href={enlaceWhatsApp(site.whatsapp)} rel="noopener noreferrer" target="_blank" data-evento="click_whatsapp" data-ubicacion="pie">
+        Escribinos por WhatsApp
+      </a>
       <a href={`mailto:${site.correo}`}>{site.correo}</a>
       <span>{site.direccion.ciudad}, {site.direccion.calle}</span>
       <span>{site.horario.texto}</span>

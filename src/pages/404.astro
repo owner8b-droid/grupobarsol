@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Button from '../components/ui/Button.astro';
-import { ruta } from '../i18n/utils';
+import { ruta, rutaCotizar } from '../i18n/utils';
 ---
 
 <Base title="Página no encontrada | Grupo Barsol" description="Esta página no existe. Volvé al inicio o pre-cotizá tu obra." noindex>
@@ -12,7 +12,7 @@ import { ruta } from '../i18n/utils';
     <p>Puede que el enlace esté mal escrito o que la página se haya movido.</p>
     <div class="error404__acciones">
       <Button href={ruta('inicio')} variante="claro" tamano="l">Volver al inicio</Button>
-      <Button href={ruta('cotizador')} tamano="l">Pre-cotizá tu obra</Button>
+      <Button href={rutaCotizar()} tamano="l">Pre-cotizá tu obra</Button>
     </div>
   </section>
 </Base>

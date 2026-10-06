@@ -4,6 +4,8 @@ interface Item {
   texto: string;
   href: string;
   evento?: string;
+  // Precarga el servicio del formulario al bajar a #cotizar (lib/forms.ts)
+  servicio?: string;
 }
 interface Props {
   items: Item[];
@@ -18,7 +20,7 @@ const { items, variante = 'linea', tono = 'claro', etiqueta } = Astro.props;
   {
     items.map((item) => (
       <li>
-        <a href={item.href} data-evento={item.evento}>
+        <a href={item.href} data-evento={item.evento} data-servicio={item.servicio}>
           <span class="chevron" aria-hidden="true" />
           {item.texto}
         </a>

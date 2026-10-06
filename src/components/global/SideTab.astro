@@ -1,9 +1,10 @@
 ---
 // Pestaña fija «Pre-cotizá tu obra» (solo escritorio). La conversión siempre a mano (BRIEF.md §2.1).
-import { ruta, t } from '../../i18n/utils';
+// Se oculta mientras el formulario está a la vista (lib/site.ts): no compite con él.
+import { destinoCotizar, t } from '../../i18n/utils';
 ---
 
-<a class="pestana" href={ruta('cotizador')} data-evento="cotizador_inicio" data-ubicacion="pestana">
+<a class="pestana" href={destinoCotizar(Astro.url.pathname)} data-pestana data-evento="cotizador_inicio" data-ubicacion="pestana">
   {t('es', 'cta.precotiza')}
 </a>
 
@@ -31,7 +32,14 @@ import { ruta, t } from '../../i18n/utils';
         text-decoration: none;
         writing-mode: vertical-rl;
         transform: rotate(180deg);
-        box-shadow: 0 8px 24px color-mix(in oklch, var(--c-ink) 28%, transparent);
+        transition:
+          opacity var(--dur-2) var(--ease-out),
+          visibility var(--dur-2) var(--ease-out);
+      }
+      /* Con el formulario a la vista, la pestaña se va (visibility: también sale del orden de tabulación) */
+      .pestana:global(.is-oculta) {
+        opacity: 0;
+        visibility: hidden;
       }
       .pestana:hover {
         background: color-mix(in oklch, var(--c-accent) 86%, var(--c-ink));
@@ -39,6 +47,11 @@ import { ruta, t } from '../../i18n/utils';
       .pestana:focus-visible {
         outline: 3px solid var(--c-ink);
         outline-offset: -7px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pestana {
+        transition: none;
       }
     }
   }

@@ -7,12 +7,21 @@ import { initFormulariosWhatsApp, initValidacionAccesible } from './forms';
 import { initAnalytics, initEventosDeClic } from './analytics';
 import { trasElPrimerPintado } from './tiempo';
 
+// La pestaña «Pre-cotizá» se va mientras el formulario está a la vista: no compite con él
+function initPestana(): void {
+  const pestana = document.querySelector<HTMLElement>('[data-pestana]');
+  const formulario = document.getElementById('cotizar');
+  if (!pestana || !formulario) return;
+  new IntersectionObserver(([e]) => pestana.classList.toggle('is-oculta', e.isIntersecting), { threshold: 0.15 }).observe(formulario);
+}
+
 export function initSite(opciones: { ga4?: string } = {}): void {
   initHeader();
   initMenu();
   initHeroVideo();
   initFraseRotante();
   initScrollspy();
+  initPestana();
   initValidacionAccesible();
   initFormulariosWhatsApp();
   initEventosDeClic();

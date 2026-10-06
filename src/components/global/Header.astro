@@ -6,7 +6,7 @@ import logo from '../../assets/img/logo-barsol.jpg';
 import Button from '../ui/Button.astro';
 import Icon from '../ui/Icon.astro';
 import { site } from '../../data/site';
-import { enlaceWhatsApp, ruta, t } from '../../i18n/utils';
+import { destinoCotizar, enlaceWhatsApp, ruta, t } from '../../i18n/utils';
 
 interface Props {
   sobreHero?: boolean;
@@ -74,7 +74,7 @@ const wa = enlaceWhatsApp(site.whatsapp);
       }
     </ul>
     <div class="menu__acciones">
-      <Button href={ruta('cotizador')} tamano="l" ancho icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion="menu">
+      <Button href={destinoCotizar(actual)} tamano="l" ancho icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion="menu">
         {t('es', 'cta.precotiza')}
       </Button>
       <Button href={wa} variante="claro" tamano="l" ancho icono="whatsapp" evento="click_whatsapp" ubicacion="menu">

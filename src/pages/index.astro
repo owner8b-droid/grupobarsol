@@ -25,7 +25,6 @@ import equipo from '../assets/img/equipo.jpg';
 import cimientos from '../assets/img/cimientos.jpg';
 
 const flota = ruta('flota');
-const cotizador = ruta('cotizador');
 ---
 
 <Base
@@ -107,7 +106,7 @@ const cotizador = ruta('cotizador');
     <p>Obra civil para desarrolladores, empresas y familias: calles, urbanizaciones, cimentaciones e infraestructura.</p>
     <ChevronList
       items={[
-        { texto: 'Cotizá tu obra civil', href: `${cotizador}?servicio=obra`, evento: 'cotizador_inicio' },
+        { texto: 'Cotizá tu obra civil', href: '#cotizar', evento: 'cotizador_inicio', servicio: 'obra' },
         { texto: 'Ver proyectos', href: ruta('proyectos') },
       ]}
     />

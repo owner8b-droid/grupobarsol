@@ -2,7 +2,7 @@
 // Página aún sin contenido (preview de la F4). Marcada como pendiente: el build de producción falla si queda.
 import Button from '../ui/Button.astro';
 import Pendiente from '../ui/Pendiente.astro';
-import { enlaceWhatsApp, ruta } from '../../i18n/utils';
+import { enlaceWhatsApp, ruta, rutaCotizar } from '../../i18n/utils';
 import { site } from '../../data/site';
 
 interface Props {
@@ -15,7 +15,7 @@ const { que } = Astro.props;
   <p><Pendiente texto={`${que}: se construye en la Fase 5`} /></p>
   <p>Mientras tanto, contanos qué necesitás y seguimos la conversación por WhatsApp.</p>
   <div class="acciones">
-    <Button href={ruta('cotizador')} tamano="l">Pre-cotizá tu obra</Button>
+    <Button href={rutaCotizar()} tamano="l">Pre-cotizá tu obra</Button>
     <Button href={enlaceWhatsApp(site.whatsapp)} variante="borde" tamano="l" icono="whatsapp" evento="click_whatsapp">Escribinos por WhatsApp</Button>
   </div>
 </section>
