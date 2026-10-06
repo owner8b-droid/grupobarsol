@@ -1,10 +1,11 @@
 /* src/styles/motion.css · estados iniciales del motor (BRIEF.md §4.6).
    Solo aplican con JS, sin reduced-motion y mientras el motor no marque .is-in.
-   Si el motor no carga, .motion-fallback (Base.astro y lib/site.ts) deja todo visible. */
+   Si el motor no carga, .motion-fallback (Base.astro y lib/site.ts) deja todo visible.
+   Solo opacidad, nunca visibility: hidden. Lo que todavía no entró en pantalla sigue en el árbol de
+   accesibilidad y recibe el foco (al enfocarlo, el navegador lo trae a la vista y el reveal se dispara). */
 @media (prefers-reduced-motion: no-preference) {
   .js:not(.motion-fallback) [data-reveal]:not(.is-in) {
     opacity: 0;
-    visibility: hidden;
   }
   .js:not(.motion-fallback) [data-reveal='up']:not(.is-in) {
     transform: translateY(2.5rem);
@@ -15,7 +16,6 @@
   .js:not(.motion-fallback) [data-panel]:not(.is-in),
   .js:not(.motion-fallback) [data-split]:not(.is-in) {
     opacity: 0;
-    visibility: hidden;
   }
 }
 

@@ -41,14 +41,14 @@ export function initMotion(root: ParentNode = document): void {
       once: true,
       onEnter: (els) =>
         gsap.to(els, {
-          autoAlpha: 1,
+          opacity: 1,
           y: 0,
           duration: 1.1,
           ease: 'expo.out',
           stagger: 0.08,
           onComplete: () => {
             marcarListo(els);
-            gsap.set(els, { clearProps: 'opacity,visibility,transform' });
+            gsap.set(els, { clearProps: 'opacity,transform' });
           },
         }),
     });
@@ -64,7 +64,7 @@ export function initMotion(root: ParentNode = document): void {
         autoSplit: true,
         onSplit: (self) => {
           if (el.classList.contains('is-in')) return; // al volver a partir (resize) no se repite
-          gsap.set(el, { autoAlpha: 1 });
+          gsap.set(el, { opacity: 1 });
           // 150 %: con el aire de la máscara (motion.css) la línea queda oculta del todo, tildes incluidas
           return gsap.from(self.lines, {
             yPercent: 150,
@@ -74,7 +74,7 @@ export function initMotion(root: ParentNode = document): void {
             scrollTrigger: { trigger: el, start: 'top 85%', once: true },
             onComplete: () => {
               marcarListo([el]);
-              gsap.set(el, { clearProps: 'opacity,visibility' });
+              gsap.set(el, { clearProps: 'opacity' });
             },
           });
         },
@@ -104,9 +104,9 @@ export function initMotion(root: ParentNode = document): void {
       const paneles = [...grupo.querySelectorAll<HTMLElement>('[data-panel]')];
       gsap.fromTo(
         paneles,
-        { autoAlpha: 0, yPercent: 12, xPercent: -12 * SLOPE },
+        { opacity: 0, yPercent: 12, xPercent: -12 * SLOPE },
         {
-          autoAlpha: 1,
+          opacity: 1,
           yPercent: 0,
           xPercent: 0,
           duration: 1.1,
@@ -115,7 +115,7 @@ export function initMotion(root: ParentNode = document): void {
           scrollTrigger: { trigger: grupo, start: 'top 75%', once: true },
           onComplete: () => {
             marcarListo(paneles);
-            gsap.set(paneles, { clearProps: 'opacity,visibility,transform' });
+            gsap.set(paneles, { clearProps: 'opacity,transform' });
           },
         },
       );
