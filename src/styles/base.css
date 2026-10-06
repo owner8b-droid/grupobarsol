@@ -17,6 +17,10 @@
   body {
     min-height: 100svh;
   }
+  /* hidden siempre oculta, aunque el componente declare su display (important en la capa reset gana a todo) */
+  [hidden]:not([hidden='until-found']) {
+    display: none !important;
+  }
   img,
   picture,
   video,
