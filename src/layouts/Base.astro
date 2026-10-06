@@ -1,0 +1,53 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Font } from 'astro:assets';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/motion.css';
+import Seo from '../components/Seo.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import SideTab from '../components/global/SideTab.astro';
+import { t } from '../i18n/utils';
+
+interface Props {
+  title: string;
+  description: string;
+  sobreHero?: boolean;
+  noindex?: boolean;
+  imagen?: ImageMetadata;
+  jsonLd?: object[];
+}
+const { title, description, sobreHero = false, noindex = false, imagen, jsonLd } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      // Respaldo: si el motor de movimiento no arranca, todo queda visible (lib/site.ts)
+      window.__respaldoMovimiento = window.setTimeout(function () {
+        document.documentElement.classList.add('motion-fallback');
+      }, 6000);
+    </script>
+    <Font cssVariable="--font-urbanist" preload />
+    <Seo title={title} description={description} noindex={noindex} imagen={imagen} jsonLd={jsonLd} />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">{t('es', 'skip')}</a>
+    <Header sobreHero={sobreHero} />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <SideTab />
+    <script>
+      import { initSite } from '../lib/site';
+      import { site } from '../data/site';
+      initSite({ ga4: site.ga4 });
+    </script>
+  </body>
+</html>

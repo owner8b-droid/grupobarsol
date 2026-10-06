@@ -1,0 +1,49 @@
+---
+// Enlace con flecha. La flecha avanza 4 px al pasar el puntero.
+import Icon from './Icon.astro';
+interface Props {
+  href: string;
+  tono?: 'claro' | 'oscuro';
+  evento?: string;
+}
+const { href, tono = 'claro', evento } = Astro.props;
+---
+
+<a class:list={['flecha', `flecha--${tono}`]} href={href} data-evento={evento}>
+  <span><slot /></span>
+  <Icon nombre="flecha" tamano={18} class="flecha__icono" />
+</a>
+
+<style>
+  @layer components {
+    .flecha {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-height: var(--target-min);
+      font-size: 1.0625rem;
+      font-weight: var(--weight-strong);
+      text-decoration: none;
+    }
+    .flecha--claro {
+      color: var(--c-ink);
+    }
+    .flecha--oscuro {
+      color: var(--c-paper);
+    }
+    .flecha:hover span {
+      text-decoration: underline;
+    }
+    .flecha :global(.flecha__icono) {
+      transition: transform var(--dur-2) var(--ease-out);
+    }
+    .flecha:hover :global(.flecha__icono) {
+      transform: translateX(4px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .flecha :global(.flecha__icono) {
+        transition: none;
+      }
+    }
+  }
+</style>

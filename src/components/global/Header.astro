@@ -1,0 +1,303 @@
+---
+// Encabezado global. Sobre el hero es transparente y se vuelve sólido al bajar (lib/header.ts).
+// Sin JS, la navegación queda visible y envuelta; el botón de menú solo aparece con JS.
+import { Image } from 'astro:assets';
+import logo from '../../assets/img/logo-barsol.jpg';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { site } from '../../data/site';
+import { enlaceWhatsApp, ruta, t } from '../../i18n/utils';
+
+interface Props {
+  sobreHero?: boolean;
+}
+const { sobreHero = false } = Astro.props;
+const actual = Astro.url.pathname;
+const enlaces = [
+  { texto: t('es', 'nav.servicios'), href: ruta('servicios') },
+  { texto: t('es', 'nav.flota'), href: ruta('flota') },
+  { texto: t('es', 'nav.proyectos'), href: ruta('proyectos') },
+  { texto: t('es', 'nav.nosotros'), href: ruta('nosotros') },
+  { texto: t('es', 'nav.contacto'), href: ruta('contacto') },
+];
+const wa = enlaceWhatsApp(site.whatsapp);
+---
+
+<header class:list={['encabezado', { 'encabezado--sobre': sobreHero }]} data-header>
+  <div class="encabezado__fila">
+    <a class="marca" href={ruta('inicio')} aria-label="Grupo Barsol, inicio">
+      <Image src={logo} alt="" width={56} height={56} densities={[1, 2]} loading="eager" class="marca__logo" />
+      <span class="marca__texto" aria-hidden="true">
+        <span class="marca__nombre">Grupo Barsol</span>
+        <span class="marca__desc">Constructora y maquinaria</span>
+      </span>
+    </a>
+    <nav class="nav" aria-label={t('es', 'nav.label')}>
+      <ul role="list">
+        {
+          enlaces.map((e) => (
+            <li>
+              <a href={e.href} aria-current={actual.startsWith(e.href) ? 'page' : undefined}>
+                {e.texto}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <Button href={wa} variante="claro" icono="whatsapp" class="encabezado__wa" evento="click_whatsapp" ubicacion="encabezado">
+      {t('es', 'cta.whatsapp')}
+    </Button>
+    <button type="button" class="menu-boton" data-menu-abrir aria-haspopup="dialog" aria-controls="menu">
+      <Icon nombre="menu" tamano={26} />
+      <span class="visualmente-oculto">{t('es', 'menu.abrir')}</span>
+    </button>
+  </div>
+
+  <dialog id="menu" class="menu" data-menu closedby="any" aria-labelledby="menu-titulo">
+    <div class="menu__cabeza">
+      <p id="menu-titulo" class="eyebrow">{t('es', 'menu.titulo')}</p>
+      <button type="button" class="menu__cerrar" data-menu-cerrar>
+        <Icon nombre="cerrar" tamano={26} />
+        <span class="visualmente-oculto">{t('es', 'menu.cerrar')}</span>
+      </button>
+    </div>
+    <ul class="menu__lista" role="list">
+      {
+        enlaces.map((e) => (
+          <li>
+            <a href={e.href} aria-current={actual.startsWith(e.href) ? 'page' : undefined}>
+              {e.texto}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="menu__acciones">
+      <Button href={ruta('cotizador')} tamano="l" ancho icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion="menu">
+        {t('es', 'cta.precotiza')}
+      </Button>
+      <Button href={wa} variante="claro" tamano="l" ancho icono="whatsapp" evento="click_whatsapp" ubicacion="menu">
+        {t('es', 'cta.escribinos')}
+      </Button>
+      <a class="menu__tel" href={`tel:${site.telefono}`} data-evento="click_telefono">{site.telefonoVisible}</a>
+    </div>
+  </dialog>
+</header>
+
+<style>
+  @layer components {
+    .encabezado {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--c-ink);
+      color: var(--c-paper);
+      transition:
+        background-color var(--dur-2) var(--ease-out),
+        transform var(--dur-2) var(--ease-out);
+    }
+    .encabezado--sobre {
+      position: absolute; /* sin JS nunca pasa a sólido: se queda arriba del hero y se va con el scroll */
+      inset-inline: 0;
+      background: transparent;
+    }
+    :global(.js) .encabezado--sobre {
+      position: fixed;
+    }
+    .encabezado--sobre:global(.is-solid) {
+      background: color-mix(in oklch, var(--c-ink) 96%, transparent);
+    }
+    .encabezado:global(.is-hidden) {
+      transform: translateY(-100%);
+    }
+    .encabezado__fila {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem 1.75rem;
+      max-width: 90rem;
+      margin-inline: auto;
+      padding: 0.75rem clamp(1.25rem, 4.4vw, 4rem);
+    }
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      color: inherit;
+      text-decoration: none;
+    }
+    .marca :global(.marca__logo) {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--c-paper) 90%, transparent);
+    }
+    .marca__texto {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .marca__nombre {
+      font-size: 1.3125rem;
+      font-weight: var(--weight-display);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+    .marca__desc {
+      font-size: 0.6875rem;
+      font-weight: var(--weight-strong);
+      letter-spacing: 0.16em;
+      line-height: 1.2;
+      text-transform: uppercase;
+      color: var(--c-paper-dim);
+    }
+    .nav {
+      margin-left: auto;
+    }
+    .nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.75rem;
+      margin: 0;
+    }
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--target-min);
+      color: inherit;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .nav a:hover {
+      text-decoration: underline;
+    }
+    .nav a[aria-current='page'] {
+      box-shadow: inset 0 -3px 0 var(--c-accent);
+    }
+    .menu-boton {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: var(--target-min);
+      height: var(--target-min);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--c-accent);
+      cursor: pointer;
+    }
+    @media (max-width: 63.99rem) {
+      :global(.js) .menu-boton {
+        display: inline-flex;
+      }
+      :global(.js) .nav {
+        display: none;
+      }
+      :global(.js) .encabezado__fila {
+        flex-wrap: nowrap;
+      }
+      /* Sin JS no hay menú: la navegación baja a su propia fila */
+      .nav {
+        order: 3;
+        flex-basis: 100%;
+        margin-left: 0;
+      }
+      .encabezado__fila :global(.encabezado__wa) {
+        margin-left: auto;
+        min-height: var(--target-min);
+        min-width: var(--target-min);
+        padding-inline: 0.65rem;
+      }
+      .marca__desc {
+        display: none;
+      }
+      .marca :global(.marca__logo) {
+        width: 2.75rem;
+        height: 2.75rem;
+      }
+    }
+
+    @media (max-width: 30rem) {
+      /* En pantallas angostas el botón de WhatsApp queda solo con el ícono (el nombre accesible se mantiene) */
+      .encabezado__fila :global(.encabezado__wa span) {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    }
+    .menu {
+      width: 100%;
+      max-width: 100%;
+      height: 100dvh;
+      max-height: 100dvh;
+      margin: 0;
+      padding: 1rem 1.25rem 2rem;
+      border: 0;
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .menu::backdrop {
+      background: color-mix(in oklch, var(--c-ink) 60%, transparent);
+    }
+    .menu__cabeza {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--c-paper-dim);
+    }
+    .menu__cerrar {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--target-min);
+      height: var(--target-min);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--c-accent);
+      cursor: pointer;
+    }
+    .menu__lista {
+      margin: 1.5rem 0 2rem;
+      border-top: 2px solid var(--c-line-dark);
+    }
+    .menu__lista li {
+      border-bottom: 2px solid var(--c-line-dark);
+    }
+    .menu__lista a {
+      display: flex;
+      align-items: center;
+      min-height: 3.75rem;
+      color: inherit;
+      font-size: var(--step-2);
+      font-weight: var(--weight-display);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .menu__lista a[aria-current='page'] {
+      color: var(--c-accent);
+    }
+    .menu__acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .menu__tel {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--target-min);
+      color: var(--c-paper);
+      font-weight: var(--weight-strong);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .encabezado {
+        transition: none;
+      }
+    }
+  }
+</style>

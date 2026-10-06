@@ -1,0 +1,132 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../assets/img/logo-barsol.jpg';
+import { site } from '../../data/site';
+import { ruta, t } from '../../i18n/utils';
+
+const anio = new Date().getFullYear();
+---
+
+<footer class="pie">
+  <div class="pie__fila">
+    <div class="pie__marca">
+      <Image src={logo} alt="Grupo Barsol" width={56} height={56} densities={[1, 2]} class="pie__logo" />
+      <p>
+        <span class="pie__nombre">Grupo Barsol</span>
+        <span>{site.lema}</span>
+      </p>
+    </div>
+    <nav aria-label={t('es', 'pie.label')} class="pie__nav">
+      <ul role="list">
+        <li><a href={ruta('servicios')}>{t('es', 'nav.servicios')}</a></li>
+        <li><a href={ruta('flota')}>{t('es', 'nav.flota')}</a></li>
+        <li><a href={ruta('proyectos')}>{t('es', 'nav.proyectos')}</a></li>
+        <li><a href={ruta('nosotros')}>{t('es', 'nav.nosotros')}</a></li>
+        <li><a href={ruta('contacto')}>{t('es', 'nav.contacto')}</a></li>
+      </ul>
+      <ul role="list">
+        <li><a href={site.redes.instagram} rel="noopener noreferrer" target="_blank">Instagram</a></li>
+        <li><a href={site.redes.facebook} rel="noopener noreferrer" target="_blank">Facebook</a></li>
+        <li><a href={site.redes.maps} rel="noopener noreferrer" target="_blank">Google Maps</a></li>
+      </ul>
+    </nav>
+    <address class="pie__contacto">
+      <a href={`tel:${site.telefono}`} data-evento="click_telefono">{site.telefonoVisible}</a>
+      <a href={`mailto:${site.correo}`}>{site.correo}</a>
+      <span>{site.direccion.ciudad}, {site.direccion.calle}</span>
+      <span>{site.horario.texto}</span>
+    </address>
+  </div>
+  <div class="pie__legal">
+    <p>© {anio} Grupo Barsol</p>
+    <p>
+      <a href={ruta('privacidad')}>{t('es', 'pie.privacidad')}</a> · <a href={ruta('terminos')}>{t('es', 'pie.terminos')}</a> ·{' '}
+      {t('es', 'pie.estudio')}
+    </p>
+  </div>
+</footer>
+
+<style>
+  @layer components {
+    .pie {
+      background: var(--c-ink-2);
+      color: var(--c-muted-dark);
+      font-size: 0.9375rem;
+    }
+    .pie__fila,
+    .pie__legal {
+      max-width: 90rem;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 4.4vw, 4rem);
+    }
+    .pie__fila {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem 3rem;
+      padding-block: 3rem 2rem;
+    }
+    .pie__marca {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      max-width: 24rem;
+    }
+    .pie__marca :global(.pie__logo) {
+      flex: none;
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+    }
+    .pie__marca p {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .pie__nombre {
+      color: var(--c-paper);
+      font-size: 1.1875rem;
+      font-weight: var(--weight-display);
+    }
+    .pie__nav {
+      display: flex;
+      gap: 2.5rem;
+    }
+    .pie__nav ul {
+      margin: 0;
+    }
+    a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--target-min);
+      color: var(--c-paper);
+      font-weight: 700;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .pie__contacto {
+      display: flex;
+      flex-direction: column;
+      font-style: normal;
+    }
+    .pie__contacto span {
+      line-height: 1.6;
+    }
+    .pie__legal {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.5rem 2rem;
+      padding-block: 1rem 2rem;
+      border-top: 1px solid var(--c-line-dark);
+      font-size: 0.8125rem;
+    }
+    .pie__legal a {
+      display: inline;
+      min-height: 0;
+      font-weight: 600;
+    }
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+// Cabecera de páginas internas: migas, eyebrow, título (una palabra con franja o H1 normal) y foto diagonal.
+import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import TitleWord from '../ui/TitleWord.astro';
+import { ruta, t } from '../../i18n/utils';
+
+interface Miga {
+  nombre: string;
+  href?: string;
+}
+interface Props {
+  titulo: string;
+  palabra?: boolean;
+  eyebrow?: string;
+  bajada?: string;
+  imagen?: ImageMetadata;
+  imagenAlt?: string;
+  migas?: Miga[];
+}
+const { titulo, palabra = false, eyebrow, bajada, imagen, imagenAlt = '', migas = [] } = Astro.props;
+const todas: Miga[] = [{ nombre: t('es', 'ruta.inicio'), href: ruta('inicio') }, ...migas, { nombre: titulo }];
+---
+
+<section class:list={['cabecera', { 'cabecera--sin-visual': !imagen }]} aria-labelledby="pagina-h1">
+  <div class="cabecera__texto">
+    <nav aria-label={t('es', 'ruta.label')} class="migas">
+      <ol role="list">
+        {
+          todas.map((m) => (
+            <li>{m.href ? <a href={m.href}>{m.nombre}</a> : <span aria-current="page">{m.nombre}</span>}</li>
+          ))
+        }
+      </ol>
+    </nav>
+    {eyebrow && <p class="eyebrow cabecera__eyebrow">{eyebrow}</p>}
+    {palabra ? <TitleWord texto={titulo} as="h1" id="pagina-h1" tono="oscuro" /> : <h1 id="pagina-h1" class="cabecera__h1">{titulo}</h1>}
+    {bajada && <p class="cabecera__bajada">{bajada}</p>}
+  </div>
+  {
+    imagen && (
+      <div class="cabecera__visual">
+        <Picture src={imagen} alt={imagenAlt} formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes="(min-width: 64rem) 45vw, 100vw" loading="eager" fetchpriority="high" />
+      </div>
+    )
+  }
+</section>
+
+<style>
+  @layer components {
+    .cabecera {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .cabecera__texto {
+      position: relative;
+      z-index: 2;
+      flex: 1 1 32rem;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(3rem, 6vw, 5rem) 2.5rem clamp(3rem, 6vw, 5rem) var(--gutter-start);
+    }
+    .migas ol {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.6rem;
+      margin: 0 0 1.5rem;
+      color: var(--c-muted-dark);
+      font-size: 0.9375rem;
+      font-weight: 700;
+    }
+    .migas li + li::before {
+      content: '/';
+      margin-right: 0.6rem;
+    }
+    .migas a {
+      color: var(--c-paper-dim);
+    }
+    .cabecera__eyebrow {
+      margin-bottom: 1rem;
+      color: var(--c-muted-dark);
+    }
+    .cabecera__h1 {
+      max-width: 18ch;
+      font-size: var(--step-3);
+      font-weight: var(--weight-display);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+    .cabecera__bajada {
+      max-width: 34rem;
+      margin-top: 1.75rem;
+      color: var(--c-paper-dim);
+      font-size: var(--step-1);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .cabecera--sin-visual .cabecera__texto {
+      /* Sin foto, la columna no ocupa todo el ancho: la franja del título conserva su largo */
+      flex: 0 1 calc(var(--gutter-start) + 44rem);
+    }
+    .cabecera__visual {
+      position: relative;
+      flex: 1 1 28rem;
+      min-height: 18rem;
+      clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .cabecera__visual :global(picture),
+    .cabecera__visual :global(img) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+</style>

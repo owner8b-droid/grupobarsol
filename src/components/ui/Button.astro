@@ -1,0 +1,144 @@
+---
+// Botón o enlace con forma de botón. Estados: hover, focus-visible, active (presión), disabled y cargando.
+import type { HTMLAttributes } from 'astro/types';
+import Icon, { type NombreIcono } from './Icon.astro';
+
+type Props = Omit<HTMLAttributes<'a'> & HTMLAttributes<'button'>, 'class'> & {
+  href?: string;
+  variante?: 'solido' | 'borde' | 'claro' | 'tinta';
+  tamano?: 'm' | 'l';
+  icono?: NombreIcono;
+  iconoAlFinal?: boolean;
+  ancho?: boolean;
+  cargando?: boolean;
+  evento?: string;
+  ubicacion?: string;
+  class?: string;
+};
+
+const {
+  href,
+  variante = 'solido',
+  tamano = 'm',
+  icono,
+  iconoAlFinal = false,
+  ancho = false,
+  cargando = false,
+  evento,
+  ubicacion,
+  class: clase,
+  type = 'button',
+  ...resto
+} = Astro.props;
+const Tag = href ? 'a' : 'button';
+const externo = href?.startsWith('https://');
+---
+
+<Tag
+  class:list={['btn', `btn--${variante}`, `btn--${tamano}`, { 'btn--ancho': ancho, 'btn--icono-inicio': icono && !iconoAlFinal, 'btn--icono-final': icono && iconoAlFinal }, clase]}
+  href={href}
+  type={href ? undefined : type}
+  target={externo ? '_blank' : undefined}
+  rel={externo ? 'noopener noreferrer' : undefined}
+  aria-busy={cargando ? 'true' : undefined}
+  data-evento={evento}
+  data-ubicacion={ubicacion}
+  {...resto}
+>
+  {icono && !iconoAlFinal && <Icon nombre={icono} />}
+  <span><slot /></span>
+  {icono && iconoAlFinal && <Icon nombre={icono} />}
+</Tag>
+
+<style>
+  @layer components {
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      min-height: 3.25rem;
+      padding-inline: 1.5rem;
+      border: 2px solid transparent;
+      border-radius: var(--radius-s);
+      font-size: 1.0625rem;
+      font-weight: var(--weight-strong);
+      line-height: 1.1;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        transform var(--dur-1) var(--ease-press),
+        background-color var(--dur-2) var(--ease-out),
+        border-color var(--dur-2) var(--ease-out),
+        color var(--dur-2) var(--ease-out);
+    }
+    .btn:active {
+      transform: translateY(1px) scale(0.97);
+    }
+    .btn--l {
+      min-height: 3.5rem;
+      padding-inline: 1.75rem;
+      font-size: 1.125rem;
+    }
+    .btn--ancho {
+      width: 100%;
+    }
+    .btn--ancho.btn--icono-inicio {
+      justify-content: flex-start; /* ícono al inicio: el texto lo sigue */
+    }
+    .btn--ancho.btn--icono-final {
+      justify-content: space-between; /* flecha al final: texto a la izquierda, flecha al borde */
+    }
+    .btn--solido {
+      border-color: var(--c-accent);
+      background: var(--c-accent);
+      color: var(--c-on-accent);
+    }
+    .btn--solido:hover {
+      background: color-mix(in oklch, var(--c-accent) 86%, var(--c-ink));
+    }
+    .btn--solido:focus-visible {
+      outline-color: var(--c-ink);
+    }
+    .btn--borde {
+      border-color: var(--c-ink);
+      background: transparent;
+      color: var(--c-ink);
+    }
+    .btn--borde:hover {
+      background: color-mix(in oklch, var(--c-ink) 8%, transparent);
+    }
+    .btn--claro {
+      border-color: var(--c-accent);
+      background: color-mix(in oklch, var(--c-ink) 45%, transparent);
+      color: var(--c-paper);
+    }
+    .btn--claro:hover {
+      background: color-mix(in oklch, var(--c-ink) 70%, transparent);
+    }
+    .btn--tinta {
+      border-color: var(--c-ink);
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .btn--tinta:hover {
+      background: var(--c-ink-2);
+    }
+    .btn:disabled,
+    .btn[aria-disabled='true'] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .btn[aria-busy='true'] {
+      cursor: progress;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn {
+        transition: none;
+      }
+      .btn:active {
+        transform: none;
+      }
+    }
+  }
+</style>

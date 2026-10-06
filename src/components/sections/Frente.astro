@@ -1,0 +1,100 @@
+---
+// Sección «frente de obra» de D: columna de texto + bloque visual diagonal a sangre.
+// Escritorio: pantalla completa con snap por proximidad. Móvil: altura natural.
+import TitleWord from '../ui/TitleWord.astro';
+
+interface Props {
+  id: string;
+  eyebrow: string;
+  palabra: string;
+  bajada: string;
+  tono?: 'claro' | 'oscuro';
+  invertida?: boolean;
+}
+const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astro.props;
+---
+
+<section id={id} class:list={['frente', `frente--${tono}`, { 'frente--invertida': invertida }]} aria-labelledby={`${id}-titulo`} data-snap>
+  <div class="frente__texto">
+    <p class="eyebrow frente__eyebrow" data-reveal="up">{eyebrow}</p>
+    <TitleWord texto={palabra} id={`${id}-titulo`} tono={tono} desde={invertida ? 'derecha' : 'izquierda'} />
+    <p class="bajada frente__bajada" data-reveal="up">{bajada}</p>
+    <div class="frente__cuerpo" data-reveal="up"><slot /></div>
+  </div>
+  <div class="frente__visual"><slot name="visual" /></div>
+</section>
+
+<style>
+  @layer components {
+    .frente {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+    }
+    .frente--claro {
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    .frente--oscuro {
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .frente__texto {
+      position: relative;
+      z-index: 2;
+      flex: 1 1 32rem;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(4.5rem, 9vw, 9rem) 2.5rem clamp(3.5rem, 7vw, 6rem) var(--gutter-start);
+    }
+    .frente--invertida .frente__texto {
+      order: 2;
+      padding-left: 2.5rem;
+      padding-right: var(--gutter-end);
+    }
+    .frente__eyebrow {
+      margin-bottom: 1.1rem;
+    }
+    .frente--claro .frente__eyebrow {
+      color: var(--c-muted);
+    }
+    .frente--oscuro .frente__eyebrow {
+      color: var(--c-muted-dark);
+    }
+    .frente__bajada {
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .frente__cuerpo {
+      max-width: 33rem;
+    }
+    .frente--claro .frente__cuerpo :global(p) {
+      color: var(--c-muted);
+    }
+    .frente--oscuro .frente__cuerpo :global(p) {
+      color: var(--c-muted-dark);
+    }
+    .frente__cuerpo :global(p + *) {
+      margin-top: 1.75rem;
+    }
+    .frente__visual {
+      position: relative;
+      flex: 1 1 35rem;
+      min-width: 0;
+      min-height: 22rem;
+    }
+    @media (min-width: 64rem) {
+      .frente {
+        min-height: var(--section-min);
+      }
+    }
+    @media (max-width: 63.99rem) {
+      .frente--invertida .frente__texto {
+        padding-left: var(--gutter-start);
+      }
+    }
+  }
+</style>

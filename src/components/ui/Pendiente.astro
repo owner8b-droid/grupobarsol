@@ -1,0 +1,25 @@
+---
+// Contenido pendiente del cliente, visible en desarrollo y en la preview, prohibido en producción
+// (BRIEF.md §2.2 y §10.5). Con PUBLIC_PRODUCCION=true el build falla si queda alguno.
+interface Props {
+  texto: string;
+}
+const { texto } = Astro.props;
+if (import.meta.env.PUBLIC_PRODUCCION === 'true') {
+  throw new Error(`Contenido pendiente en producción: «${texto}» (${Astro.url.pathname})`);
+}
+---
+
+<mark class="pendiente">[{texto}]</mark>
+
+<style>
+  @layer components {
+    .pendiente {
+      padding: 0.1em 0.35em;
+      border: 1.5px dashed currentColor;
+      border-radius: var(--radius-s);
+      background: transparent;
+      color: inherit;
+    }
+  }
+</style>

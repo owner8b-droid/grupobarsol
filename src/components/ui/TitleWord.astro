@@ -1,0 +1,63 @@
+---
+// Título de una palabra con la franja ocre del logo (docs/03-direccion-de-arte.md §5).
+// La franja entra desde el borde de la página y termina con un corte al ángulo del brazo.
+interface Props {
+  texto: string;
+  as?: 'h1' | 'h2';
+  id?: string;
+  tono?: 'claro' | 'oscuro' | 'acento';
+  desde?: 'izquierda' | 'derecha';
+}
+const { texto, as: Tag = 'h2', id, tono = 'claro', desde = 'izquierda' } = Astro.props;
+---
+
+<Tag class:list={['palabra', `palabra--${tono}`, `palabra--${desde}`]} id={id}>
+  <span class="palabra__barra" data-barra aria-hidden="true"></span>
+  <span class="palabra__texto">{texto}</span>
+</Tag>
+
+<style>
+  @layer components {
+    .palabra {
+      position: relative;
+      display: inline-block;
+      font-size: var(--step-4);
+      font-weight: var(--weight-display);
+      line-height: var(--leading-tight);
+      letter-spacing: var(--tracking-display);
+    }
+    .palabra--claro {
+      color: var(--c-ink);
+    }
+    .palabra--oscuro {
+      color: var(--c-paper);
+    }
+    .palabra--acento {
+      color: var(--c-ink);
+    }
+    .palabra__texto {
+      position: relative;
+    }
+    .palabra__barra {
+      position: absolute;
+      bottom: var(--bar-offset);
+      height: var(--bar-height);
+      background: var(--c-accent);
+    }
+    .palabra--acento .palabra__barra {
+      background: var(--c-ink);
+    }
+    .palabra--izquierda .palabra__barra {
+      left: calc(-1 * var(--barra-inicio, var(--gutter-start)));
+      right: 22%;
+      transform-origin: 0 50%;
+      clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);
+    }
+    .palabra--derecha .palabra__barra {
+      left: -0.3em;
+      right: calc(-1 * var(--barra-inicio, var(--gutter-end)));
+      transform-origin: 100% 50%;
+      clip-path: polygon(0.12em 0, 100% 0, 100% 100%, 0 100%);
+    }
+  }
+</style>

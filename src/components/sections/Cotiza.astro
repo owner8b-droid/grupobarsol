@@ -1,0 +1,250 @@
+---
+// Sección «Cotizá» del home: formulario corto que abre WhatsApp con el resumen y datos de contacto.
+// Copia por correo con Web3Forms solo cuando exista la access key (pendiente #19).
+import TitleWord from '../ui/TitleWord.astro';
+import Field from '../ui/Field.astro';
+import Button from '../ui/Button.astro';
+import { site } from '../../data/site';
+import { enlaceWhatsApp, ruta } from '../../i18n/utils';
+
+interface Props {
+  eyebrow?: string;
+}
+const { eyebrow = '06 · Pre-cotización' } = Astro.props;
+
+const servicios = [
+  { valor: '', texto: 'Elegí una opción' },
+  { valor: 'Movimiento de tierras', texto: 'Movimiento de tierras' },
+  { valor: 'Alquiler de maquinaria', texto: 'Alquiler de maquinaria' },
+  { valor: 'Acarreo o agregados', texto: 'Acarreo o agregados' },
+  { valor: 'Obra civil', texto: 'Obra civil' },
+  { valor: 'No estoy seguro', texto: 'No estoy seguro' },
+];
+---
+
+<section id="cotizar" class="cotiza" aria-labelledby="cotizar-titulo" data-snap>
+  <span class="cotiza__corte" aria-hidden="true"></span>
+  <div class="cotiza__fila">
+    <div class="cotiza__formulario">
+      <p class="eyebrow cotiza__eyebrow" data-reveal="up">{eyebrow}</p>
+      <TitleWord texto="Cotizá" id="cotizar-titulo" tono="oscuro" />
+      <p class="bajada cotiza__bajada" data-reveal="up">Contanos qué necesitás y seguimos por WhatsApp.</p>
+      <noscript>
+        <div class="cotiza__sin-js">
+          <p>Este formulario necesita JavaScript. Escribinos directo y te respondemos con la pre-cotización.</p>
+          <Button href={enlaceWhatsApp(site.whatsapp, 'Hola, Grupo Barsol. Quiero una pre-cotización.')} tamano="l" icono="whatsapp">
+            Escribinos por WhatsApp
+          </Button>
+        </div>
+      </noscript>
+      <form
+        class="formulario"
+        data-whatsapp={site.whatsapp}
+        data-web3forms={site.web3formsKey || undefined}
+        data-formulario="home"
+        data-saludo="Hola, Grupo Barsol. Quiero una pre-cotización:"
+      >
+        <Field id="c-nombre" name="nombre" label="Nombre" required autocomplete="name" tono="oscuro" etiqueta="Nombre" error="Escribí tu nombre." />
+        <Field
+          id="c-telefono"
+          name="telefono"
+          label="Teléfono o WhatsApp"
+          tipo="tel"
+          required
+          autocomplete="tel"
+          inputmode="tel"
+          pattern="(\+506)?[0-9 ]{8,}"
+          pista="8 dígitos, por ejemplo 8888 8888"
+          tono="oscuro"
+          etiqueta="Teléfono"
+          error="Escribí un teléfono de 8 dígitos, por ejemplo 8888 8888."
+        />
+        <Field
+          id="c-servicio"
+          name="servicio"
+          label="¿Qué necesitás?"
+          tipo="select"
+          required
+          opciones={servicios}
+          tono="oscuro"
+          etiqueta="Servicio"
+          error="Elegí una opción."
+        />
+        <Field id="c-lugar" name="lugar" label="¿Dónde es la obra?" placeholder="Cantón o distrito" tono="oscuro" etiqueta="Lugar" />
+        <Field id="c-mensaje" name="mensaje" label="Contanos un poco más" tipo="textarea" tono="oscuro" etiqueta="Detalle" completo />
+        <div class="formulario__trampa" aria-hidden="true">
+          <label for="c-sitio">No llenar este campo</label>
+          <input id="c-sitio" name="sitio" type="text" tabindex="-1" autocomplete="off" data-trampa />
+        </div>
+        <label class="formulario__permiso">
+          <input type="checkbox" name="consentimiento" required />
+          <span>
+            Acepto que Grupo Barsol use estos datos solo para responder mi consulta (Ley 8968).{' '}
+            <a href={ruta('privacidad')}>Política de privacidad</a>
+          </span>
+        </label>
+        <div class="formulario__enviar">
+          <Button type="submit" tamano="l" icono="flecha" iconoAlFinal>Enviar y seguir por WhatsApp</Button>
+        </div>
+        <p class="formulario__confirmacion" data-confirmacion role="status" hidden>
+          <strong data-saludo-nombre>¡Listo!</strong> Abrimos WhatsApp con tu resumen. ¿No se abrió?
+          <a href="#">Tocá aquí para abrirlo</a>. Te respondemos de lunes a viernes, de 8:00&nbsp;a.&nbsp;m. a 5:00&nbsp;p.&nbsp;m.
+        </p>
+        <p class="formulario__error" data-error-correo role="alert" hidden>
+          No pudimos enviar la copia por correo, pero tu resumen igual está listo en WhatsApp.
+        </p>
+      </form>
+    </div>
+    <dl class="cotiza__datos" data-reveal="up">
+      <div>
+        <dt class="eyebrow">Oficina</dt>
+        <dd>{site.direccion.ciudad}, {site.direccion.calle}<br /><a href={site.redes.maps} rel="noopener noreferrer" target="_blank">Ver en Google Maps</a></dd>
+      </div>
+      <div>
+        <dt class="eyebrow">Horario</dt>
+        <dd>{site.horario.texto}</dd>
+      </div>
+      <div>
+        <dt class="eyebrow">Teléfono y WhatsApp</dt>
+        <dd><a href={`tel:${site.telefono}`} data-evento="click_telefono">{site.telefonoVisible}</a></dd>
+      </div>
+      <div>
+        <dt class="eyebrow">Correo</dt>
+        <dd><a href={`mailto:${site.correo}`}>{site.correo}</a></dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<style>
+  @layer components {
+    .cotiza {
+      position: relative;
+      overflow: hidden;
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .cotiza__corte {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 34%;
+      height: 46%;
+      background: var(--c-accent);
+      clip-path: polygon(62% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .cotiza__fila {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3.5rem 5rem;
+      max-width: 90rem;
+      margin-inline: auto;
+      padding: clamp(4.5rem, 9vw, 9rem) var(--gutter-end) clamp(4rem, 7vw, 6rem) var(--gutter-start);
+    }
+    .cotiza__formulario {
+      flex: 1 1 34rem;
+      min-width: 0;
+      /* La fila se centra a 90rem: la franja del título suma el margen para llegar al borde de la página */
+      --barra-inicio: calc(var(--gutter-start) + max(0px, (100vw - 90rem) / 2));
+    }
+    .cotiza__eyebrow {
+      margin-bottom: 1.1rem;
+      color: var(--c-muted-dark);
+    }
+    .cotiza__bajada {
+      margin: 2rem 0 1.75rem;
+    }
+    /* Sin JS el envío no puede armar el mensaje: se ofrece la salida directa a WhatsApp */
+    :global(html:not(.js)) .formulario {
+      display: none;
+    }
+    .cotiza__sin-js {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      max-width: 34rem;
+      color: var(--c-muted-dark);
+    }
+    .formulario {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+      gap: 1.15rem 1.25rem;
+      max-width: 45rem;
+    }
+    .formulario__trampa {
+      position: absolute;
+      left: -9999px;
+    }
+    .formulario__permiso,
+    .formulario__enviar,
+    .formulario__confirmacion,
+    .formulario__error {
+      grid-column: 1 / -1;
+    }
+    .formulario__permiso {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--c-muted-dark);
+      font-size: 0.9375rem;
+      line-height: 1.45;
+    }
+    .formulario__permiso input {
+      flex: none;
+      width: 1.375rem;
+      height: 1.375rem;
+      margin: 0.05rem 0 0;
+      accent-color: var(--c-accent);
+    }
+    .formulario a,
+    .cotiza__datos a {
+      color: var(--c-paper);
+      font-weight: 700;
+    }
+    .formulario__confirmacion {
+      padding: 0.9rem 1rem;
+      border: 2px solid var(--c-accent);
+      border-radius: var(--radius-s);
+      background: var(--c-ink-2);
+    }
+    .formulario__error {
+      padding: 0.9rem 1rem;
+      border: 2px solid var(--c-error-line);
+      border-radius: var(--radius-s);
+      background: var(--c-error-bg);
+      color: var(--c-error);
+      font-weight: 700;
+    }
+    .cotiza__datos {
+      flex: 1 1 18rem;
+      max-width: 25rem;
+      align-self: flex-end;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      margin: 0;
+    }
+    .cotiza__datos dt {
+      color: var(--c-muted-dark);
+    }
+    .cotiza__datos dd {
+      margin: 0.35rem 0 0;
+      font-size: 1.1875rem;
+      font-weight: 700;
+    }
+    @media (min-width: 64rem) {
+      .cotiza {
+        min-height: var(--section-min);
+      }
+    }
+    @media (max-width: 63.99rem) {
+      /* Una columna: el corte queda como esquina sobre el título y no pasa por detrás de los campos */
+      .cotiza__corte {
+        width: 40%;
+        height: 7rem;
+      }
+    }
+  }
+</style>

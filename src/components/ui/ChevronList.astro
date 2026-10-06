@@ -1,0 +1,94 @@
+---
+// Lista de enlaces con chevrones recortados al ángulo del brazo. Variante «caja»: fondo de acento.
+interface Item {
+  texto: string;
+  href: string;
+  evento?: string;
+}
+interface Props {
+  items: Item[];
+  variante?: 'linea' | 'caja';
+  tono?: 'claro' | 'oscuro';
+  etiqueta?: string;
+}
+const { items, variante = 'linea', tono = 'claro', etiqueta } = Astro.props;
+---
+
+<ul class:list={['chevrones', `chevrones--${variante}`, `chevrones--${tono}`]} aria-label={etiqueta} role="list">
+  {
+    items.map((item) => (
+      <li>
+        <a href={item.href} data-evento={item.evento}>
+          <span class="chevron" aria-hidden="true" />
+          {item.texto}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  @layer components {
+    .chevrones {
+      max-width: 28rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .chevrones--linea {
+      border-top: 2px solid currentColor;
+    }
+    .chevrones--linea li {
+      border-bottom: 2px solid currentColor;
+    }
+    .chevrones--claro {
+      color: var(--c-ink);
+    }
+    .chevrones--oscuro {
+      color: var(--c-paper);
+    }
+    .chevrones--caja {
+      padding: 0.75rem 1.5rem;
+      background: var(--c-accent);
+      color: var(--c-on-accent);
+    }
+    .chevrones--caja li + li {
+      border-top: 1.5px solid currentColor;
+    }
+    a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-height: 3.5rem;
+      color: inherit;
+      font-size: 1.1875rem;
+      font-weight: var(--weight-strong);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .chevrones--caja a:focus-visible {
+      outline-color: var(--c-ink);
+    }
+    .chevron {
+      flex: none;
+      width: 1.125rem;
+      height: 1.25rem;
+      background: var(--c-accent);
+      clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);
+      transition: transform var(--dur-2) var(--ease-out);
+    }
+    .chevrones--caja .chevron {
+      background: currentColor;
+    }
+    a:hover .chevron {
+      transform: translateX(3px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chevron {
+        transition: none;
+      }
+    }
+  }
+</style>

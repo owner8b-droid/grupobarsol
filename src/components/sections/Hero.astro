@@ -1,0 +1,203 @@
+---
+// Hero de D: video propio a pantalla completa, H1 concreto (ADR-011) y el lema como display con frase rotante.
+// El póster es el LCP (fetchpriority="high", sin lazy); el video llega después y solo sin reduced-motion ni Save-Data.
+import { Picture } from 'astro:assets';
+import poster from '../../assets/img/hero-excavadora-poster.jpg';
+import Button from '../ui/Button.astro';
+import Icon from '../ui/Icon.astro';
+import { ruta, t } from '../../i18n/utils';
+
+interface Props {
+  h1: string;
+  palabra: string;
+  frases: string[];
+  completa: string;
+}
+const { h1, palabra, frases, completa } = Astro.props;
+const video = `${import.meta.env.BASE_URL}media/hero-excavadora.mp4`;
+---
+
+<section id="inicio" class="hero" aria-labelledby="hero-h1" data-hero data-snap>
+  <Picture
+    src={poster}
+    alt=""
+    formats={['avif', 'webp']}
+    widths={[640, 960, 1280, 1600]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="hero__poster"
+  />
+  <video class="hero__video" data-hero-video data-src={video} muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+  <div class="hero__velo" aria-hidden="true"></div>
+  <div class="hero__contenido">
+    <h1 id="hero-h1" class="hero__h1 eyebrow">{h1}</h1>
+    <p class="hero__display">
+      <span class="hero__palabra">{palabra}</span>
+      <span class="hero__frase" data-rota={JSON.stringify(frases)} data-completa={completa} aria-hidden="true">{frases[0]}</span>
+      <span class="visualmente-oculto">{completa}</span>
+    </p>
+    <div class="hero__acciones">
+      <Button href="#tierra" variante="claro" tamano="l">{t('es', 'cta.verServicios')}</Button>
+      <Button href={ruta('cotizador')} tamano="l" evento="cotizador_inicio" ubicacion="hero">{t('es', 'cta.precotiza')}</Button>
+    </div>
+  </div>
+  <button
+    type="button"
+    class="hero__pausa"
+    data-video-toggle
+    data-pausar={t('es', 'video.pausar')}
+    data-reproducir={t('es', 'video.reproducir')}
+    aria-label={t('es', 'video.pausar')}
+    data-estado="reproduciendo"
+    hidden
+  >
+    <Icon nombre="pausa" tamano={18} class="hero__icono-pausa" />
+    <Icon nombre="play" tamano={18} class="hero__icono-play" />
+  </button>
+  <p class="hero__bajar" aria-hidden="true">Bajá <Icon nombre="abajo" tamano={18} /></p>
+</section>
+
+<style>
+  @layer components {
+    .hero {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: max(40rem, min(100svh, 62.5rem));
+      overflow: hidden;
+      background: var(--c-ink);
+      color: var(--c-paper);
+      text-align: center;
+    }
+    .hero :global(.hero__poster),
+    .hero :global(.hero__poster img),
+    .hero__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 55% 50%;
+    }
+    .hero__video {
+      opacity: 0;
+      transition: opacity var(--dur-3) var(--ease-out);
+    }
+    .hero__video:global(.is-playing) {
+      opacity: 1;
+    }
+    .hero__velo {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklch, var(--c-ink) 62%, transparent) 0%,
+        color-mix(in oklch, var(--c-ink) 42%, transparent) 40%,
+        color-mix(in oklch, var(--c-ink) 60%, transparent) 100%
+      );
+    }
+    .hero__contenido {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      max-width: 100%;
+      padding: 7rem 1.25rem 6rem;
+    }
+    .hero__h1 {
+      max-width: 40rem;
+      margin: 0 auto 1.4rem;
+      color: var(--c-paper-dim);
+    }
+    .hero__display {
+      font-weight: var(--weight-display);
+      line-height: 0.9;
+      letter-spacing: var(--tracking-display);
+    }
+    .hero__palabra {
+      display: block;
+      font-size: var(--step-5);
+    }
+    .hero__frase {
+      display: block;
+      margin-top: 0.9rem;
+      font-size: clamp(1.75rem, 1rem + 2.4vw, 3.375rem);
+      font-weight: var(--weight-text);
+      letter-spacing: -0.02em;
+      transition:
+        opacity var(--dur-2) var(--ease-out),
+        transform var(--dur-2) var(--ease-out);
+    }
+    .hero__frase:global(.is-saliendo) {
+      opacity: 0;
+      transform: translateY(-0.4em);
+    }
+    .hero__acciones {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2.75rem;
+    }
+    .hero__pausa {
+      position: absolute;
+      right: clamp(1rem, 6vw, 6rem);
+      bottom: 2.25rem;
+      z-index: 3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      padding: 0;
+      border: 2px solid color-mix(in oklch, var(--c-paper) 85%, transparent);
+      border-radius: 50%;
+      background: color-mix(in oklch, var(--c-ink) 40%, transparent);
+      color: var(--c-paper);
+      cursor: pointer;
+    }
+    .hero__pausa[hidden] {
+      display: none;
+    }
+    .hero__pausa[data-estado='reproduciendo'] :global(.hero__icono-play),
+    .hero__pausa[data-estado='pausa'] :global(.hero__icono-pausa) {
+      display: none;
+    }
+    .hero__bajar {
+      position: absolute;
+      bottom: 1.75rem;
+      left: 50%;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      transform: translateX(-50%);
+      color: var(--c-paper-dim);
+      font-size: 0.75rem;
+      font-weight: var(--weight-strong);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    @media (max-width: 40rem) {
+      .hero__acciones {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        max-width: 22rem;
+        margin-inline: auto;
+      }
+      .hero__h1 {
+        letter-spacing: 0.12em;
+      }
+      .hero__bajar {
+        display: none;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero__video,
+      .hero__frase {
+        transition: none;
+      }
+    }
+  }
+</style>

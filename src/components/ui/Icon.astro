@@ -1,0 +1,36 @@
+---
+// Un solo set de íconos propios en trazo (BRIEF.md §6.3: nada de emojis ni sets mezclados).
+export type NombreIcono = 'whatsapp' | 'flecha' | 'menu' | 'cerrar' | 'pausa' | 'play' | 'telefono' | 'abajo';
+interface Props {
+  nombre: NombreIcono;
+  tamano?: number;
+  class?: string;
+}
+const { nombre, tamano = 20, class: clase } = Astro.props;
+const rellenos: NombreIcono[] = ['pausa', 'play'];
+---
+
+<svg
+  class={clase}
+  width={tamano}
+  height={tamano}
+  viewBox="0 0 24 24"
+  fill={rellenos.includes(nombre) ? 'currentColor' : 'none'}
+  stroke={rellenos.includes(nombre) ? 'none' : 'currentColor'}
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {nombre === 'whatsapp' && <path d="M4.5 19.5l1.2-3.6A7.5 7.5 0 1 1 8.3 18.4z" />}
+  {nombre === 'flecha' && <path d="M4 12h15M13 6l6 6-6 6" />}
+  {nombre === 'menu' && <path d="M4 6h16M4 12h16M4 18h16" />}
+  {nombre === 'cerrar' && <path d="M6 6l12 12M18 6L6 18" />}
+  {nombre === 'pausa' && <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" />}
+  {nombre === 'play' && <path d="M8 5l11 7-11 7z" />}
+  {nombre === 'telefono' && (
+    <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />
+  )}
+  {nombre === 'abajo' && <path d="M6 9l6 6 6-6" />}
+</svg>

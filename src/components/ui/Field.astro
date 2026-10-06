@@ -1,0 +1,171 @@
+---
+// Campo de formulario accesible (modern-web-guidance: validate-input-after-interaction).
+// Pista arriba del campo, error visible solo con :user-invalid y aria-invalid sincronizado por lib/forms.ts.
+interface Opcion {
+  valor: string;
+  texto: string;
+}
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  tipo?: 'text' | 'tel' | 'email' | 'textarea' | 'select';
+  required?: boolean;
+  autocomplete?: string;
+  inputmode?: 'text' | 'numeric' | 'tel' | 'email';
+  pattern?: string;
+  placeholder?: string;
+  pista?: string;
+  error?: string;
+  opciones?: Opcion[];
+  tono?: 'claro' | 'oscuro';
+  etiqueta?: string;
+  completo?: boolean;
+  filas?: number;
+}
+const {
+  id,
+  name,
+  label,
+  tipo = 'text',
+  required = false,
+  autocomplete,
+  inputmode,
+  pattern,
+  placeholder,
+  pista,
+  error,
+  opciones = [],
+  tono = 'claro',
+  etiqueta,
+  completo = false,
+  filas = 3,
+} = Astro.props;
+const idPista = pista ? `${id}-pista` : undefined;
+const idError = error ? `${id}-error` : undefined;
+---
+
+<div class:list={['campo', `campo--${tono}`, { 'campo--completo': completo }]}>
+  <label for={id}>
+    {label}
+    {!required && <span class="campo__opcional"> (opcional)</span>}
+  </label>
+  {pista && <span id={idPista} class="campo__pista">{pista}</span>}
+  {
+    tipo === 'textarea' ? (
+      <textarea
+        id={id}
+        name={name}
+        rows={filas}
+        required={required}
+        placeholder={placeholder}
+        aria-describedby={idPista}
+        aria-errormessage={idError}
+        data-etiqueta={etiqueta}
+      />
+    ) : tipo === 'select' ? (
+      <select id={id} name={name} required={required} aria-describedby={idPista} aria-errormessage={idError} data-etiqueta={etiqueta}>
+        {opciones.map((o) => (
+          <option value={o.valor}>{o.texto}</option>
+        ))}
+      </select>
+    ) : (
+      <input
+        id={id}
+        name={name}
+        type={tipo}
+        required={required}
+        autocomplete={autocomplete}
+        inputmode={inputmode}
+        pattern={pattern}
+        placeholder={placeholder}
+        aria-describedby={idPista}
+        aria-errormessage={idError}
+        data-etiqueta={etiqueta}
+      />
+    )
+  }
+  {error && <span id={idError} class="campo__error">{error}</span>}
+</div>
+
+<style>
+  @layer components {
+    .campo {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end; /* alinea los campos de una fila aunque uno tenga pista */
+      gap: 0.45rem;
+    }
+    .campo--completo {
+      grid-column: 1 / -1;
+    }
+    label {
+      font-size: 0.9375rem;
+      font-weight: var(--weight-strong);
+    }
+    .campo__opcional {
+      font-weight: var(--weight-text);
+    }
+    .campo--claro .campo__opcional,
+    .campo--claro .campo__pista {
+      color: var(--c-muted);
+    }
+    .campo--oscuro label {
+      color: var(--c-paper-dim);
+    }
+    .campo--oscuro .campo__opcional,
+    .campo--oscuro .campo__pista {
+      color: var(--c-muted-dark);
+    }
+    .campo__pista {
+      font-size: 0.875rem;
+    }
+    input,
+    select,
+    textarea {
+      min-height: 3.25rem;
+      padding: 0 0.9rem;
+      border: 2px solid var(--c-field-border);
+      border-radius: var(--radius-s);
+      background: var(--c-paper-2);
+      color: var(--c-ink);
+      font-weight: var(--weight-text);
+    }
+    textarea {
+      padding-block: 0.75rem;
+      resize: vertical;
+    }
+    .campo--oscuro :is(input, select, textarea) {
+      border-color: var(--c-field-border-dark);
+      background: var(--c-ink-2);
+      color: var(--c-paper);
+    }
+    :is(input, select, textarea):focus-visible {
+      border-color: var(--c-accent);
+      outline: 3px solid var(--c-focus);
+      outline-offset: 2px;
+    }
+    :is(input, select, textarea):user-invalid {
+      border-color: var(--c-error-line);
+      background: var(--c-error-bg);
+      color: var(--c-ink);
+    }
+    /* Sobre oscuro el campo conserva su fondo; el borde y el mensaje marcan el error */
+    .campo--oscuro :is(input, select, textarea):user-invalid {
+      border-color: var(--c-error-line);
+    }
+    .campo__error {
+      display: none;
+      padding: 0.4rem 0.7rem;
+      border: 2px solid var(--c-error-line);
+      border-radius: var(--radius-s);
+      background: var(--c-error-bg);
+      color: var(--c-error);
+      font-size: 0.9375rem;
+      font-weight: var(--weight-strong);
+    }
+    :is(input, select, textarea):user-invalid ~ .campo__error {
+      display: block;
+    }
+  }
+</style>
