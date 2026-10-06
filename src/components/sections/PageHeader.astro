@@ -34,7 +34,7 @@ const todas: Miga[] = [{ nombre: t('es', 'ruta.inicio'), href: ruta('inicio') },
       </ol>
     </nav>
     {eyebrow && <p class="eyebrow cabecera__eyebrow">{eyebrow}</p>}
-    {palabra ? <TitleWord texto={titulo} as="h1" id="pagina-h1" tono="oscuro" /> : <h1 id="pagina-h1" class="cabecera__h1">{titulo}</h1>}
+    {palabra ? <TitleWord texto={titulo} as="h1" id="pagina-h1" tono="oscuro" revelar={false} /> : <h1 id="pagina-h1" class="cabecera__h1">{titulo}</h1>}
     {bajada && <p class="cabecera__bajada">{bajada}</p>}
   </div>
   {

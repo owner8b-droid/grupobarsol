@@ -12,8 +12,16 @@
   .js:not(.motion-fallback) [data-barra]:not(.is-in) {
     transform: scaleX(0);
   }
-  .js:not(.motion-fallback) [data-panel]:not(.is-in) {
+  .js:not(.motion-fallback) [data-panel]:not(.is-in),
+  .js:not(.motion-fallback) [data-split]:not(.is-in) {
     opacity: 0;
     visibility: hidden;
   }
+}
+
+/* Máscara de los títulos que parte el motor (SplitText, data-split): aire arriba y abajo para que la
+   interlínea apretada de los títulos no recorte tildes ni descendentes; el margen negativo no mueve el layout. */
+[data-split] .linea-mask {
+  padding-block: 0.18em 0.24em;
+  margin-block: -0.18em -0.24em;
 }

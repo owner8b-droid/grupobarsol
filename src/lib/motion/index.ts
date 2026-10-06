@@ -53,20 +53,31 @@ export function initMotion(root: ParentNode = document): void {
         }),
     });
 
-    // Títulos por líneas con máscara
+    // Títulos por líneas con máscara (paso 2 de la entrada de sección, después de la franja)
     root.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
       SplitText.create(el, {
         type: 'lines',
         mask: 'lines',
+        linesClass: 'linea',
+        // Las líneas no parten palabras: el lector las lee igual (aria-label en un span está prohibido)
+        aria: 'none',
         autoSplit: true,
-        onSplit: (self) =>
-          gsap.from(self.lines, {
-            yPercent: 110,
+        onSplit: (self) => {
+          if (el.classList.contains('is-in')) return; // al volver a partir (resize) no se repite
+          gsap.set(el, { autoAlpha: 1 });
+          // 150 %: con el aire de la máscara (motion.css) la línea queda oculta del todo, tildes incluidas
+          return gsap.from(self.lines, {
+            yPercent: 150,
             duration: 1.1,
             ease: 'expo.out',
             stagger: 0.08,
             scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-          }),
+            onComplete: () => {
+              marcarListo([el]);
+              gsap.set(el, { clearProps: 'opacity,visibility' });
+            },
+          });
+        },
       });
     });
 
@@ -119,6 +130,6 @@ export function initMotion(root: ParentNode = document): void {
 
   // Con reduced-motion: todo visible y en su lugar
   mm.add('(prefers-reduced-motion: reduce)', () => {
-    marcarListo([...root.querySelectorAll('[data-reveal], [data-barra], [data-panel]')]);
+    marcarListo([...root.querySelectorAll('[data-reveal], [data-barra], [data-panel], [data-split]')]);
   });
 }
