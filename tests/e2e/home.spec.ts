@@ -1,7 +1,21 @@
 // Hero (LCP, video con pausa, frase), motor de movimiento y respaldo con reduced-motion.
 import { expect, test } from '@playwright/test';
 
+test('las pre-cotizaciones de la home bajan al formulario, ninguna a una página en construcción', async ({ page }) => {
+  await page.goto('');
+  await expect(page.locator('.hero__acciones').getByRole('link', { name: 'Pre-cotizá tu obra' })).toHaveAttribute('href', '#cotizar');
+  await expect(page.locator('main a[href*="/cotizador/"]')).toHaveCount(0);
+});
+
 test.describe('con movimiento', () => {
+  test('la frase del hero se detiene en el lema completo antes de 5 s (WCAG 2.2.2)', async ({ page }) => {
+    await page.goto('');
+    const frase = page.locator('[data-rota]');
+    await expect(frase).toHaveText((await frase.getAttribute('data-completa')) ?? '', { timeout: 5_000 });
+    await page.waitForTimeout(3000);
+    await expect(frase).toHaveText((await frase.getAttribute('data-completa')) ?? '');
+  });
+
   test('el póster del hero carga primero (LCP)', async ({ page }) => {
     await page.goto('');
     const poster = page.locator('img.hero__poster, .hero__poster img').first();
@@ -55,7 +69,7 @@ test.describe('con movimiento', () => {
 });
 
 test.describe('con movimiento, sin hacer scroll', () => {
-  test('el teclado y los lectores de pantalla alcanzan lo que todavía no se reveló', async ({ page }) => {
+  test('el teclado y los lectores de pantalla alcanzan lo que todavía no se reveló', async ({ page, browserName }) => {
     await page.goto('');
     await expect(page.locator('html')).toHaveClass(/motion-ready/);
     // Los títulos de sección siguen en el árbol de accesibilidad antes de entrar en pantalla
@@ -64,8 +78,10 @@ test.describe('con movimiento, sin hacer scroll', () => {
     }
     // Con Tab se llega a los enlaces de 01 · Tierra, y al enfocarlos la sección se revela
     const enlace = page.locator('#tierra').getByRole('link', { name: 'Movimiento de tierras' });
+    // Safari no recorre enlaces con Tab por defecto (es Opción+Tab), y el WebKit de Playwright hace lo mismo
+    const tecla = browserName === 'webkit' ? 'Alt+Tab' : 'Tab';
     for (let i = 0; i < 25 && !(await enlace.evaluate((el) => el === document.activeElement)); i++) {
-      await page.keyboard.press('Tab');
+      await page.keyboard.press(tecla);
     }
     await expect(enlace).toBeFocused();
     // Margen amplio: en CI corren cuatro navegadores en paralelo y la entrada dura 1,1 s

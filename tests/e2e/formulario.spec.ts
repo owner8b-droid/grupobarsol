@@ -64,3 +64,44 @@ test('si el honeypot viene lleno se descarta en silencio', async ({ page }) => {
   expect(await abiertos(page)).toEqual([]);
   await expect(form.locator('[data-confirmacion]')).toBeHidden();
 });
+
+test('acepta el teléfono en formato tico y rechaza solo espacios', async ({ page }) => {
+  const form = await llenar(page);
+  const telefono = form.getByLabel('Teléfono o WhatsApp');
+  for (const valido of ['8880-8799', '+506 8880-8799', '(506) 8880 8799']) {
+    await telefono.fill(valido);
+    expect(await telefono.evaluate((el: HTMLInputElement) => el.checkValidity())).toBe(true);
+  }
+  await telefono.fill('        ');
+  await form.getByRole('button', { name: /Enviar/ }).click();
+  await expect(telefono).toHaveAttribute('aria-invalid', 'true');
+  await expect(telefono).toBeFocused();
+  expect(await abiertos(page)).toEqual([]);
+  await telefono.fill('8880-8799');
+  await form.getByRole('button', { name: /Enviar/ }).click();
+  expect((await abiertos(page))[0]).toContain('8880-8799');
+});
+
+test('sin consentimiento muestra su mensaje y no envía', async ({ page }) => {
+  const form = await llenar(page);
+  await form.getByRole('checkbox').uncheck();
+  await form.getByRole('button', { name: /Enviar/ }).click();
+  await expect(form.getByRole('checkbox')).toBeFocused();
+  await expect(form.getByText('Necesitamos tu permiso para usar estos datos.')).toBeVisible();
+  await expect(form.getByRole('checkbox')).toHaveAccessibleDescription('Necesitamos tu permiso para usar estos datos.');
+  expect(await abiertos(page)).toEqual([]);
+});
+
+test('sin datos, el foco va al primer campo con error', async ({ page }) => {
+  const form = page.locator('#cotizar form');
+  await form.getByRole('button', { name: /Enviar/ }).click();
+  await expect(form.getByLabel('Nombre')).toBeFocused();
+});
+
+test('el servicio se precarga desde la URL (lista cerrada)', async ({ page }) => {
+  await page.goto('contacto/?servicio=obra#cotizar');
+  await expect(page.locator('#c-servicio')).toHaveValue('Obra civil');
+  await page.goto('contacto/?servicio=<script>#cotizar');
+  await expect(page.locator('#c-servicio')).toHaveValue('');
+});
+
