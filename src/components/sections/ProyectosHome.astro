@@ -20,7 +20,7 @@ if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
 }
 ---
 
-<section id="proyectos" class="proyectos" aria-labelledby="proyectos-titulo" data-snap>
+<section id="proyectos" class="proyectos" aria-labelledby="proyectos-titulo" data-snap data-entrada>
   <Picture
     src={fondo}
     alt=""
@@ -90,11 +90,7 @@ if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
     .proyectos__fila {
       position: relative;
       z-index: 1; /* por encima de la foto y del corte, que crean su propio contexto (blend y transform) */
-      max-width: 90rem;
-      margin-inline: auto;
       padding: clamp(4.5rem, 9vw, 9rem) var(--gutter-end) clamp(4rem, 7vw, 6rem) var(--gutter-start);
-      /* La fila se centra a 90rem: la franja del título suma el margen para llegar al borde de la página */
-      --barra-inicio: calc(var(--gutter-start) + max(0px, (100vw - 90rem) / 2));
     }
     .proyectos__eyebrow {
       margin-bottom: 1.1rem;
@@ -109,6 +105,7 @@ if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
       gap: 1.75rem;
+      max-width: 75rem;
       margin: clamp(2.5rem, 4vw, 3.25rem) 0 0;
     }
     .proyectos__fila :global(.proyectos__todos) {
@@ -117,6 +114,16 @@ if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
     @media (min-width: 64rem) {
       .proyectos {
         min-height: var(--section-min);
+      }
+    }
+    @media (max-width: 63.99rem) {
+      /* En una columna el corte claro dejaría una cuña ocre junto a las tarjetas: campo ocre completo, como el
+         artboard móvil. La foto se desvanece arriba para que eyebrow, título y nota queden sobre ocre liso (8,3:1). */
+      .proyectos__papel {
+        display: none;
+      }
+      .proyectos :global(.proyectos__fondo) {
+        mask-image: linear-gradient(to bottom, transparent 0, transparent 16rem, var(--c-ink) 24rem); /* la máscara solo usa el alfa */
       }
     }
   }

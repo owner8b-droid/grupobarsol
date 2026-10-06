@@ -1,10 +1,11 @@
 ---
 // Tarjeta de proyecto (home y /proyectos/). Se acomoda a su propio ancho con container queries
 // (modern-web-guidance: size-aware-styling): apilada en angosto, foto al lado cuando hay espacio.
-// «Ver detalles» aparece cuando exista la ficha del proyecto (href).
+// Con href (cuando exista la ficha) toda la tarjeta es un enlace: el título lleva el enlace y su área cubre la
+// tarjeta; al pasar, la foto se acerca un 3 % y el foco se ve alrededor (docs/03-direccion-de-arte.md §8).
 import type { CollectionEntry } from 'astro:content';
 import { Picture } from 'astro:assets';
-import Button from './Button.astro';
+import Icon from './Icon.astro';
 
 interface Props {
   proyecto: CollectionEntry<'proyectos'>;
@@ -20,19 +21,23 @@ const tipo = d.servicios.map((s) => NOMBRES[s]).join(' · ');
 const cliente = d.cliente ? (d.permisoCliente ? d.cliente : 'Cliente privado') : POR_CONFIRMAR;
 ---
 
-<article class="proyecto">
+<article class:list={['proyecto', { 'proyecto--enlace': href }]}>
   <div class="proyecto__cuerpo">
-    <Picture
-      src={d.foto}
-      alt={d.fotoAlt}
-      formats={['avif', 'webp']}
-      widths={[320, 480, 640, 800]}
-      sizes="(min-width: 64rem) 13rem, (min-width: 40rem) 45vw, 100vw"
-      class="proyecto__foto"
-      style={`object-position: ${d.fotoPosicion}`}
-    />
+    <div class="proyecto__marco">
+      <Picture
+        src={d.foto}
+        alt={d.fotoAlt}
+        formats={['avif', 'webp']}
+        widths={[320, 480, 640, 800]}
+        sizes="(min-width: 64rem) 13rem, (min-width: 40rem) 45vw, 100vw"
+        class="proyecto__foto"
+        style={`object-position: ${d.fotoPosicion}`}
+      />
+    </div>
     <div class="proyecto__texto">
-      <Titulo class="proyecto__titulo">{d.titulo}</Titulo>
+      <Titulo class="proyecto__titulo">
+        {href ? <a href={href} class="proyecto__enlace">{d.titulo}</a> : d.titulo}
+      </Titulo>
       <dl class="proyecto__datos">
         <div>
           <dt>Tipo de proyecto</dt>
@@ -47,7 +52,13 @@ const cliente = d.cliente ? (d.permisoCliente ? d.cliente : 'Cliente privado') :
           <dd>{d.ubicacion ?? POR_CONFIRMAR}</dd>
         </div>
       </dl>
-      {href && <Button href={href} variante="tinta" class="proyecto__accion">Ver detalles</Button>}
+      {
+        href && (
+          <span class="proyecto__cta" aria-hidden="true">
+            Ver detalles <Icon nombre="flecha" tamano={18} />
+          </span>
+        )
+      }
     </div>
   </div>
 </article>
@@ -55,6 +66,7 @@ const cliente = d.cliente ? (d.permisoCliente ? d.cliente : 'Cliente privado') :
 <style>
   @layer components {
     .proyecto {
+      position: relative;
       container-type: inline-size;
       height: 100%;
       padding: 1.1rem;
@@ -70,12 +82,15 @@ const cliente = d.cliente ? (d.permisoCliente ? d.cliente : 'Cliente privado') :
       gap: 1.25rem;
       height: 100%;
     }
+    .proyecto__marco {
+      overflow: clip;
+      border-radius: var(--radius-s);
+    }
     .proyecto :global(.proyecto__foto) {
       display: block;
       width: 100%;
       height: auto; /* sin esto, el atributo height de <img> gana y el aspect-ratio no aplica */
       aspect-ratio: 4 / 3;
-      border-radius: var(--radius-s);
       object-fit: cover;
     }
     .proyecto__texto {
@@ -104,9 +119,47 @@ const cliente = d.cliente ? (d.permisoCliente ? d.cliente : 'Cliente privado') :
       margin: 0;
       color: var(--c-muted);
     }
-    .proyecto__texto :global(.proyecto__accion) {
-      align-self: flex-start;
+
+    /* Tarjeta enlace: el área del título cubre la tarjeta (un solo enlace, sin duplicados para el lector) */
+    .proyecto__enlace {
+      color: inherit;
+      text-decoration: none;
+    }
+    .proyecto__enlace::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-m);
+    }
+    .proyecto__enlace:focus-visible {
+      outline: none;
+    }
+    .proyecto--enlace:has(.proyecto__enlace:focus-visible) {
+      outline: 3px solid var(--c-focus);
+      outline-offset: 3px;
+    }
+    .proyecto__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
       margin-top: auto;
+      font-weight: var(--weight-strong);
+    }
+    .proyecto--enlace :global(.proyecto__foto),
+    .proyecto__cta :global(svg) {
+      transition: transform var(--dur-2) var(--ease-out);
+    }
+    .proyecto--enlace:hover :global(.proyecto__foto) {
+      transform: scale(1.03);
+    }
+    .proyecto--enlace:hover .proyecto__cta :global(svg) {
+      transform: translateX(4px);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .proyecto--enlace :global(.proyecto__foto),
+      .proyecto__cta :global(svg) {
+        transition: none;
+      }
     }
 
     /* Con espacio, la foto va al lado del texto (como en el artboard) */
@@ -115,9 +168,10 @@ const cliente = d.cliente ? (d.permisoCliente ? d.cliente : 'Cliente privado') :
         flex-direction: row;
         gap: 1.4rem;
       }
+      .proyecto__marco {
+        flex: 0 0 12.5rem;
+      }
       .proyecto :global(.proyecto__foto) {
-        flex: 0 0 auto;
-        width: 12.5rem;
         aspect-ratio: 4 / 5;
       }
     }

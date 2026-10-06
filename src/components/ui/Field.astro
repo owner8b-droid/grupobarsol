@@ -1,6 +1,7 @@
 ---
 // Campo de formulario accesible (modern-web-guidance: validate-input-after-interaction).
-// Pista arriba del campo, error visible solo con :user-invalid y aria-invalid sincronizado por lib/forms.ts.
+// Pista debajo del campo (las etiquetas de una fila quedan alineadas), error visible solo con :user-invalid y
+// aria-invalid sincronizado por lib/forms.ts.
 interface Opcion {
   valor: string;
   texto: string;
@@ -50,7 +51,6 @@ const idError = error ? `${id}-error` : undefined;
     {label}
     {!required && <span class="campo__opcional"> (opcional)</span>}
   </label>
-  {pista && <span id={idPista} class="campo__pista">{pista}</span>}
   {
     tipo === 'textarea' ? (
       <textarea
@@ -85,6 +85,7 @@ const idError = error ? `${id}-error` : undefined;
       />
     )
   }
+  {pista && <span id={idPista} class="campo__pista">{pista}</span>}
   {error && <span id={idError} class="campo__error">{error}</span>}
 </div>
 
@@ -93,7 +94,6 @@ const idError = error ? `${id}-error` : undefined;
     .campo {
       display: flex;
       flex-direction: column;
-      justify-content: flex-end; /* alinea los campos de una fila aunque uno tenga pista */
       gap: 0.45rem;
     }
     .campo--completo {

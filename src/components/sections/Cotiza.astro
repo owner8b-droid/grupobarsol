@@ -22,7 +22,7 @@ const servicios = [
 ];
 ---
 
-<section id="cotizar" class="cotiza" aria-labelledby="cotizar-titulo" data-snap>
+<section id="cotizar" class="cotiza" aria-labelledby="cotizar-titulo" data-snap data-entrada>
   <span class="cotiza__corte" aria-hidden="true"></span>
   <div class="cotiza__fila">
     <div class="cotiza__formulario">
@@ -106,7 +106,12 @@ const servicios = [
       </div>
       <div>
         <dt class="eyebrow">Teléfono y WhatsApp</dt>
-        <dd><a href={`tel:${site.telefono}`} data-evento="click_telefono">{site.telefonoVisible}</a></dd>
+        <dd class="cotiza__canales">
+          <a href={`tel:${site.telefono}`} data-evento="click_telefono">{site.telefonoVisible}</a>
+          <a href={enlaceWhatsApp(site.whatsapp)} rel="noopener noreferrer" target="_blank" data-evento="click_whatsapp" data-ubicacion="cotiza">
+            Escribinos por WhatsApp
+          </a>
+        </dd>
       </div>
       <div>
         <dt class="eyebrow">Correo</dt>
@@ -121,32 +126,32 @@ const servicios = [
     .cotiza {
       position: relative;
       overflow: hidden;
+      --c-focus: var(--c-accent);
       background: var(--c-ink);
       color: var(--c-paper);
     }
+    /* Esquina de acento: su borde izquierdo es la diagonal del brazo a cualquier alto (sesgo, no clip-path en %) */
     .cotiza__corte {
       position: absolute;
       top: 0;
-      right: 0;
-      width: 34%;
+      left: 66%;
+      right: -50%;
       height: 46%;
       background: var(--c-accent);
-      clip-path: polygon(62% 0, 100% 0, 100% 100%, 0 100%);
+      transform: skewX(calc(-1 * atan(var(--slope))));
+      transform-origin: 0 100%;
     }
     .cotiza__fila {
       position: relative;
       display: flex;
       flex-wrap: wrap;
       gap: 3.5rem 5rem;
-      max-width: 90rem;
-      margin-inline: auto;
       padding: clamp(4.5rem, 9vw, 9rem) var(--gutter-end) clamp(4rem, 7vw, 6rem) var(--gutter-start);
     }
     .cotiza__formulario {
       flex: 1 1 34rem;
       min-width: 0;
-      /* La fila se centra a 90rem: la franja del título suma el margen para llegar al borde de la página */
-      --barra-inicio: calc(var(--gutter-start) + max(0px, (100vw - 90rem) / 2));
+      max-width: 45rem;
     }
     .cotiza__eyebrow {
       margin-bottom: 1.1rem;
@@ -234,6 +239,11 @@ const servicios = [
       font-size: 1.1875rem;
       font-weight: 700;
     }
+    .cotiza__canales {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
     @media (min-width: 64rem) {
       .cotiza {
         min-height: var(--section-min);
@@ -242,8 +252,17 @@ const servicios = [
     @media (max-width: 63.99rem) {
       /* Una columna: el corte queda como esquina sobre el título y no pasa por detrás de los campos */
       .cotiza__corte {
-        width: 40%;
+        left: 60%;
         height: 7rem;
+      }
+    }
+    @media (max-width: 30rem) {
+      /* La etiqueta del envío entra en una línea desde 360 px (a 320 se parte en dos, sin cortar el copy) */
+      .formulario__enviar :global(.btn) {
+        width: 100%;
+        justify-content: space-between;
+        padding-inline: 1.1rem;
+        font-size: 1rem;
       }
     }
   }
