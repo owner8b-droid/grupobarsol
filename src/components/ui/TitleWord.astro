@@ -54,13 +54,13 @@ const { texto, as: Tag = 'h2', id, tono = 'claro', desde = 'izquierda', revelar 
       left: calc(-1 * var(--barra-inicio, var(--gutter-start)));
       right: 22%;
       transform-origin: 0 50%;
-      clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--bar-height) * var(--slope)) 100%, 0 100%);
     }
     .palabra--derecha .palabra__barra {
       left: -0.3em;
       right: calc(-1 * var(--barra-inicio, var(--gutter-end)));
       transform-origin: 100% 50%;
-      clip-path: polygon(0.12em 0, 100% 0, 100% 100%, 0 100%);
+      clip-path: polygon(calc(var(--bar-height) * var(--slope)) 0, 100% 0, 100% 100%, 0 100%);
     }
   }
 </style>

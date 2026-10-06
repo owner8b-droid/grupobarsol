@@ -49,14 +49,13 @@ const anio = new Date().getFullYear();
 <style>
   @layer components {
     .pie {
+      --c-focus: var(--c-accent);
       background: var(--c-ink-2);
       color: var(--c-muted-dark);
       font-size: 0.9375rem;
     }
     .pie__fila,
     .pie__legal {
-      max-width: 90rem;
-      margin-inline: auto;
       padding-inline: clamp(1.25rem, 4.4vw, 4rem);
     }
     .pie__fila {

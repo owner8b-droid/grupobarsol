@@ -64,8 +64,9 @@ const video = `${import.meta.env.BASE_URL}media/hero-excavadora.mp4`;
       position: relative;
       display: grid;
       place-items: center;
-      min-height: max(40rem, min(100svh, 62.5rem));
+      min-height: max(40rem, 100svh); /* llena la pantalla también en monitores altos */
       overflow: hidden;
+      --c-focus: var(--c-accent);
       background: var(--c-ink);
       color: var(--c-paper);
       text-align: center;

@@ -26,7 +26,7 @@
     --c-error-bg: oklch(0.938 0.018 43);       /* #F6E7E1 */
     --c-error-line: var(--c-brand);
     --c-scrim: oklch(0.184 0.005 67 / 0.5);    /* velo sobre video y fotos con texto encima */
-    --c-focus: var(--c-accent);
+    --c-focus: var(--c-ink);                   /* anillo de foco sobre claro y ocre; las superficies oscuras lo pasan a --c-accent (8,3:1) */
 
     /* Tipografía: una sola familia (Urbanist, geométrica como las letras del logo) */
     --font-text: var(--font-urbanist, 'Urbanist'), system-ui, sans-serif;
@@ -35,7 +35,7 @@
     --step-1:  clamp(1.25rem, 1.15rem + 0.50vw, 1.50rem);   /* bajadas */
     --step-2:  clamp(1.56rem, 1.35rem + 1.00vw, 2.10rem);
     --step-3:  clamp(2.25rem, 1.80rem + 2.00vw, 3.25rem);   /* títulos de bloque, pasos del cotizador */
-    --step-4:  clamp(4.00rem, 2.40rem + 4.80vw, 7.25rem);   /* títulos de una palabra (Tierra, Obra…) */
+    --step-4:  clamp(min(4rem, 16vw), 2.40rem + 4.80vw, 7.25rem); /* títulos de una palabra: 51 px a 320, 60 a 375, 116 máx.; «Maquinaria» entra entera */
     --step-5:  clamp(2.75rem, 0.50rem + 10.4vw, 10rem);     /* display del hero: 47 px a 375, 158 px a 1440 */
     --weight-text: 500; --weight-strong: 800; --weight-display: 900;
     --leading-tight: 0.92; --leading-snug: 1.2; --leading-body: 1.55;
@@ -53,7 +53,7 @@
     --radius-s: 4px;      /* botones y campos */
     --radius-m: 6px;      /* tarjetas */
     --radius-pill: 999px; /* chips de filtro y opciones */
-    --section-min: min(100svh, 62.5rem);                   /* pantallas completas del home en escritorio */
+    --section-min: min(100svh, 75rem);                     /* pantallas completas del home en escritorio (llenan hasta 1200 px de alto) */
     --slope: 0.46;        /* corte diagonal: avance horizontal por unidad de alto (≈ 65°, el brazo de la excavadora) */
     --bar-height: 0.2em;  /* franja bajo los títulos (la línea ocre del logo) */
     --bar-offset: -0.06em;
