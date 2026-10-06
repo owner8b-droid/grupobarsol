@@ -1,26 +1,24 @@
 ---
-// Tira de cortes de una misma foto (artboard D, «04 · Equipo»): tres paralelogramos con el ángulo del brazo, cada
-// uno encuadrando otra parte de la foto. Es una sola imagen para el lector (role="img" con su texto alternativo).
-// Entra con la pasada del brazo (data-diagonal + data-cortina), como DiagonalPanels.
+// Tira diagonal (artboard D, «04 · Equipo»): una sola foto continua partida por dos ranuras con el ángulo del brazo,
+// que se lee como tres cortes de la misma escena sin repetir el encuadre. Es una sola imagen para el lector
+// (role="img" con su texto alternativo). Entra con la pasada del brazo (data-diagonal + data-cortina).
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
   img: ImageMetadata;
   alt: string;
-  encuadres?: string[];
+  posicion?: string;
 }
-const { img, alt, encuadres = ['12% 50%', '52% 50%', '92% 50%'] } = Astro.props;
+const { img, alt, posicion = '50% 60%' } = Astro.props;
 ---
 
 <div class="tira" role="img" aria-label={alt} data-diagonal>
-  {
-    encuadres.map((pos) => (
-      <div class="tira__corte" data-panel style={`--pos: ${pos}`}>
-        <Picture src={img} alt="" formats={['avif', 'webp']} widths={[320, 480, 640]} sizes="(min-width: 64rem) 22vw, 40vw" loading="lazy" />
-      </div>
-    ))
-  }
+  <div class="tira__foto" data-panel style={`--pos: ${posicion}`}>
+    <Picture src={img} alt="" formats={['avif', 'webp']} widths={[640, 960, 1280, 1600]} sizes="(min-width: 64rem) 62vw, 100vw" loading="lazy" />
+  </div>
+  <span class="tira__ranura" style="--n: 1" aria-hidden="true"></span>
+  <span class="tira__ranura" style="--n: 2" aria-hidden="true"></span>
   <span class="tira__cortina" data-cortina aria-hidden="true"></span>
 </div>
 
@@ -29,33 +27,35 @@ const { img, alt, encuadres = ['12% 50%', '52% 50%', '92% 50%'] } = Astro.props;
     .tira {
       position: relative;
       container-type: size;
-      display: flex;
       height: 9.5rem;
       overflow: hidden;
     }
-    .tira__corte {
-      flex: 1 1 0;
-      min-width: 0;
-      overflow: hidden;
-      /* Paralelogramo: ambos lados al ángulo del brazo; los cortes se solapan para dejar una ranura pareja */
-      margin-left: calc(-1 * var(--slope) * 100cqh + 0.5rem);
-      clip-path: polygon(calc(var(--slope) * 100cqh) 0, 100% 0, calc(100% - var(--slope) * 100cqh) 100%, 0 100%);
-    }
-    .tira__corte:first-child {
-      margin-left: 0;
-    }
-    .tira__corte:last-of-type {
+    /* La foto entra por la izquierda con el corte del brazo y llega al borde de la página */
+    .tira__foto {
+      position: absolute;
+      inset: 0;
       clip-path: polygon(calc(var(--slope) * 100cqh) 0, 100% 0, 100% 100%, 0 100%);
     }
-    .tira__corte :global(picture),
-    .tira__corte :global(img) {
+    .tira__foto :global(picture),
+    .tira__foto :global(img) {
       display: block;
       width: 100%;
       height: 100%;
     }
-    .tira__corte :global(img) {
+    .tira__foto :global(img) {
       object-fit: cover;
-      object-position: var(--pos, 50% 50%);
+      object-position: var(--pos);
+    }
+    /* Ranuras del color de la sección a un tercio y dos tercios, sesgadas al ángulo del brazo */
+    .tira__ranura {
+      position: absolute;
+      inset-block: 0;
+      left: calc(100% / 3 * var(--n) - 0.25rem);
+      z-index: 1;
+      width: 0.5rem;
+      background: var(--superficie, var(--c-paper));
+      transform: skewX(calc(-1 * atan(var(--slope))));
+      transform-origin: 0 100%;
     }
     .tira__cortina {
       position: absolute;
@@ -67,6 +67,15 @@ const { img, alt, encuadres = ['12% 50%', '52% 50%', '92% 50%'] } = Astro.props;
       background: var(--superficie, var(--c-paper));
       transform-origin: 0 100%;
       transform: skewX(calc(-1 * atan(var(--slope))));
+    }
+    /* El filo de la cortina es la franja ocre del logo: lo que pasa y destapa es el brazo */
+    .tira__cortina::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      width: 0.75rem;
+      background: var(--c-accent);
     }
     @media (min-width: 64rem) {
       .tira {

@@ -170,5 +170,14 @@ const sizes = '(min-width: 64rem) 50vw, 100vw';
       transform-origin: 0 100%;
       transform: skewX(calc(-1 * atan(var(--slope))));
     }
+    /* El filo de la cortina es la franja ocre del logo: lo que pasa y destapa es el brazo */
+    .diagonal__cortina::before {
+      content: '';
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      width: 0.75rem;
+      background: var(--c-accent);
+    }
   }
 </style>

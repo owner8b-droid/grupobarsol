@@ -64,13 +64,14 @@ function entrada(grupo: Element, scrollTrigger: ScrollTrigger.Vars, incluir = { 
   const angulo = sesgo();
   cortinas.forEach((cortina, i) => {
     const fotos = cortina.parentElement?.querySelectorAll('[data-panel] img') ?? [];
-    const inicio = (incluir.texto ? 0.45 : 0) + i * 0.08;
+    const inicio = (incluir.texto ? 0.35 : 0) + i * 0.08;
     // --ease-in-out de la casa (cubic-bezier(0.65, 0, 0.35, 1)) = power2.inOut
     tl.fromTo(cortina, { xPercent: 0, skewX: angulo }, { xPercent: 101, skewX: angulo, duration: 0.9, ease: 'power2.inOut' }, inicio);
-    if (fotos.length) tl.from(fotos, { scale: 1.06, xPercent: -2, duration: 1.3 }, inicio + 0.1);
+    if (fotos.length) tl.from(fotos, { scale: 1.06, xPercent: -2, duration: 1.1 }, inicio + 0.1);
   });
   if (reveals.length) {
-    tl.fromTo(reveals, { opacity: 0, y: '2.5rem' }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.08 }, barras.length ? 0.5 : 0);
+    // El texto llega al final, cuando la pasada ya destapó buena parte de los paneles
+    tl.fromTo(reveals, { opacity: 0, y: '2.5rem' }, { opacity: 1, y: 0, duration: 1.1, stagger: 0.08 }, barras.length ? 0.8 : 0);
   }
 }
 
@@ -93,9 +94,12 @@ export function initMotion(root: ParentNode = document): void {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
-    // Snap por proximidad solo en escritorio con puntero fino; nunca obligatorio (ADR-009).
+    // Snap por proximidad solo en escritorio con puntero fino; nunca obligatorio (ADR-009). Solo las pantallas que
+    // caben en la ventana: en una más alta (Cotizá en una laptop) el snap devolvería al tope a quien lee o completa.
     let snap: Snap | undefined;
-    const pantallas = [...root.querySelectorAll<HTMLElement>('[data-snap]')];
+    const pantallas = [...root.querySelectorAll<HTMLElement>('[data-snap]')].filter(
+      (el) => el.offsetHeight <= window.innerHeight * 1.02,
+    );
     if (escritorio && pantallas.length && matchMedia('(pointer: fine)').matches) {
       snap = new Snap(lenis, { type: 'proximity', distanceThreshold: '18%', debounce: 450, duration: 0.9 });
       snap.addElements(pantallas, { align: ['start'] });
@@ -114,10 +118,11 @@ export function initMotion(root: ParentNode = document): void {
         entrada(seccion, { trigger: seccion, start: 'top 65%' });
         return;
       }
+      // Disparan casi al asomar: al frenar el pulgar no queda la parte de abajo de la pantalla vacía
       const texto = seccion.querySelector('[data-split]') ?? seccion;
-      entrada(seccion, { trigger: texto, start: 'top 85%' }, { texto: true, paneles: false });
+      entrada(seccion, { trigger: texto, start: 'top 95%' }, { texto: true, paneles: false });
       seccion.querySelectorAll('[data-diagonal]').forEach((visual) => {
-        entrada(visual, { trigger: visual, start: 'top 80%' }, { texto: false, paneles: true });
+        entrada(visual, { trigger: visual, start: 'top 92%' }, { texto: false, paneles: true });
       });
     });
 

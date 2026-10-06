@@ -61,17 +61,17 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
     .frente__texto {
       position: relative;
       z-index: 2;
-      flex: 1 1 32rem;
+      flex: 1 1 30rem; /* 30 + 32 < 64rem: lado a lado desde 1024 px */
       min-width: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: clamp(4.5rem, 9vw, 9rem) 2.5rem clamp(3.5rem, 7vw, 6rem) var(--gutter-start);
     }
-    .frente--invertida .frente__texto {
-      order: 2;
-      padding-left: 2.5rem;
-      padding-right: var(--gutter-end);
+    /* Título de una palabra a su ancho (como el artboard): la franja se mide sobre la palabra, no sobre la columna.
+       Del lado derecho la franja va hasta el borde de la página, así que ahí el título ocupa la columna. */
+    .frente__texto :global(.palabra--izquierda) {
+      align-self: flex-start;
     }
     .frente__eyebrow {
       margin-bottom: 1.1rem;
@@ -100,9 +100,20 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
     }
     .frente__visual {
       position: relative;
-      flex: 1 1 35rem;
+      flex: 1 1 32rem;
       min-width: 0;
       min-height: 22rem;
+    }
+    @media (max-width: 63.99rem) {
+      /* Apilado y siempre con el texto primero (también en 02, que en escritorio va invertida) */
+      .frente__texto,
+      .frente__visual {
+        flex-basis: 100%;
+      }
+      /* El bloque diagonal ya tiene alto propio (26rem, o 12rem la capa de 04 · Equipo) */
+      .frente__visual {
+        min-height: 0;
+      }
     }
     @media (min-width: 64rem) {
       .frente {
@@ -111,10 +122,10 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
       .frente__tira {
         padding-left: 38%;
       }
-    }
-    @media (max-width: 63.99rem) {
       .frente--invertida .frente__texto {
-        padding-left: var(--gutter-start);
+        order: 2;
+        padding-left: 2.5rem;
+        padding-right: var(--gutter-end);
       }
     }
   }
