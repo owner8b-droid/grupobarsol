@@ -24,5 +24,5 @@ for (const ruta of RUTAS) {
 test('la pre-cotización sin JS ofrece WhatsApp directo', async ({ page }) => {
   await page.goto('#cotizar');
   await expect(page.locator('#cotizar form')).toBeHidden();
-  await expect(page.locator('#cotizar').getByRole('link', { name: 'Escribinos por WhatsApp' })).toHaveAttribute('href', /^https:\/\/wa\.me\//);
+  await expect(page.locator('#cotizar .cotiza__sin-js').getByRole('link', { name: 'Escribinos por WhatsApp' })).toHaveAttribute('href', /^https:\/\/wa\.me\//);
 });

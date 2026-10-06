@@ -46,7 +46,7 @@ test.describe('con movimiento', () => {
       await page.waitForTimeout(60);
     }
     await expect(
-      page.locator('[data-reveal]:not(.is-in), [data-panel]:not(.is-in), [data-barra]:not(.is-in), [data-split]:not(.is-in)'),
+      page.locator('[data-reveal]:not(.is-in), [data-cortina]:not(.is-in), [data-barra]:not(.is-in), [data-split]:not(.is-in)'),
     ).toHaveCount(0);
     // Los títulos subieron con máscara y quedaron en su lugar
     await expect(page.locator('#tierra .linea-mask')).toHaveCount(1);
@@ -70,6 +70,29 @@ test.describe('con movimiento, sin hacer scroll', () => {
     await expect(enlace).toBeFocused();
     // Margen amplio: en CI corren cuatro navegadores en paralelo y la entrada dura 1,1 s
     await expect(page.locator('#tierra [data-reveal]').first()).toHaveClass(/is-in/, { timeout: 10_000 });
+  });
+});
+
+test.describe('con red lenta', () => {
+  test('si se baja antes de que llegue el motor, nada queda en blanco', async ({ page }) => {
+    // El motor llega 3 s tarde: mientras tanto el contenido se ve, y al llegar no oculta lo que ya está a la vista
+    await page.route(/motion\.[\w-]+\.js$/, async (route) => {
+      await new Promise((listo) => setTimeout(listo, 3000));
+      await route.continue();
+    });
+    await page.goto('');
+    await page.locator('#tierra').scrollIntoViewIfNeeded();
+    const ocultos = () =>
+      page.evaluate(
+        () =>
+          [...document.querySelectorAll('#tierra [data-reveal], #tierra [data-barra], #tierra [data-split]')].filter((el) => {
+            const estilo = getComputedStyle(el);
+            return estilo.opacity === '0' || estilo.transform.startsWith('matrix(0');
+          }).length,
+      );
+    expect(await ocultos()).toBe(0);
+    await expect(page.locator('html')).toHaveClass(/motion-ready/, { timeout: 15_000 });
+    expect(await ocultos()).toBe(0);
   });
 });
 
