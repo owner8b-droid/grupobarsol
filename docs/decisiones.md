@@ -104,6 +104,9 @@ con el GATE indicado.
 - Alternativas consideradas: lema como H1 (débil para SEO y para M01); H1 grande con la frase de servicios (pierde la
   fuerza visual de la referencia).
 - Consecuencias: SEO local y M01 cumplidos sin cambiar la imagen del hero.
+- Revisión (2026-10-06, GATE 5, aprobada por el usuario): la crítica mostró que la línea chica en mayúsculas no se
+  leía sobre el video. El H1 pasa a una línea en caja normal (`--step-1`, peso 800) sobre el display; el lema sigue
+  siendo el display.
 
 ## ADR-012 · Venta de agregados dentro de Acarreo
 - Fecha: 2026-10-05 · Estado: aceptada (respuesta del usuario)

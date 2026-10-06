@@ -31,7 +31,7 @@ const video = `${import.meta.env.BASE_URL}media/hero-excavadora.mp4`;
   <video class="hero__video" data-hero-video data-src={video} muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
   <div class="hero__velo" aria-hidden="true"></div>
   <div class="hero__contenido">
-    <h1 id="hero-h1" class="hero__h1 eyebrow">{h1}</h1>
+    <h1 id="hero-h1" class="hero__h1">{h1}</h1>
     <p class="hero__display">
       <span class="hero__palabra">{palabra}</span>
       <span class="hero__frase" data-rota={JSON.stringify(frases)} data-completa={completa} aria-hidden="true">{frases[0]}</span>
@@ -105,10 +105,16 @@ const video = `${import.meta.env.BASE_URL}media/hero-excavadora.mp4`;
       max-width: 100%;
       padding: 7rem 1.25rem 6rem;
     }
+    /* La oferta se lee de un vistazo (crítica del GATE 5, ADR-011): línea en caja normal sobre el display */
     .hero__h1 {
-      max-width: 40rem;
-      margin: 0 auto 1.4rem;
-      color: var(--c-paper-dim);
+      max-width: 34rem;
+      margin: 0 auto 1.25rem;
+      color: var(--c-paper);
+      font-size: var(--step-1);
+      font-weight: var(--weight-strong);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
     }
     .hero__display {
       font-weight: var(--weight-display);
@@ -186,9 +192,6 @@ const video = `${import.meta.env.BASE_URL}media/hero-excavadora.mp4`;
         align-items: stretch;
         max-width: 22rem;
         margin-inline: auto;
-      }
-      .hero__h1 {
-        letter-spacing: 0.12em;
       }
       .hero__bajar {
         display: none;
