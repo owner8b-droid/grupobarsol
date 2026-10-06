@@ -1,0 +1,717 @@
+---
+// Pre-cotizador de 5 pasos (docs/02-estrategia.md §10 · artboard Cotizador-*.dc.html · ADR-002, ADR-016).
+// Sin JS el asistente no puede armar el mensaje: se ofrece la salida directa a WhatsApp (como en «Cotizá»).
+// Con JS (lib/cotizador.ts): un paso por vez, validación con los mensajes de la estrategia, estado en la URL y en
+// sessionStorage, precarga de ?servicio= y ?maquina= contra listas cerradas y salida a WhatsApp con el resumen.
+// Layout: una sola copia de cada bloque, ubicada con grid-template-areas. En escritorio la columna de tinta apila la
+// promesa, «¿Preferís hablar ya?» y la esquina, que llena el resto de la columna y nunca pisa el texto. Apilado sigue
+// al artboard móvil: promesa compacta, franja con la esquina, asistente y el contacto directo al final, sobre cal.
+import { Picture } from 'astro:assets';
+import TitleWord from '../ui/TitleWord.astro';
+import Field from '../ui/Field.astro';
+import Button from '../ui/Button.astro';
+import { site } from '../../data/site';
+import { CUANDO, DETALLES, MAQUINAS, MENSAJES, SERVICIOS, TITULOS } from '../../data/cotizador';
+import { enlaceWhatsApp, ruta } from '../../i18n/utils';
+import capaFoto from '../../assets/img/vagonetas.jpg';
+
+const detalles = Object.entries(DETALLES) as [keyof typeof DETALLES, (typeof DETALLES)[keyof typeof DETALLES]][];
+const wa = enlaceWhatsApp(site.whatsapp);
+const resumen = [
+  { clave: 'servicio', dt: 'Servicio', paso: 1 },
+  { clave: 'detalle', dt: 'Detalle', paso: 2 },
+  { clave: 'lugar', dt: 'Lugar', paso: 3 },
+  { clave: 'cuando', dt: 'Para cuándo', paso: 3 },
+  { clave: 'contacto', dt: 'Contacto', paso: 4 },
+];
+---
+
+<div class="cotizador">
+  <section class="intro" aria-labelledby="cotizador-h1">
+    <p class="eyebrow intro__eyebrow">Pre-cotización · Sin costo ni compromiso</p>
+    <TitleWord texto="Cotizá" as="h1" id="cotizador-h1" tono="oscuro" revelar={false} />
+    <p class="intro__bajada">Contanos qué necesitás en cuatro pasos cortos y seguimos la conversación por WhatsApp.</p>
+    <ol class="intro__pasos" role="list">
+      <li><span class="intro__numero" aria-hidden="true">1</span>Respondés cuatro preguntas.</li>
+      <li><span class="intro__numero" aria-hidden="true">2</span>Revisás el resumen.</li>
+      <li><span class="intro__numero" aria-hidden="true">3</span>Lo seguimos por WhatsApp con vos.</li>
+    </ol>
+  </section>
+
+  <div class="corte" aria-hidden="true">
+    <div class="corte__marco">
+      <div class="corte__capa">
+        <Picture src={capaFoto} alt="" formats={['avif', 'webp']} widths={[480, 800]} sizes="(min-width: 68rem) 25vw, 42vw" loading="lazy" />
+      </div>
+    </div>
+  </div>
+
+  <section class="asistente" aria-label="Formulario de pre-cotización">
+    <noscript>
+      <div class="asistente__sin-js">
+        <p>El cotizador necesita JavaScript. Escribinos directo y te respondemos con la pre-cotización.</p>
+        <Button href={enlaceWhatsApp(site.whatsapp, 'Hola, Grupo Barsol. Quiero una pre-cotización.')} tamano="l" icono="whatsapp">
+          Escribinos por WhatsApp
+        </Button>
+      </div>
+    </noscript>
+    <form
+      class="asistente__form"
+      novalidate
+      data-cotizador
+      data-whatsapp={site.whatsapp}
+      data-web3forms={site.web3formsKey || undefined}
+      data-titulos={JSON.stringify(TITULOS)}
+      data-maquinas={JSON.stringify(MAQUINAS)}
+    >
+      <div class="progreso" aria-hidden="true">
+        {TITULOS.map((_, i) => <span class="progreso__barra" data-barra-paso={i + 1} />)}
+      </div>
+      <p class="estado" data-estado aria-live="polite">Paso 1 de {TITULOS.length} · {TITULOS[0]}</p>
+
+      <fieldset class="paso" data-paso="1">
+        <legend><h2 class="paso__titulo" id="paso-1-titulo" tabindex="-1">¿Qué necesitás?</h2></legend>
+        <div class="opciones" role="radiogroup" aria-labelledby="paso-1-titulo" aria-errormessage="error-servicio" data-grupo="servicio">
+          {
+            SERVICIOS.map((s) => (
+              <label class="opcion">
+                <input type="radio" name="servicio" value={s.clave} data-etiqueta={s.titulo} />
+                <span>
+                  <span class="opcion__titulo">{s.titulo}</span>
+                  <span class="opcion__desc">{s.descripcion}</span>
+                </span>
+              </label>
+            ))
+          }
+        </div>
+        <p id="error-servicio" class="paso__error" hidden>{MENSAJES.elegir}</p>
+      </fieldset>
+
+      <fieldset class="paso" data-paso="2" hidden>
+        <legend><h2 class="paso__titulo" tabindex="-1">Detalles</h2></legend>
+        {
+          detalles.map(([clave, d]) => (
+            <div class="detalle" data-detalle={clave} hidden>
+              <fieldset class="subgrupo">
+                <legend class="subgrupo__titulo" id={`detalle-${clave}-titulo`}>{d.pregunta}</legend>
+                <div class="chips" role="radiogroup" aria-labelledby={`detalle-${clave}-titulo`} aria-errormessage={`error-detalle-${clave}`} data-grupo={`detalle-${clave}`}>
+                  {d.opciones.map((o) => (
+                    <label class="chip">
+                      <input type="radio" name={`detalle-${clave}`} value={o} />
+                      <span>{o}</span>
+                    </label>
+                  ))}
+                </div>
+                <p id={`error-detalle-${clave}`} class="paso__error" hidden>{MENSAJES.elegir}</p>
+              </fieldset>
+              <div class="detalle__extra">
+                <Field id={`extra-${clave}`} name={`extra-${clave}`} label={d.extra} placeholder={d.ejemplo} />
+              </div>
+            </div>
+          ))
+        }
+        <div class="detalle" data-detalle="nose" hidden>
+          <Field
+            id="proyecto"
+            name="proyecto"
+            label="Contanos tu proyecto"
+            tipo="textarea"
+            filas={5}
+            required
+            pista="Qué querés hacer, dónde y si ya tenés planos. Te orientamos sin compromiso."
+            error={MENSAJES.proyecto}
+          />
+        </div>
+      </fieldset>
+
+      <fieldset class="paso" data-paso="3" hidden>
+        <legend><h2 class="paso__titulo" tabindex="-1">¿Dónde y cuándo?</h2></legend>
+        <Field id="lugar" name="lugar" label="¿Dónde es la obra?" placeholder="Cantón o distrito" required error={MENSAJES.lugar} />
+        <fieldset class="subgrupo subgrupo--separado">
+          <legend class="subgrupo__titulo" id="cuando-titulo">¿Para cuándo lo necesitás?</legend>
+          <div class="chips" role="radiogroup" aria-labelledby="cuando-titulo" aria-errormessage="error-cuando" data-grupo="cuando">
+            {
+              CUANDO.map((c) => (
+                <label class="chip">
+                  <input type="radio" name="cuando" value={c} />
+                  <span>{c}</span>
+                </label>
+              ))
+            }
+          </div>
+          <p id="error-cuando" class="paso__error" hidden>{MENSAJES.cuando}</p>
+        </fieldset>
+      </fieldset>
+
+      <fieldset class="paso" data-paso="4" hidden>
+        <legend><h2 class="paso__titulo" tabindex="-1">¿Cómo te contactamos?</h2></legend>
+        <div class="campos">
+          <Field id="cz-nombre" name="nombre" label="Nombre" required autocomplete="name" error={MENSAJES.nombre} />
+          <Field
+            id="cz-telefono"
+            name="telefono"
+            label="Teléfono o WhatsApp"
+            tipo="tel"
+            required
+            autocomplete="tel"
+            inputmode="tel"
+            validar="telefono"
+            pista="8 dígitos, por ejemplo 8888 8888"
+            error={MENSAJES.telefono}
+          />
+          <Field
+            id="cz-correo"
+            name="correo"
+            label="Correo"
+            tipo="email"
+            autocomplete="email"
+            inputmode="email"
+            pista="Te mandamos una copia del resumen."
+            error={MENSAJES.correo}
+            completo
+          />
+          <div class="trampa" aria-hidden="true">
+            <label for="cz-sitio">No llenar este campo</label>
+            <input id="cz-sitio" name="sitio" type="text" tabindex="-1" autocomplete="off" data-trampa />
+          </div>
+          <label class="permiso">
+            <input type="checkbox" id="cz-permiso" name="permiso" required aria-errormessage="cz-permiso-error" />
+            <span>
+              Acepto que Grupo Barsol use estos datos solo para responder mi consulta (Ley 8968).{' '}
+              <a href={ruta('privacidad')}>Política de privacidad</a>
+            </span>
+          </label>
+          <span id="cz-permiso-error" class="permiso__error">{MENSAJES.permiso}</span>
+        </div>
+      </fieldset>
+
+      <fieldset class="paso" data-paso="5" hidden>
+        <legend><h2 class="paso__titulo" tabindex="-1">Revisá tu pre-cotización</h2></legend>
+        <dl class="resumen">
+          {
+            resumen.map((r) => (
+              <div class="resumen__fila">
+                <dt>{r.dt}</dt>
+                <dd>
+                  <span class="resumen__valor" data-resumen={r.clave}></span>
+                  <button type="button" class="resumen__editar" data-ir={r.paso}>
+                    Editar<span class="visualmente-oculto"> {r.dt.toLowerCase()}</span>
+                  </button>
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+        <p class="aviso">
+          La pre-cotización no tiene costo ni compromiso. El precio se define cuando conversemos el alcance. Te respondemos de
+          lunes a viernes, de 8:00&nbsp;a.&nbsp;m. a 5:00&nbsp;p.&nbsp;m.
+        </p>
+        <div class="envio">
+          <Button type="submit" tamano="l" icono="flecha" iconoAlFinal>Enviar y seguir por WhatsApp</Button>
+          <button type="button" class="envio__editar" data-ir="1">Editar respuestas</button>
+        </div>
+        <p class="confirmacion" data-confirmacion role="status" tabindex="-1" hidden>
+          <strong data-saludo-nombre>¡Listo!</strong> Abrimos WhatsApp con tu resumen. ¿No se abrió?{' '}
+          <a href="#">Tocá aquí para abrirlo</a>.
+        </p>
+        <p class="error-correo" data-error-correo role="alert" hidden>
+          No pudimos enviar la copia por correo, pero tu resumen igual está listo en WhatsApp.
+        </p>
+      </fieldset>
+
+      <div class="navegacion" data-navegacion>
+        <Button type="button" variante="borde" tamano="l" data-atras hidden>Atrás</Button>
+        <Button type="button" tamano="l" icono="flecha" iconoAlFinal data-seguir>Seguir</Button>
+      </div>
+    </form>
+  </section>
+
+  <section class="directo" aria-labelledby="directo-titulo">
+    <h2 class="eyebrow directo__titulo" id="directo-titulo">¿Preferís hablar ya?</h2>
+    <p class="directo__canales">
+      <a href={wa} rel="noopener noreferrer" target="_blank" data-evento="click_whatsapp" data-ubicacion="cotizador">WhatsApp {site.telefonoVisible}</a>
+      <a href={`tel:${site.telefono}`} data-evento="click_telefono">Llamar</a>
+    </p>
+    <p class="directo__horario">{site.horario.texto}</p>
+  </section>
+</div>
+
+<style>
+  @layer components {
+    /* Apilado (móvil y tableta): promesa, franja con la esquina, asistente, contacto directo */
+    .cotizador {
+      --corte-alto: 3.5rem;
+      --corte-ancho: 42%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto var(--corte-alto) auto auto;
+      grid-template-areas: 'intro' 'corte' 'asistente' 'directo';
+    }
+
+    /* La promesa (tinta) */
+    .intro {
+      --c-focus: var(--c-accent);
+      grid-area: intro;
+      min-width: 0;
+      overflow: hidden;
+      padding: 2.25rem var(--gutter-end) 1.5rem var(--gutter-start);
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .intro__eyebrow {
+      margin-bottom: 1rem;
+      color: var(--c-muted-dark);
+    }
+    .intro :global(.palabra) {
+      margin-bottom: 1.25rem;
+    }
+    .intro__bajada {
+      max-width: 27.5rem;
+      color: var(--c-paper-dim);
+      font-size: var(--step-0);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .intro__pasos {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 26rem;
+      margin: 2.25rem 0 0;
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+    .intro__pasos li {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+    }
+    .intro__numero {
+      flex: none;
+      color: var(--c-accent);
+      font-size: var(--step-2);
+      font-weight: var(--weight-display);
+      line-height: 1;
+    }
+
+    /* La esquina: el brazo cierra la columna de tinta. Corte en cqh: el ángulo es el mismo a cualquier alto */
+    .corte {
+      grid-area: corte;
+      position: relative;
+      background: var(--c-ink);
+    }
+    .corte__marco {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: var(--corte-ancho);
+      height: min(100%, 24rem);
+      container-type: size;
+    }
+    .corte__capa {
+      position: absolute;
+      inset: 0;
+      background: var(--c-accent);
+      clip-path: polygon(calc(var(--slope) * 100cqh) 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .corte__capa :global(picture),
+    .corte__capa :global(img) {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .corte__capa :global(img) {
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.15) brightness(1.05);
+      mix-blend-mode: multiply;
+    }
+
+    /* Contacto directo: sobre cal al final; en escritorio sube a la columna de tinta */
+    .directo {
+      grid-area: directo;
+      min-width: 0;
+      padding: 1.5rem var(--gutter-end) 2.25rem var(--gutter-start);
+      border-top: 2px solid var(--c-line);
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    .directo__titulo {
+      margin-bottom: 0.4rem;
+      color: var(--c-muted);
+    }
+    .directo__canales {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 1.5rem;
+      font-size: 1.1875rem;
+      font-weight: 700;
+    }
+    .directo__canales a {
+      display: inline-flex;
+      align-items: center;
+      min-height: var(--target-min);
+      color: inherit;
+    }
+    .directo__horario {
+      color: var(--c-muted);
+    }
+
+    /* El asistente (cal) */
+    .asistente {
+      grid-area: asistente;
+      min-width: 0;
+      padding: 2rem var(--gutter-end) 3rem var(--gutter-start);
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    :global(html:not(.js)) .asistente__form {
+      display: none;
+    }
+    .asistente__sin-js {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.25rem;
+      max-width: 34rem;
+    }
+    .asistente__form {
+      max-width: 45rem;
+    }
+    .progreso {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.375rem;
+      margin-bottom: 0.875rem;
+    }
+    .progreso__barra {
+      height: 0.375rem;
+      border-radius: 0.1875rem;
+      background: var(--c-line);
+    }
+    .progreso__barra:global(.is-hecho) {
+      background: var(--c-ink);
+    }
+    .progreso__barra:global(.is-actual) {
+      background: var(--c-accent);
+    }
+    .estado {
+      margin-bottom: 1.75rem;
+      color: var(--c-muted);
+      font-size: 0.875rem;
+      font-weight: var(--weight-strong);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .paso {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      min-width: 0;
+    }
+    .paso legend,
+    .subgrupo legend {
+      padding: 0;
+    }
+    .paso__titulo {
+      margin-bottom: 1.25rem;
+      font-size: var(--step-3);
+      font-weight: var(--weight-display);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .paso__titulo:focus {
+      outline: none;
+    }
+    .paso__titulo:focus-visible {
+      outline: 3px solid var(--c-focus);
+      outline-offset: 3px;
+    }
+
+    /* Tarjetas de opción y chips: radios nativos (flechas del teclado); elegido = fondo tinta, texto cal (§8) */
+    .opciones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.75rem), 1fr));
+      gap: 0.75rem;
+    }
+    .opcion {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.875rem;
+      min-height: 5.5rem;
+      padding: 1.125rem;
+      border: 2px solid var(--c-chip-border);
+      border-radius: var(--radius-m);
+      background: var(--c-paper-2);
+      cursor: pointer;
+    }
+    .opcion input,
+    .chip input {
+      flex: none;
+      margin: 0;
+      accent-color: var(--c-accent);
+    }
+    .opcion input {
+      width: 1.25rem;
+      height: 1.25rem;
+      margin-top: 0.2rem;
+    }
+    .opcion__titulo {
+      display: block;
+      font-size: 1.1875rem;
+      font-weight: var(--weight-display);
+      line-height: 1.2;
+    }
+    .opcion__desc {
+      display: block;
+      margin-top: 0.25rem;
+      color: var(--c-muted);
+      line-height: 1.4;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.625rem;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      min-height: 3rem;
+      padding: 0 1.125rem;
+      border: 2px solid var(--c-chip-border);
+      border-radius: var(--radius-pill);
+      background: var(--c-paper-2);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .chip input {
+      width: 1rem;
+      height: 1rem;
+    }
+    .opcion:has(input:checked),
+    .chip:has(input:checked) {
+      border-color: var(--c-ink);
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .opcion:has(input:checked) .opcion__desc {
+      color: var(--c-muted-dark);
+    }
+    .opcion:hover,
+    .chip:hover {
+      border-color: var(--c-ink);
+    }
+    .opcion:has(input:focus-visible),
+    .chip:has(input:focus-visible) {
+      outline: 3px solid var(--c-focus);
+      outline-offset: 3px;
+    }
+    .subgrupo {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      min-width: 0;
+    }
+    .subgrupo--separado {
+      margin-top: 2rem;
+    }
+    .subgrupo__titulo {
+      margin-bottom: 0.875rem;
+      font-size: var(--step-2);
+      font-weight: var(--weight-display);
+      line-height: 1.2;
+    }
+    .detalle__extra {
+      margin-top: 1.75rem;
+    }
+    .paso__error,
+    .permiso__error {
+      margin-top: 0.75rem;
+      padding: 0.4rem 0.7rem;
+      border: 2px solid var(--c-error-line);
+      border-radius: var(--radius-s);
+      background: var(--c-error-bg);
+      color: var(--c-error);
+      font-size: 0.9375rem;
+      font-weight: var(--weight-strong);
+    }
+    .campos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+      gap: 1.125rem 1.25rem;
+    }
+    .trampa {
+      position: absolute;
+      left: -9999px;
+    }
+    .permiso {
+      display: flex;
+      grid-column: 1 / -1;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--c-muted);
+      font-size: 0.9375rem;
+      line-height: 1.45;
+    }
+    .permiso input {
+      flex: none;
+      width: 1.375rem;
+      height: 1.375rem;
+      margin: 0.05rem 0 0;
+      accent-color: var(--c-accent);
+    }
+    .permiso a {
+      color: var(--c-ink);
+      font-weight: 700;
+    }
+    .permiso__error {
+      display: none;
+      grid-column: 1 / -1;
+      margin-top: -0.5rem;
+    }
+    .permiso:has(input:is(:user-invalid, [aria-invalid='true'])) + .permiso__error {
+      display: block;
+    }
+
+    /* Resumen */
+    .resumen {
+      margin: 0 0 1.5rem;
+      border-top: 2px solid var(--c-line);
+    }
+    /* En una dl el grupo solo admite dt y dd: «Editar» va dentro del dd, al lado del valor */
+    .resumen__fila {
+      display: grid;
+      grid-template-columns: minmax(7rem, 10rem) 1fr;
+      align-items: baseline;
+      gap: 0.25rem 1rem;
+      padding-block: 0.875rem;
+      border-bottom: 2px solid var(--c-line);
+    }
+    .resumen dt {
+      font-weight: var(--weight-strong);
+    }
+    .resumen dd {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: 0;
+    }
+    .resumen__valor {
+      min-width: 0;
+      color: var(--c-muted);
+      overflow-wrap: anywhere;
+    }
+    .resumen__editar,
+    .envio__editar {
+      min-height: var(--target-min);
+      padding: 0 0.25rem;
+      border: 0;
+      background: none;
+      color: var(--c-ink);
+      font: inherit;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .aviso {
+      max-width: 38rem;
+      margin-bottom: 1.5rem;
+      color: var(--c-muted);
+      font-size: 0.9375rem;
+    }
+    .envio {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+    }
+    .confirmacion,
+    .error-correo {
+      margin-top: 1.5rem;
+      padding: 0.9rem 1rem;
+      border-radius: var(--radius-s);
+    }
+    .confirmacion {
+      border: 2px solid var(--c-ink);
+      background: var(--c-paper-2);
+    }
+    .confirmacion a {
+      color: var(--c-ink);
+      font-weight: 700;
+    }
+    .error-correo {
+      border: 2px solid var(--c-error-line);
+      background: var(--c-error-bg);
+      color: var(--c-error);
+      font-weight: 700;
+    }
+    .navegacion {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+    }
+    .navegacion :global([data-seguir]) {
+      margin-left: auto;
+    }
+    /* Angosto (artboard móvil): Seguir y el envío ocupan el ancho, texto a la izquierda y flecha al borde */
+    @media (max-width: 40rem) {
+      .navegacion :global([data-seguir]),
+      .envio :global(button[type='submit']) {
+        flex: 1 1 auto;
+        justify-content: space-between;
+        text-align: start;
+      }
+      .envio :global(button[type='submit']) {
+        flex-basis: 100%;
+      }
+      .envio :global(button[type='submit'] > span) {
+        text-wrap: balance;
+      }
+    }
+    /* Dos columnas: la de tinta apila promesa, contacto directo y la esquina, que crece con el asistente */
+    @media (min-width: 68rem) {
+      .cotizador {
+        --corte-alto: 9rem;
+        --corte-ancho: 56%;
+        grid-template-columns: minmax(0, 28fr) minmax(0, 40fr);
+        grid-template-rows: auto auto minmax(var(--corte-alto), 1fr);
+        grid-template-areas: 'intro asistente' 'directo asistente' 'corte asistente';
+        min-height: calc(var(--section-min) - 5rem);
+      }
+      .intro {
+        padding: clamp(3.5rem, 6vw, 4.5rem) clamp(1.75rem, 4vw, 3.5rem) 2.5rem var(--gutter-start);
+      }
+      .intro :global(.palabra) {
+        margin-bottom: 1.75rem;
+      }
+      .intro__bajada {
+        font-size: var(--step-1);
+      }
+      .intro__pasos {
+        display: flex;
+      }
+      .directo {
+        --c-focus: var(--c-accent);
+        padding: 0 clamp(1.75rem, 4vw, 3.5rem) 2.5rem var(--gutter-start);
+        border-top: 0;
+        background: var(--c-ink);
+        color: var(--c-paper);
+      }
+      .directo__titulo,
+      .directo__horario {
+        color: var(--c-muted-dark);
+      }
+      .asistente {
+        padding: clamp(3.5rem, 6vw, 4.5rem) var(--gutter-end) clamp(3.5rem, 6vw, 4.5rem) clamp(1.75rem, 4.4vw, 4rem);
+      }
+    }
+    @media (max-width: 30rem) {
+      .resumen__fila {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+</style>

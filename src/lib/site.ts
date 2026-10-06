@@ -22,6 +22,8 @@ export function initSite(opciones: { ga4?: string } = {}): void {
   initFraseRotante();
   initScrollspy();
   initPestana();
+  // El cotizador es la función de su página: se carga apenas hace falta, no después del primer pintado
+  if (document.querySelector('[data-cotizador]')) void import('./cotizador').then((m) => m.initCotizador());
   initValidacionAccesible();
   initFormulariosWhatsApp();
   initEventosDeClic();

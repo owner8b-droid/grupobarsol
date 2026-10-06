@@ -16,7 +16,7 @@ const SERVICIOS: Record<string, string> = {
 
 // aria-invalid y el mensaje de error en aria-describedby solo mientras el campo es inválido
 // (aria-errormessage se mantiene, pero su soporte en lectores de pantalla es parcial).
-function marcar(el: HTMLElement, invalido: boolean) {
+export function marcar(el: HTMLElement, invalido: boolean) {
   const idError = el.getAttribute('aria-errormessage');
   const ids = new Set((el.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean));
   if (invalido) el.setAttribute('aria-invalid', 'true');
@@ -40,11 +40,11 @@ function sincronizarAria(el: Element | null) {
 }
 
 // Teléfono de Costa Rica: 8 dígitos, con o sin espacios, guiones, paréntesis o el prefijo 506
-function digitosTelefono(valor: string): string {
+export function digitosTelefono(valor: string): string {
   const digitos = valor.replace(/\D/g, '');
   return digitos.length === 11 && digitos.startsWith('506') ? digitos.slice(3) : digitos;
 }
-function validarTelefono(el: HTMLInputElement) {
+export function validarTelefono(el: HTMLInputElement) {
   // Vacío de verdad lo resuelve «required»; cualquier otra cosa (también solo espacios) tiene que dar 8 dígitos
   const vacio = el.value === '';
   const mensaje = document.getElementById(el.getAttribute('aria-errormessage') ?? '')?.textContent ?? 'Teléfono inválido';
@@ -87,7 +87,7 @@ function resumen(form: HTMLFormElement): { lineas: string[]; datos: Record<strin
   return { lineas, datos };
 }
 
-async function copiaPorCorreo(clave: string, asunto: string, datos: Record<string, string>): Promise<boolean> {
+export async function copiaPorCorreo(clave: string, asunto: string, datos: Record<string, string>): Promise<boolean> {
   const control = new AbortController();
   const limite = window.setTimeout(() => control.abort(), 8000);
   try {

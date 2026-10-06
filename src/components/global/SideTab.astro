@@ -1,12 +1,18 @@
 ---
 // Pestaña fija «Pre-cotizá tu obra» (solo escritorio). La conversión siempre a mano (BRIEF.md §2.1).
-// Se oculta mientras el formulario está a la vista (lib/site.ts): no compite con él.
+// Se oculta mientras el formulario está a la vista (lib/site.ts): no compite con él. En el cotizador no va.
 import { destinoCotizar, t } from '../../i18n/utils';
+
+const destino = destinoCotizar(Astro.url.pathname);
 ---
 
-<a class="pestana" href={destinoCotizar(Astro.url.pathname)} data-pestana data-evento="cotizador_inicio" data-ubicacion="pestana">
-  {t('es', 'cta.precotiza')}
-</a>
+{
+  destino !== Astro.url.pathname && (
+    <a class="pestana" href={destino} data-pestana data-evento="cotizador_inicio" data-ubicacion="pestana">
+      {t('es', 'cta.precotiza')}
+    </a>
+  )
+}
 
 <style>
   @layer components {

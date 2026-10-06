@@ -27,18 +27,19 @@ export function enlaceWhatsApp(numero: string, mensaje?: string): string {
   return mensaje ? `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}` : `https://wa.me/${numero}`;
 }
 
-// Hasta que exista el cotizador de 5 pasos (F5), toda pre-cotización va al formulario corto de contacto (#cotizar),
-// con el servicio precargado (?servicio=, lista cerrada en lib/forms.ts). Al terminar el cotizador: true.
-const COTIZADOR_LISTO = false;
+// Pre-cotizar desde otra página va al cotizador de 5 pasos (lib/cotizador.ts), con el servicio y la máquina
+// precargados (?servicio=, ?maquina=; listas cerradas). En false, todo iría al formulario corto de contacto.
+const COTIZADOR_LISTO = true;
 
 /** Destino de «Pre-cotizá tu obra» desde otra página: el cotizador cuando exista; mientras, el formulario corto. */
-export function rutaCotizar(servicio?: string, idioma: Idioma = 'es'): string {
-  const consulta = servicio ? `?servicio=${encodeURIComponent(servicio)}` : '';
+export function rutaCotizar(servicio?: string, extra: Record<string, string> = {}, idioma: Idioma = 'es'): string {
+  const parametros = new URLSearchParams({ ...(servicio ? { servicio } : {}), ...extra }).toString();
+  const consulta = parametros ? `?${parametros}` : '';
   return COTIZADOR_LISTO ? `${ruta('cotizador', idioma)}${consulta}` : `${ruta('contacto', idioma)}${consulta}#cotizar`;
 }
 
 /** En las páginas que ya tienen el formulario (inicio y contacto), «Pre-cotizá» baja a él sin salir. */
 export function destinoCotizar(paginaActual: string, idioma: Idioma = 'es'): string {
-  return [ruta('inicio', idioma), ruta('contacto', idioma)].includes(paginaActual) ? '#cotizar' : rutaCotizar(undefined, idioma);
+  return [ruta('inicio', idioma), ruta('contacto', idioma)].includes(paginaActual) ? '#cotizar' : rutaCotizar(undefined, {}, idioma);
 }
 
