@@ -13,8 +13,17 @@ test.describe('con movimiento', () => {
   test('el video se puede pausar y reanudar (WCAG 2.2.2)', async ({ page }) => {
     await page.goto('');
     const video = page.locator('[data-hero-video]');
-    const h264 = await video.evaluate((v: HTMLVideoElement) => v.canPlayType('video/mp4; codecs="avc1.42E01E"'));
-    test.skip(!h264, 'Este navegador no reproduce H.264');
+    // canPlayType puede decir "maybe" y aun así fallar (navegadores de Playwright en Linux sin H.264):
+    // se espera la reproducción real y, si no llega, el test se salta con el motivo.
+    const reproduce = await video.evaluate(
+      (v: HTMLVideoElement) =>
+        new Promise<boolean>((listo) => {
+          if (!v.paused && v.readyState > 2) return listo(true);
+          v.addEventListener('playing', () => listo(true), { once: true });
+          setTimeout(() => listo(false), 8000);
+        }),
+    );
+    test.skip(!reproduce, 'Este navegador no reproduce el MP4 (H.264)');
 
     const boton = page.locator('[data-video-toggle]');
     await expect(video).toHaveClass(/is-playing/);

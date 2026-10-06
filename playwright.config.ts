@@ -19,6 +19,9 @@ export default defineConfig({
   },
   webServer: {
     command: `npx astro preview --port ${PUERTO} --host 127.0.0.1`,
+    // Astro 7 manda el preview a segundo plano si detecta un agente (am-i-vibing lee CLAUDECODE):
+    // vacía, el servidor queda en primer plano y Playwright lo controla y lo cierra.
+    env: { CLAUDECODE: '' },
     url: BASE,
     reuseExistingServer: !CI,
     timeout: 60_000,

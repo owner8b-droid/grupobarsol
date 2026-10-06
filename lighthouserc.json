@@ -1,7 +1,7 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "npx astro preview --port 4322 --host 127.0.0.1",
+      "startServerCommand": "CLAUDECODE= npx astro preview --port 4322 --host 127.0.0.1",
       "startServerReadyPattern": "4322",
       "url": [
         "http://127.0.0.1:4322/grupobarsol/",
