@@ -63,20 +63,23 @@ export function initFraseRotante(): void {
   const el = document.querySelector<HTMLElement>('[data-rota]');
   if (!el) return;
   const frases: string[] = JSON.parse(el.dataset.rota ?? '[]');
+  const completa = el.dataset.completa ?? el.textContent ?? '';
   if (frases.length < 2 || matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    el.textContent = el.dataset.completa ?? el.textContent;
+    el.textContent = completa;
     return;
   }
-  let i = 0;
-  let visible = true;
-  new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(el);
-  window.setInterval(() => {
-    if (!visible || document.hidden) return;
-    i = (i + 1) % frases.length;
-    el.classList.add('is-saliendo');
+  // Una sola vuelta que se resuelve en el lema completo antes de los 5 s: WCAG 2.2.2 no pide un control de pausa
+  // para lo que se detiene solo en ese plazo. «caminos.» → «oportunidades.» → «caminos, oportunidades y futuro.»
+  const pasos = [...frases.slice(1, -1), completa];
+  const PASO = 2000;
+  const SALIDA = 320; // --dur-2
+  pasos.forEach((texto, i) => {
     window.setTimeout(() => {
-      el.textContent = frases[i];
-      el.classList.remove('is-saliendo');
-    }, 320);
-  }, 2800);
+      el.classList.add('is-saliendo');
+      window.setTimeout(() => {
+        el.textContent = texto;
+        el.classList.remove('is-saliendo');
+      }, SALIDA);
+    }, PASO * (i + 1) - SALIDA);
+  });
 }
