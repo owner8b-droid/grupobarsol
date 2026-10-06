@@ -1,0 +1,36 @@
+# Calidad en cada push y PR: tipos + build, e2e y axe en Chromium, WebKit y Firefox, y Lighthouse CI
+# contra los presupuestos del nivel premium (BRIEF.md §7). Los reportes quedan como artefactos del run.
+name: Calidad
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  calidad:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit firefox
+      - run: npm run test:e2e
+      - run: npm run lhci
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: reportes
+          path: |
+            playwright-report/
+            .lighthouseci/
+          retention-days: 14
