@@ -25,3 +25,6 @@ test-results/
 
 # Sistema
 .DS_Store
+
+# Capturas del MCP de Playwright
+.playwright-mcp/

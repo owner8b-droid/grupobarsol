@@ -1,0 +1,38 @@
+{
+  "name": "grupobarsol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "dev:bg": "astro dev --background",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "test:e2e": "playwright test",
+    "test:a11y": "playwright test tests/a11y",
+    "lint:design": "npx fluid-skills detect src --strict",
+    "lint:impeccable": "~/.claude/skills/impeccable/scripts/impeccable detect --json src",
+    "lhci": "lhci autorun"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.3.5",
+    "gsap": "3.15.0",
+    "lenis": "1.3.26"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.13.0",
+    "@lhci/cli": "0.15.1",
+    "@playwright/test": "1.63.0",
+    "prettier": "3.9.9",
+    "prettier-plugin-astro": "1.1.0",
+    "schema-dts": "2.1.0",
+    "typescript": "6.0.3"
+  }
+}

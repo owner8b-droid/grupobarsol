@@ -1,0 +1,7 @@
+dist/
+.astro/
+node_modules/
+design/
+docs/
+insumos/
+package-lock.json
