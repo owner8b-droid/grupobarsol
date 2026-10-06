@@ -21,6 +21,8 @@ import { ruta, t } from '../../i18n/utils';
         display: flex;
         align-items: center;
         padding: 1.85rem 0.95rem;
+        border: 2px solid var(--c-ink);
+        border-right: 0;
         border-radius: 0 0.6rem 0.6rem 0;
         background: var(--c-accent);
         color: var(--c-on-accent);
@@ -35,7 +37,8 @@ import { ruta, t } from '../../i18n/utils';
         background: color-mix(in oklch, var(--c-accent) 86%, var(--c-ink));
       }
       .pestana:focus-visible {
-        outline-color: var(--c-ink);
+        outline: 3px solid var(--c-ink);
+        outline-offset: -7px;
       }
     }
   }
