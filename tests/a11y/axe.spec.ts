@@ -3,6 +3,7 @@
 // Un 0 aquí no reemplaza las pruebas manuales (teclado, lector de pantalla, zoom): BRIEF.md §10.2.
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { asistente, hastaElResumen, seguir } from '../cotizador';
 import { nombre, RUTAS } from '../rutas';
 
 test.use({ reducedMotion: 'reduce' });
@@ -34,4 +35,14 @@ test('formulario con errores visibles: sin violaciones', async ({ page }) => {
   await expect(page.locator('#c-nombre')).toHaveAttribute('aria-invalid', 'true');
   const { violations } = await analizar(page);
   expect(resumen(violations)).toEqual([]);
+});
+
+test('cotizador con el error del paso y en el resumen: sin violaciones', async ({ page }) => {
+  await page.goto('cotizador/');
+  await seguir(page).click();
+  await expect(asistente(page).locator('#error-servicio')).toBeVisible();
+  expect(resumen((await analizar(page)).violations)).toEqual([]);
+
+  await hastaElResumen(page);
+  expect(resumen((await analizar(page)).violations)).toEqual([]);
 });

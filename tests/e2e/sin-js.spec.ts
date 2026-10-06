@@ -26,3 +26,10 @@ test('la pre-cotización sin JS ofrece WhatsApp directo', async ({ page }) => {
   await expect(page.locator('#cotizar form')).toBeHidden();
   await expect(page.locator('#cotizar .cotiza__sin-js').getByRole('link', { name: 'Escribinos por WhatsApp' })).toHaveAttribute('href', /^https:\/\/wa\.me\//);
 });
+
+test('el cotizador sin JS ofrece WhatsApp directo y el contacto', async ({ page }) => {
+  await page.goto('cotizador/');
+  await expect(page.locator('form[data-cotizador]')).toBeHidden();
+  await expect(page.locator('.asistente__sin-js').getByRole('link', { name: 'Escribinos por WhatsApp' })).toHaveAttribute('href', /^https:\/\/wa\.me\//);
+  await expect(page.getByRole('heading', { name: '¿Preferís hablar ya?' })).toBeVisible();
+});
