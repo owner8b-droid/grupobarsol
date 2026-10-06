@@ -143,3 +143,21 @@ con el GATE indicado.
   y conviene tenerlas listas al bajar).
 - Consecuencias: LCP del home 0,90 s en traza (Slow 4G, CPU ×4) y 1,43 s en Lighthouse CI; Performance 100.
   El CSS no se cachea entre páginas, lo que con este peso es más barato que el viaje de red.
+
+## ADR-015 · Movimiento: entrada en un gesto, pasada con cortina y estados solo con el motor listo
+- Fecha: 2026-10-06 · Estado: aceptada (crítica del director de arte antes del GATE 5)
+- Contexto: la crítica puntuó «Momentos firma» con 2: los paneles entraban con un fundido (con imágenes fantasma) y
+  el orden de entrada iba al revés (paneles, título, franja) porque cada pieza tenía su propio disparador. Además,
+  con red lenta las secciones quedaban en blanco hasta que llegaba el motor (respaldo a los 6 s), y los cortes
+  cambiaban de ángulo con el ancho (0,46 a 1280 px; 1,03 a 768 px).
+- Decisión:
+  - Una línea de tiempo por sección en escritorio (`data-entrada`): franja → título con máscara → cortina que barre
+    con el ángulo del brazo (`data-cortina`, solo `transform`) → texto. En móvil, texto y pasada entran por separado.
+  - Los estados iniciales dependen de `.motion-ready`, que el motor pone al final; lo que ya está a la vista al
+    arrancar se marca revelado sin animación. Se elimina el temporizador de respaldo.
+  - Los estados iniciales usan solo opacidad y transform: nunca `visibility: hidden` (dejaba fuera del foco y del
+    lector de pantalla las secciones aún no reveladas).
+  - Los cortes se calculan sobre el alto (`cqh` con `container-type: size`, o `skewX(atan(var(--slope)))`).
+- Consecuencias: la máscara de los títulos solo recorta en vertical; SplitText arma las líneas en `<span>` sin aria
+  extra. Los bloques diagonales necesitan un alto definido (26rem apilados en móvil) para que `cqh` no valga 0.
+

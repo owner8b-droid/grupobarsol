@@ -47,7 +47,7 @@ familia: geométrica como las letras del logo y con el peso de la referencia.
 | Uso | Tamaño | Peso / interlínea / tracking |
 |---|---|---|
 | Display del hero | `--step-5` (64–160 px) | 900 · 0,9 · −0,045em |
-| Título de una palabra | `--step-4` (64–116 px) | 900 · 0,92 · −0,045em |
+| Título de una palabra | `--step-4` (51–116 px: 16vw en móvil, para que «Maquinaria» entre entera desde 320 px) | 900 · 0,92 · −0,045em |
 | Título de bloque y pasos del cotizador | `--step-3` (36–52 px) | 900 · 1,05 · −0,03em |
 | Bajada | 21–24 px | 800 · 1,25 |
 | Texto | `--step-0` (16,5–18 px) | 500 · 1,55 |
@@ -64,7 +64,13 @@ familia: geométrica como las letras del logo y con el peso de la referencia.
   un corte al mismo ángulo.
 - **Listas con chevrones** (forma recortada en acento) y **caja de acento** para listas cortas de enlaces.
 - **Fijos:** encabezado (transparente sobre el hero y negro al bajar), puntos de progreso a la izquierda y pestaña
-  «Pre-cotizá tu obra» a la derecha. En móvil: WhatsApp y Pre-cotizá arriba del hero, sin pestaña.
+  «Pre-cotizá tu obra» a la derecha. En móvil: WhatsApp y Pre-cotizá arriba del hero, sin pestaña; por debajo de
+  480 px el botón dice «WhatsApp» y el nombre queda en el sello del logo.
+- **Márgenes:** encabezado y pie a todo el ancho; el texto de todas las pantallas arranca en `--gutter-start`
+  (también a 1920 px). Las pantallas completas llenan hasta 1200 px de alto (`--section-min`).
+- **El ángulo del brazo es constante:** los cortes se calculan sobre el alto (unidades `cqh` o un sesgo con
+  `atan(var(--slope))`), nunca con porcentajes del ancho, así la pendiente es 0,46 en cualquier pantalla.
+- **04 · Equipo** usa la tira del artboard: tres cortes de la foto del equipo arriba y un panel de capa grande.
 - **Formas:** 4 px en botones y campos, 6 px en tarjetas, píldora en chips.
 
 ## 6. Fotografía y video
@@ -84,18 +90,23 @@ familia: geométrica como las letras del logo y con el peso de la referencia.
 | Scroll | *Snap* por proximidad en escritorio (Lenis o ScrollTrigger; API exacta con context7 en la F4). Nunca obligatorio ni secuestrado | Scroll normal |
 | Botones | Presión: `scale(0.97)` con `--ease-press` | Sin escala |
 
-**Momento firma (premium = 1): «La pasada del brazo».** Al entrar a cada sección, los paneles barren en la
-dirección del brazo de la excavadora y la franja ocre se traza bajo el título, como la pasada de la máquina sobre
-el terreno.
+**Momento firma (premium = 1): «La pasada del brazo».** Al entrar a cada sección, en un solo gesto y en este
+orden: la franja ocre sale del borde de la página; la palabra sube con máscara y se apoya en ella; una cortina del
+color de la sección, con el borde al ángulo del brazo, barre de izquierda a derecha y destapa los paneles, cuyas
+fotos se asientan (escala 1,06 → 1); al final suben eyebrow, bajada y listas. Escritorio: una línea de tiempo por
+sección (`data-entrada`, al 65 % de la ventana). Móvil: el texto y la pasada entran cada uno al llegar. Sin
+opacidad en los paneles: nada de imágenes fantasma.
 
-Motor único en `src/lib/motion` con atributos: `data-reveal="up"`, `data-split`, `data-barra`, `data-diagonal`,
-`data-rota`. Solo `transform`, `opacity` y `clip-path`; nada de bounce; ninguna duración de interfaz pasa de 1,2 s.
+Motor único en `src/lib/motion` con atributos: `data-entrada`, `data-reveal="up"`, `data-split`, `data-barra`,
+`data-diagonal` con `data-cortina`, `data-rota`. Solo `transform`, `opacity` y `clip-path`; nada de bounce; ninguna
+duración de interfaz pasa de 1,2 s. Los estados iniciales solo existen cuando el motor ya arrancó (`.motion-ready`):
+sin JS, con red lenta o si el motor falla, todo se ve (ADR-015).
 
 ## 8. Componentes y estados
 
 | Componente | Estados obligatorios |
 |---|---|
-| Botón sólido (acento) y con borde | hover (fondo un 8 % más oscuro) · focus-visible (contorno de 3 px en `--c-focus` con separación de 3 px; sobre acento, contorno en tinta) · active (presión) · disabled (opacidad 0,45) · cargando («Enviando…») |
+| Botón sólido (acento) y con borde | hover (fondo un 8 % más oscuro) · focus-visible (contorno de 3 px en `--c-focus` con separación de 3 px: tinta sobre claro y ocre, ocre sobre superficies oscuras) · active (presión) · disabled (opacidad 0,45) · cargando («Enviando…») |
 | Enlace con flecha | hover (la flecha avanza 4 px) · focus-visible |
 | Chip de filtro y tarjeta de opción (radio) | seleccionado (fondo tinta, texto cal) · focus-visible · teclado con flechas (radios nativos) |
 | Campo de texto | normal · focus (borde en acento) · error (borde óxido + mensaje con `role="alert"`) · deshabilitado |
