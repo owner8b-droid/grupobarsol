@@ -84,7 +84,7 @@ familia: geométrica como las letras del logo y con el peso de la referencia.
 
 | Momento | Comportamiento | Reduced-motion |
 |---|---|---|
-| Hero | La frase rota cada 2,8 s (líneas con máscara, `--dur-3`, `expo.out`) | Frase completa, fija |
+| Hero | La frase hace una sola vuelta (2 s por frase) y se detiene en el lema completo antes de 5 s (WCAG 2.2.2) | Frase completa, fija |
 | Entrada de sección (una vez) | 1) la franja se traza desde la izquierda (`scaleX`, `--dur-3`); 2) el título sube con máscara (`--dur-4`); 3) los paneles diagonales se deslizan a lo largo del ángulo del brazo, escalonados 80 ms; 4) bajada y listas suben | Todo en su lugar, sin desplazamiento |
 | Encabezado | Transparente → negro al pasar el hero (`--dur-2`) | Igual, sin transición |
 | Scroll | *Snap* por proximidad en escritorio (Lenis o ScrollTrigger; API exacta con context7 en la F4). Nunca obligatorio ni secuestrado | Scroll normal |
@@ -92,7 +92,7 @@ familia: geométrica como las letras del logo y con el peso de la referencia.
 
 **Momento firma (premium = 1): «La pasada del brazo».** Al entrar a cada sección, en un solo gesto y en este
 orden: la franja ocre sale del borde de la página; la palabra sube con máscara y se apoya en ella; una cortina del
-color de la sección, con el borde al ángulo del brazo, barre de izquierda a derecha y destapa los paneles, cuyas
+color de la sección, con un filo ocre (la franja del logo como cuchilla) al ángulo del brazo, barre de izquierda a derecha y destapa los paneles, cuyas
 fotos se asientan (escala 1,06 → 1); al final suben eyebrow, bajada y listas. Escritorio: una línea de tiempo por
 sección (`data-entrada`, al 65 % de la ventana). Móvil: el texto y la pasada entran cada uno al llegar. Sin
 opacidad en los paneles: nada de imágenes fantasma.

@@ -161,3 +161,22 @@ con el GATE indicado.
 - Consecuencias: la máscara de los títulos solo recorta en vertical; SplitText arma las líneas en `<span>` sin aria
   extra. Los bloques diagonales necesitan un alto definido (26rem apilados en móvil) para que `cqh` no valga 0.
 
+## ADR-016 · Pre-cotizar va al formulario que funciona y el formulario habla con voz propia
+- Fecha: 2026-10-06 · Estado: aceptada (crítica de impeccable antes del GATE 5)
+- Contexto: «Pre-cotizá tu obra» (hero, pestaña, menú, servicios, flota, 404) llevaba a `/cotizador/`, todavía en
+  construcción, cuando la home y Contacto ya tienen un formulario que funciona. Además, el teléfono rechazaba el
+  formato tico («8880-8799») y aceptaba ocho espacios, los errores salían en la burbuja nativa del navegador y la
+  frase del hero rotaba sin fin (WCAG 2.2.2, nivel A).
+- Decisión:
+  - `rutaCotizar()` y `destinoCotizar()` (`src/i18n/utils.ts`): en inicio y contacto, «Pre-cotizá» baja a `#cotizar`;
+    desde otras páginas va a `/contacto/?servicio=…#cotizar`. Cuando exista el cotizador de 5 pasos, una bandera
+    (`COTIZADOR_LISTO`) lo vuelve a apuntar ahí. El servicio se precarga contra una lista cerrada.
+  - Formularios `novalidate` con mensajes propios junto al campo (voseo), el foco al primer error, mensaje de
+    consentimiento («Necesitamos tu permiso para usar estos datos.») y el aviso «sin costo ni compromiso».
+  - Teléfono: 8 dígitos con o sin espacios, guiones, paréntesis o el prefijo 506.
+  - La frase del hero hace una sola vuelta y se detiene en el lema completo antes de 5 s (sin control de pausa).
+  - El snap solo engancha las pantallas que caben en la ventana; en laptops bajas, «Cotizá» se compacta para que el
+    botón de envío se vea al llegar.
+- Consecuencias: el evento `cotizador_inicio` sigue marcando el inicio de una pre-cotización aunque hoy termine en
+  el formulario corto. Al construir el cotizador hay que cambiar la bandera y revisar los tests de CTA.
+

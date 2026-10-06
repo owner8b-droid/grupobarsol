@@ -112,7 +112,7 @@ Las colecciones se crean en la F4; el contenido real entra cuando llegue del cli
 | Bloque | Copy |
 |---|---|
 | H1 (línea superior del hero) | Movimiento de tierras, maquinaria y obra civil en Cartago |
-| Display del hero | Construyendo / caminos. · oportunidades. · futuro. (el lema real; rota cada 2,8 s, completo con reduced-motion) |
+| Display del hero | Construyendo / caminos. · oportunidades. → «caminos, oportunidades y futuro.» (el lema real: una sola vuelta de 2 s por frase que se detiene en el lema completo antes de 5 s, WCAG 2.2.2; completo con reduced-motion) |
 | CTAs del hero | **Pre-cotizá tu obra** · Ver servicios · (botón: Pausar video / Reproducir video) |
 | 01 · Tierra | **Movemos lo que tu obra necesita.** Excavación, cortes, rellenos, conformación y compactación de terrenos, y acarreo de tierra, lastre, piedra y escombro en vagoneta. También vendemos agregados. → Movimiento de tierras · Acarreo y agregados |
 | 02 · Maquinaria | **Equipo pesado cuando lo necesitás.** Alquiler por hora, día o proyecto, para obras grandes y para lotes particulares. → Excavadoras · Compactadoras · Niveladoras · Vagonetas · Ver toda la flota |
