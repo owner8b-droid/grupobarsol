@@ -3,7 +3,7 @@
 > Fase 0 · 2026-10-04 · Estado: **GATE 0 aprobado** el 2026-10-05 («continuemos», junto con la elección de la dirección D)
 > Avance al 2026-10-05: F1 completa · F2 en [02-estrategia.md](02-estrategia.md) · F3 consolidada en
 > [03-direccion-de-arte.md](03-direccion-de-arte.md) · GATE 1+2+3 aprobado («continua», acento ocre) ·
-> **F4 base técnica publicada, esperando GATE 4**.
+> GATE 4 y GATE 5 (home completa) aprobados · **F5 en curso: páginas internas, cotizador, flota y fichas**.
 > Preview: https://owner8b-droid.github.io/grupobarsol/ (GitHub Pages, repo público, docs sensibles en `docs/privado/`;
 > ADR-010, ADR-013). Cada push a `main` se publica solo.
 > Fuentes: [BRIEF.md](../BRIEF.md) · [PRODUCT.md](../PRODUCT.md) · [decisiones](decisiones.md) · [pendientes](privado/pendientes.md) (privado, fuera de git)

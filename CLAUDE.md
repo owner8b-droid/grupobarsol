@@ -49,5 +49,5 @@ npm run dev | dev:bg | build | preview | test:e2e | test:a11y | lint:design | lh
 
 ## Flujo
 Fases y GATES: BRIEF.md §9; calendario en docs/00-plan.md. GATE 0 aprobado. Dirección de arte: D · Frente de obra
-(ADR-009, design/home-territorios/). GATES 0–3 aprobados. Fase actual: 4 (base técnica), esperando GATE 4.
+(ADR-009, design/home-territorios/). GATES 0–5 aprobados. Fase actual: 5 (construcción): páginas internas, cotizador, flota y fichas.
 Preview: https://owner8b-droid.github.io/grupobarsol/ — cada push a main se publica solo (deploy.yml).
