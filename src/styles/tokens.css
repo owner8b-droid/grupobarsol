@@ -36,7 +36,7 @@
     --step-2:  clamp(1.56rem, 1.35rem + 1.00vw, 2.10rem);
     --step-3:  clamp(2.25rem, 1.80rem + 2.00vw, 3.25rem);   /* títulos de bloque, pasos del cotizador */
     --step-4:  clamp(4.00rem, 2.40rem + 4.80vw, 7.25rem);   /* títulos de una palabra (Tierra, Obra…) */
-    --step-5:  clamp(4.00rem, 1.80rem + 8.20vw, 10rem);     /* display del hero */
+    --step-5:  clamp(2.75rem, 0.50rem + 10.4vw, 10rem);     /* display del hero: 47 px a 375, 158 px a 1440 */
     --weight-text: 500; --weight-strong: 800; --weight-display: 900;
     --leading-tight: 0.92; --leading-snug: 1.2; --leading-body: 1.55;
     --tracking-display: -0.045em; --tracking-eyebrow: 0.18em;
