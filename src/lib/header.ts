@@ -37,8 +37,20 @@ export function initHeader(): void {
 export function initMenu(): void {
   const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
   if (!menu) return;
-  document.querySelectorAll('[data-menu-abrir]').forEach((b) => b.addEventListener('click', () => menu.showModal()));
+  let abridor: HTMLElement | null = null;
+  document.querySelectorAll<HTMLElement>('[data-menu-abrir]').forEach((b) =>
+    b.addEventListener('click', () => {
+      abridor = b;
+      menu.showModal();
+    }),
+  );
   menu.querySelectorAll('[data-menu-cerrar], a').forEach((b) => b.addEventListener('click', () => menu.close()));
+
+  // Safari no enfoca un botón al tocarlo: al cerrar, el diálogo dejaría el foco en <body>.
+  menu.addEventListener('close', () => {
+    const activo = document.activeElement;
+    if (abridor && (!activo || activo === document.body || menu.contains(activo))) abridor.focus();
+  });
 
   // Respaldo de light-dismiss donde no existe `closedby` (modern-web-guidance: light-dismiss-a-dialog)
   if (!('closedBy' in HTMLDialogElement.prototype)) {
