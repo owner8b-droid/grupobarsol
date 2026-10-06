@@ -1,0 +1,132 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/sections/Hero.astro';
+import Frente from '../components/sections/Frente.astro';
+import Cotiza from '../components/sections/Cotiza.astro';
+import ProgressDots from '../components/global/ProgressDots.astro';
+import DiagonalPanels from '../components/ui/DiagonalPanels.astro';
+import ChevronList from '../components/ui/ChevronList.astro';
+import ArrowLink from '../components/ui/ArrowLink.astro';
+import Button from '../components/ui/Button.astro';
+import Pendiente from '../components/ui/Pendiente.astro';
+import { ruta } from '../i18n/utils';
+
+import aereoTerraza from '../assets/img/aereo-terraza.jpg';
+import aereoLote from '../assets/img/aereo-lote.jpg';
+import cargaVagoneta from '../assets/img/carga-vagoneta.jpg';
+import nocheLowboy from '../assets/img/noche-lowboy.jpg';
+import vagonetas from '../assets/img/vagonetas.jpg';
+import calleCondominio from '../assets/img/calle-condominio.jpg';
+import zanjaNave from '../assets/img/zanja-nave.jpg';
+import nochePavimento from '../assets/img/noche-pavimento.jpg';
+import equipo from '../assets/img/equipo.jpg';
+import cimientos from '../assets/img/cimientos.jpg';
+
+const flota = ruta('flota');
+const cotizador = ruta('cotizador');
+---
+
+<Base
+  title="Movimiento de tierras y maquinaria en Cartago | Grupo Barsol"
+  description="Movimiento de tierras, alquiler de maquinaria, acarreo de materiales y obra civil en Cartago. Pre-cotizá en línea y seguí la conversación por WhatsApp."
+  sobreHero
+>
+  <ProgressDots
+    secciones={[
+      { id: 'inicio', nombre: 'Inicio' },
+      { id: 'tierra', nombre: 'Tierra' },
+      { id: 'maquinaria', nombre: 'Maquinaria' },
+      { id: 'obra', nombre: 'Obra' },
+      { id: 'nosotros', nombre: 'Equipo' },
+      { id: 'cotizar', nombre: 'Cotizá' },
+    ]}
+  />
+
+  <Hero
+    h1="Movimiento de tierras, maquinaria y obra civil en Cartago"
+    palabra="Construyendo"
+    frases={['caminos.', 'oportunidades.', 'futuro.']}
+    completa="caminos, oportunidades y futuro."
+  />
+
+  <Frente id="tierra" eyebrow="01 · Movimiento de tierras y acarreo" palabra="Tierra" bajada="Movemos lo que tu obra necesita.">
+    <p>
+      Excavación, cortes, rellenos, conformación y compactación de terrenos, y acarreo de tierra, lastre, piedra y escombro
+      en vagoneta. También vendemos agregados.
+    </p>
+    <ChevronList
+      items={[
+        { texto: 'Movimiento de tierras', href: ruta('movimientoDeTierras') },
+        { texto: 'Acarreo y agregados', href: ruta('acarreoYAgregados') },
+      ]}
+    />
+    <DiagonalPanels
+      slot="visual"
+      principal={{
+        img: aereoTerraza,
+        alt: 'Vista aérea de un lote en conformación con motoniveladora, excavadora y vagonetas',
+        posicion: '50% 65%',
+      }}
+      capa={{ img: aereoLote, alt: '' }}
+      secundaria={{ img: cargaVagoneta, alt: 'Excavadora cargando tierra en una vagoneta', posicion: '35% 45%' }}
+    />
+  </Frente>
+
+  <Frente
+    id="maquinaria"
+    eyebrow="02 · Alquiler de maquinaria"
+    palabra="Maquinaria"
+    bajada="Equipo pesado cuando lo necesitás."
+    tono="oscuro"
+    invertida
+  >
+    <p>Alquiler por hora, día o proyecto, para obras grandes y para lotes particulares.</p>
+    <ChevronList
+      variante="caja"
+      etiqueta="Tipos de máquina"
+      items={[
+        { texto: 'Excavadoras', href: `${flota}?tipo=excavadora` },
+        { texto: 'Compactadoras', href: `${flota}?tipo=compactadora` },
+        { texto: 'Niveladoras', href: `${flota}?tipo=niveladora` },
+        { texto: 'Vagonetas', href: `${flota}?tipo=vagoneta` },
+      ]}
+    />
+    <ArrowLink href={flota} tono="oscuro">Ver toda la flota</ArrowLink>
+    <DiagonalPanels
+      slot="visual"
+      lado="izquierda"
+      principal={{ img: nocheLowboy, alt: 'Excavadora sobre una carreta durante un traslado nocturno', posicion: '62% 50%' }}
+      capa={{ img: vagonetas, alt: '' }}
+    />
+  </Frente>
+
+  <Frente id="obra" eyebrow="03 · Obra civil" palabra="Obra" bajada="De la terraza a la calle terminada.">
+    <p>Obra civil para desarrolladores, empresas y familias: calles, urbanizaciones, cimentaciones e infraestructura.</p>
+    <ChevronList
+      items={[
+        { texto: 'Cotizá tu obra civil', href: `${cotizador}?servicio=obra`, evento: 'cotizador_inicio' },
+        { texto: 'Ver proyectos', href: ruta('proyectos') },
+      ]}
+    />
+    <DiagonalPanels
+      slot="visual"
+      principal={{ img: calleCondominio, alt: 'Calle de concreto recién terminada en un condominio', posicion: '45% 55%' }}
+      capa={{ img: zanjaNave, alt: '', posicion: '50% 40%' }}
+      secundaria={{ img: nochePavimento, alt: 'Pavimentadora y vagoneta trabajando de noche', posicion: '40% 60%' }}
+    />
+  </Frente>
+
+  <Frente id="nosotros" eyebrow="04 · Nosotros" palabra="Equipo" bajada="La gente detrás de cada obra.">
+    <p>
+      <Pendiente texto="Historia de Grupo Barsol: desde cuándo trabajan, quién la dirige y cómo empezó" />
+    </p>
+    <Button href={ruta('nosotros')} variante="borde">Conocé al equipo</Button>
+    <DiagonalPanels
+      slot="visual"
+      principal={{ img: equipo, alt: 'Cuadrilla de Grupo Barsol con cascos y chalecos en una obra', posicion: '50% 60%' }}
+      capa={{ img: cimientos, alt: '' }}
+    />
+  </Frente>
+
+  <Cotiza />
+</Base>

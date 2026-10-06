@@ -1,0 +1,204 @@
+---
+// Sistema de diseño D en vivo (GATE 4). Página interna: noindex y fuera del sitemap.
+import Base from '../layouts/Base.astro';
+import Button from '../components/ui/Button.astro';
+import ArrowLink from '../components/ui/ArrowLink.astro';
+import ChevronList from '../components/ui/ChevronList.astro';
+import TitleWord from '../components/ui/TitleWord.astro';
+import Field from '../components/ui/Field.astro';
+import DiagonalPanels from '../components/ui/DiagonalPanels.astro';
+import Pendiente from '../components/ui/Pendiente.astro';
+import cargaVagoneta from '../assets/img/carga-vagoneta.jpg';
+import aereoLote from '../assets/img/aereo-lote.jpg';
+import zanjaNave from '../assets/img/zanja-nave.jpg';
+
+const colores = [
+  ['--c-ink', 'Tinta'],
+  ['--c-ink-2', 'Tinta 2'],
+  ['--c-paper', 'Cal'],
+  ['--c-paper-2', 'Cal 2'],
+  ['--c-line', 'Línea'],
+  ['--c-muted', 'Texto secundario'],
+  ['--c-accent', 'Ocre (acento)'],
+  ['--c-brand', 'Óxido'],
+  ['--c-brand-2', 'Carmesí'],
+  ['--c-error', 'Error'],
+];
+const pasos = ['--step-5', '--step-4', '--step-3', '--step-2', '--step-1', '--step-0', '--step--1'];
+---
+
+<Base title="Sistema de diseño | Grupo Barsol" description="Componentes y estados del sistema de diseño D (uso interno)." noindex>
+  <div class="sistema">
+    <header class="contenedor bloque">
+      <p class="eyebrow">Uso interno · GATE 4</p>
+      <h1>Sistema de diseño D · Frente de obra</h1>
+      <p>Componentes base con sus estados. Navegá con el teclado para ver el foco; escribí y salí de un campo para ver la validación.</p>
+    </header>
+
+    <section class="contenedor bloque" aria-labelledby="s-color">
+      <h2 id="s-color">Color</h2>
+      <ul role="list" class="muestras">
+        {
+          colores.map(([token, nombre]) => (
+            <li>
+              <span class="muestra" style={`background: var(${token})`} />
+              <code>{token}</code> {nombre}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="contenedor bloque" aria-labelledby="s-tipo">
+      <h2 id="s-tipo">Tipografía · Urbanist</h2>
+      {
+        pasos.map((p) => (
+          <p class="paso" style={`font-size: var(${p})`}>
+            <code>{p}</code> Construyendo caminos
+          </p>
+        ))
+      }
+    </section>
+
+    <section class="contenedor bloque" aria-labelledby="s-botones">
+      <h2 id="s-botones">Botones</h2>
+      <div class="fila">
+        <Button>Sólido</Button>
+        <Button variante="borde">Con borde</Button>
+        <Button variante="tinta">Tinta</Button>
+        <Button icono="whatsapp">Con ícono</Button>
+        <Button icono="flecha" iconoAlFinal tamano="l">Grande con flecha</Button>
+        <Button disabled>Deshabilitado</Button>
+        <Button cargando>Enviando…</Button>
+      </div>
+      <div class="fila fila--oscura">
+        <Button variante="claro">Claro sobre oscuro</Button>
+        <Button>Sólido sobre oscuro</Button>
+        <ArrowLink href="#s-botones" tono="oscuro">Enlace con flecha</ArrowLink>
+      </div>
+      <div class="fila"><ArrowLink href="#s-botones">Enlace con flecha</ArrowLink></div>
+    </section>
+
+    <section class="contenedor bloque" aria-labelledby="s-titulos">
+      <h2 id="s-titulos">Títulos de una palabra</h2>
+      <div class="titulo-demo"><TitleWord texto="Tierra" /></div>
+      <div class="titulo-demo titulo-demo--oscuro"><TitleWord texto="Maquinaria" tono="oscuro" /></div>
+    </section>
+
+    <section class="contenedor bloque" aria-labelledby="s-listas">
+      <h2 id="s-listas">Listas con chevrones</h2>
+      <div class="columnas">
+        <ChevronList items={[{ texto: 'Movimiento de tierras', href: '#s-listas' }, { texto: 'Acarreo y agregados', href: '#s-listas' }]} />
+        <ChevronList variante="caja" items={[{ texto: 'Excavadoras', href: '#s-listas' }, { texto: 'Vagonetas', href: '#s-listas' }]} />
+      </div>
+    </section>
+
+    <section class="contenedor bloque" aria-labelledby="s-campos">
+      <h2 id="s-campos">Campos</h2>
+      <form class="campos">
+        <Field id="d-nombre" name="nombre" label="Nombre" required error="Escribí tu nombre." />
+        <Field id="d-correo" name="correo" label="Correo" tipo="email" pista="Por ejemplo: nombre@correo.com" error="Revisá el correo." />
+        <Field id="d-sel" name="servicio" label="¿Qué necesitás?" tipo="select" required opciones={[{ valor: '', texto: 'Elegí una opción' }, { valor: 'a', texto: 'Alquiler de maquinaria' }]} error="Elegí una opción." />
+        <Field id="d-texto" name="mensaje" label="Contanos un poco más" tipo="textarea" completo />
+      </form>
+    </section>
+
+    <section class="bloque" aria-labelledby="s-diagonal">
+      <h2 id="s-diagonal" class="contenedor">Paneles diagonales («La pasada del brazo»)</h2>
+      <div class="diagonal-demo">
+        <DiagonalPanels
+          principal={{ img: cargaVagoneta, alt: 'Excavadora cargando una vagoneta' }}
+          capa={{ img: aereoLote, alt: '' }}
+          secundaria={{ img: zanjaNave, alt: 'Zanja en una nave industrial', posicion: '50% 40%' }}
+        />
+      </div>
+    </section>
+
+    <section class="contenedor bloque" aria-labelledby="s-pendiente">
+      <h2 id="s-pendiente">Contenido pendiente</h2>
+      <p>Visible en la preview y bloqueado en producción: <Pendiente texto="Dato que entrega el cliente" /></p>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .sistema h1 {
+    margin-block: 0.75rem 1rem;
+    font-size: var(--step-3);
+    font-weight: var(--weight-display);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .sistema h2 {
+    margin-bottom: 1.5rem;
+    font-size: var(--step-2);
+    font-weight: var(--weight-display);
+    letter-spacing: -0.02em;
+  }
+  .bloque {
+    padding-block: 3rem;
+    border-bottom: 1px solid var(--c-line);
+  }
+  .muestras {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: 1rem;
+    margin: 0;
+  }
+  .muestras li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+  }
+  .muestra {
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-s);
+  }
+  .paso {
+    font-weight: var(--weight-display);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .paso code {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: var(--weight-text);
+    letter-spacing: 0;
+    color: var(--c-muted);
+  }
+  .fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .fila--oscura,
+  .titulo-demo--oscuro {
+    padding: 1.5rem;
+    background: var(--c-ink);
+  }
+  .titulo-demo {
+    --barra-inicio: 1.5rem;
+    overflow: hidden;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+    gap: 2rem;
+  }
+  .campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 1.25rem;
+    max-width: 48rem;
+  }
+  .diagonal-demo {
+    height: 34rem;
+  }
+</style>

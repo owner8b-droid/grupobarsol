@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import Button from '../../components/ui/Button.astro';
+import Pendiente from '../../components/ui/Pendiente.astro';
+import { ruta } from '../../i18n/utils';
+import { migas } from '../../lib/schema';
+import nocheLowboy from '../../assets/img/noche-lowboy.jpg';
+
+const unidades = await getCollection('flota', (u) => u.data.lang === 'es');
+const hayMuestras = unidades.some((u) => u.data.muestra);
+if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
+  throw new Error('La flota tiene unidades de muestra: falta el inventario real (pendiente #1).');
+}
+const modalidad = { hora: 'Hora', dia: 'Día', proyecto: 'Proyecto', viaje: 'Viaje' } as const;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const jsonLd = [migas([{ nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.site).href }, { nombre: 'Flota', url }])];
+---
+
+<Base
+  title="Flota de maquinaria pesada en alquiler | Grupo Barsol"
+  description="Excavadoras, compactadoras, niveladoras y vagonetas con su ficha técnica. Filtrá por tipo y cotizá la unidad que necesitás en Cartago."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    titulo="Flota"
+    palabra
+    eyebrow="Alquiler de maquinaria"
+    bajada="Excavadoras, compactadoras, niveladoras y vagonetas por hora, día o proyecto. Cada ficha trae los datos de la unidad."
+    imagen={nocheLowboy}
+    imagenAlt="Excavadora sobre una carreta durante un traslado nocturno"
+  />
+  <section class="flota contenedor" aria-label="Unidades">
+    {hayMuestras && <p class="aviso"><Pendiente texto="Unidades de muestra: falta el inventario real de la flota" /></p>}
+    <ul role="list">
+      {
+        unidades.map((u) => (
+          <li class="unidad" data-reveal="up">
+            {u.data.fotos[0] ? (
+              <Picture src={u.data.fotos[0]} alt={u.data.fotoAlt ?? ''} formats={['avif', 'webp']} widths={[400, 700]} sizes="(min-width: 64rem) 30vw, 100vw" loading="lazy" />
+            ) : (
+              <div class="sin-foto" role="img" aria-label="Foto de la unidad pendiente">
+                <span>[Foto de la unidad]</span>
+              </div>
+            )}
+            <div class="unidad__texto">
+              <p class="eyebrow">{u.data.tipo}</p>
+              <h2>{[u.data.nombre, u.data.marca, u.data.modelo].filter(Boolean).join(' ')}</h2>
+              <dl>
+                {u.data.specs.map((s) => (
+                  <>
+                    <dt>{s.label}</dt>
+                    <dd>{s.valor}</dd>
+                  </>
+                ))}
+                <dt>Alquiler</dt>
+                <dd>{u.data.modalidades.map((m) => modalidad[m]).join(' · ')}</dd>
+              </dl>
+              <Button href={`${ruta('cotizador')}?servicio=alquiler&item=${u.id.split('/').pop()}`} evento="cotizador_inicio" ubicacion="flota">
+                Cotizar esta máquina
+              </Button>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .flota {
+    padding-block: clamp(3rem, 6vw, 5rem) clamp(4rem, 8vw, 6.5rem);
+  }
+  .aviso {
+    margin-bottom: 2rem;
+  }
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
+    gap: 1.75rem;
+    margin: 0;
+  }
+  .unidad {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1.5px solid var(--c-line);
+    border-radius: var(--radius-m);
+    background: var(--c-paper-2);
+  }
+  .unidad :global(img),
+  .sin-foto {
+    width: 100%;
+    height: 14.5rem;
+    object-fit: cover;
+    clip-path: polygon(0 0, 100% 0, 100% 84%, 0 100%);
+  }
+  .sin-foto {
+    display: grid;
+    place-items: center;
+    background: var(--c-line);
+    color: var(--c-muted);
+    font-weight: 700;
+  }
+  .unidad__texto {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.35rem 1.4rem;
+  }
+  .unidad__texto .eyebrow {
+    color: var(--c-muted);
+  }
+  h2 {
+    font-size: 1.5625rem;
+    font-weight: var(--weight-display);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.35rem 1rem;
+    margin: 0 0 0.5rem;
+    font-size: 0.96875rem;
+  }
+  dt {
+    font-weight: var(--weight-strong);
+  }
+  dd {
+    margin: 0;
+    color: var(--c-muted);
+  }
+  .unidad__texto :global(.btn) {
+    margin-top: auto;
+    align-self: flex-start;
+  }
+</style>

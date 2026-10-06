@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import ArrowLink from '../../components/ui/ArrowLink.astro';
+import { ruta } from '../../i18n/utils';
+import { rutaDeServicio } from '../../i18n/routes';
+import { migas } from '../../lib/schema';
+import aereoLote from '../../assets/img/aereo-lote.jpg';
+
+const servicios = (await getCollection('servicios', (s) => s.data.lang === 'es')).sort((a, b) => a.data.orden - b.data.orden);
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const jsonLd = [
+  migas([
+    { nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.site).href },
+    { nombre: 'Servicios', url },
+  ]),
+];
+---
+
+<Base
+  title="Servicios de construcción y maquinaria | Grupo Barsol"
+  description="Movimiento de tierras, alquiler de maquinaria, acarreo y venta de agregados, y obra civil en Cartago. Elegí el servicio y pre-cotizá sin compromiso."
+  jsonLd={jsonLd}
+>
+  <PageHeader
+    titulo="Servicios"
+    palabra
+    eyebrow="Constructora y maquinaria"
+    bajada="Cuatro servicios que podés contratar por separado o en conjunto."
+    imagen={aereoLote}
+    imagenAlt="Vista aérea de una terraza conformada junto a una rotonda"
+  />
+  <section class="servicios contenedor" aria-label="Lista de servicios">
+    <ul role="list">
+      {
+        servicios.map((s) => {
+          const id = s.id.split('/').pop()!;
+          const href = ruta(rutaDeServicio[id]);
+          return (
+            <li class="tarjeta" data-reveal="up">
+              <Picture src={s.data.foto} alt={s.data.fotoAlt} formats={['avif', 'webp']} widths={[480, 800]} sizes="(min-width: 64rem) 45vw, 100vw" loading="lazy" />
+              <div class="tarjeta__texto">
+                <h2>{s.data.titulo}</h2>
+                <p>{s.data.resumen}</p>
+                <ArrowLink href={href}>Ver {s.data.titulo.toLowerCase()}</ArrowLink>
+              </div>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .servicios {
+    padding-block: clamp(3rem, 7vw, 6rem);
+  }
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
+    gap: 2.5rem 1.75rem;
+    margin: 0;
+  }
+  .tarjeta :global(img) {
+    width: 100%;
+    height: 18rem;
+    object-fit: cover;
+    clip-path: polygon(0 0, 100% 0, 100% 84%, 0 100%);
+  }
+  .tarjeta__texto {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 1rem;
+  }
+  h2 {
+    font-size: var(--step-2);
+    font-weight: var(--weight-display);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .tarjeta__texto p {
+    color: var(--c-muted);
+  }
+</style>

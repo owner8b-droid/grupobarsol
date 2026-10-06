@@ -1,0 +1,204 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PageHeader from '../../components/sections/PageHeader.astro';
+import Button from '../../components/ui/Button.astro';
+import Pendiente from '../../components/ui/Pendiente.astro';
+import { enlaceWhatsApp, ruta } from '../../i18n/utils';
+import { site } from '../../data/site';
+import { migas, servicio as esquemaServicio } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const servicios = await getCollection('servicios', (s) => s.data.lang === 'es');
+  return servicios.map((entrada) => ({ params: { servicio: entrada.id.split('/').pop()! }, props: { entrada } }));
+}
+
+interface Props {
+  entrada: CollectionEntry<'servicios'>;
+}
+const { entrada } = Astro.props;
+const d = entrada.data;
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const sitio = new URL(import.meta.env.BASE_URL, Astro.site);
+const cotizar = `${ruta('cotizador')}?servicio=${d.cotizadorServicio}`;
+const jsonLd = [
+  esquemaServicio(sitio, d.titulo, d.resumen, url),
+  migas([
+    { nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.site).href },
+    { nombre: 'Servicios', url: new URL(ruta('servicios'), Astro.site).href },
+    { nombre: d.titulo, url },
+  ]),
+];
+---
+
+<Base title={d.seoTitle} description={d.seoDescription} imagen={d.foto} jsonLd={jsonLd}>
+  <PageHeader
+    titulo={d.h1}
+    eyebrow={d.titulo}
+    bajada={d.bajada}
+    imagen={d.foto}
+    imagenAlt={d.fotoAlt}
+    migas={[{ nombre: 'Servicios', href: ruta('servicios') }]}
+  />
+
+  <section class="bloque contenedor" aria-labelledby="para-quien">
+    <h2 id="para-quien" class="bloque__titulo">Para quién</h2>
+    <div class="columnas">
+      <div data-reveal="up">
+        <h3 class="eyebrow">Empresas y desarrolladores</h3>
+        <ul role="list">{d.paraEmpresas.map((x) => <li>{x}</li>)}</ul>
+      </div>
+      <div data-reveal="up">
+        <h3 class="eyebrow">Dueños de lote o casa</h3>
+        <ul role="list">{d.paraParticulares.map((x) => <li>{x}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloque bloque--oscuro" aria-labelledby="incluye">
+    <div class="contenedor">
+      <h2 id="incluye" class="bloque__titulo">Qué incluye</h2>
+      <ul role="list" class="incluye">{d.incluye.map((x) => <li><span class="chevron" aria-hidden="true" />{x}</li>)}</ul>
+      <p class="nota"><Pendiente texto="Alcance detallado y qué no incluye: por confirmar con el cliente" /></p>
+    </div>
+  </section>
+
+  <section class="bloque contenedor" aria-labelledby="como">
+    <h2 id="como" class="bloque__titulo">Cómo trabajamos</h2>
+    <ol class="pasos">
+      <li><strong>Contanos qué necesitás.</strong> Una pre-cotización corta: servicio, lugar y fechas.</li>
+      <li><strong>Lo hablamos por WhatsApp.</strong> Te asesoramos y definimos el alcance con vos.</li>
+      <li><strong>Visita técnica.</strong> <Pendiente texto="Confirmar en qué casos se visita el sitio" /></li>
+      <li><strong>Propuesta y obra.</strong> <Pendiente texto="Plazos y entregables por confirmar" /></li>
+    </ol>
+  </section>
+
+  <section class="cta" aria-labelledby="cta-titulo">
+    <div class="contenedor cta__fila">
+      <h2 id="cta-titulo">¿Arrancamos con tu {d.titulo.toLowerCase()}?</h2>
+      <div class="cta__acciones">
+        <Button href={cotizar} variante="tinta" tamano="l" evento="cotizador_inicio" ubicacion="servicio">Cotizá este servicio</Button>
+        <Button href={enlaceWhatsApp(site.whatsapp, `Hola, Grupo Barsol. Quiero información sobre ${d.titulo.toLowerCase()}.`)} variante="borde" tamano="l" icono="whatsapp" evento="click_whatsapp" ubicacion="servicio">
+          Escribinos por WhatsApp
+        </Button>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bloque {
+    padding-block: clamp(3.5rem, 7vw, 6rem);
+  }
+  .bloque--oscuro {
+    background: var(--c-ink);
+    color: var(--c-paper);
+  }
+  .bloque__titulo {
+    margin-bottom: 2rem;
+    font-size: var(--step-3);
+    font-weight: var(--weight-display);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .columnas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: 2.5rem;
+    border-top: 2px solid var(--c-ink);
+    padding-top: 1.75rem;
+  }
+  .columnas h3 {
+    margin-bottom: 1rem;
+    color: var(--c-muted);
+  }
+  .columnas ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 0;
+  }
+  .columnas li {
+    position: relative;
+    padding-left: 1.6rem;
+    font-size: 1.125rem;
+  }
+  /* Marca ocre con el corte de la franja de los títulos (docs/03-direccion-de-arte.md §5) */
+  .columnas li::before {
+    content: '';
+    position: absolute;
+    top: 0.62em;
+    left: 0;
+    width: 0.9rem;
+    height: var(--bar-height);
+    background: var(--c-accent);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);
+  }
+  .incluye {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+    gap: 0 2.5rem;
+    margin: 0;
+    border-top: 2px solid var(--c-paper);
+  }
+  .incluye li {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-height: 3.5rem;
+    border-bottom: 1px solid var(--c-line-dark);
+    font-size: 1.1875rem;
+    font-weight: var(--weight-strong);
+  }
+  .chevron {
+    flex: none;
+    width: 1rem;
+    height: 1.125rem;
+    background: var(--c-accent);
+    clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);
+  }
+  .nota {
+    margin-top: 1.5rem;
+    color: var(--c-muted-dark);
+  }
+  .pasos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 1.75rem;
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+  .pasos li::marker {
+    color: var(--c-accent);
+    font-weight: var(--weight-display);
+  }
+  .pasos strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 1.1875rem;
+  }
+  .cta {
+    background: var(--c-accent);
+    color: var(--c-on-accent);
+  }
+  .cta__fila {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem 3rem;
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+  .cta h2 {
+    max-width: 20ch;
+    font-size: var(--step-3);
+    font-weight: var(--weight-display);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .cta__acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+</style>
