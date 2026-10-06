@@ -28,3 +28,6 @@ test-results/
 
 # Capturas del MCP de Playwright
 .playwright-mcp/
+
+# Registros locales de las críticas de impeccable
+.impeccable/critique/
