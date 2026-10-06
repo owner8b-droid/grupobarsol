@@ -10,8 +10,16 @@ test.use({ reducedMotion: 'reduce' });
 
 const ETIQUETAS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const analizar = (page: Page) => new AxeBuilder({ page }).withTags(ETIQUETAS).analyze();
-const resumen = (v: Awaited<ReturnType<typeof analizar>>['violations']) =>
-  v.map((x) => `${x.id} (${x.impact}): ${x.nodes.map((n) => n.target.join(' ')).join(' | ')}`);
+type Violaciones = Awaited<ReturnType<typeof analizar>>['violations'];
+// En contraste, cada nodo dice qué colores midió axe y qué elemento tomó como fondo: sin eso, un fallo que solo
+// aparece en el CI (WebKit en Linux) no se puede diagnosticar desde el log
+const medido = (n: Violaciones[number]['nodes'][number]) => {
+  const d = n.any[0]?.data as { fgColor?: string; bgColor?: string; contrastRatio?: number } | undefined;
+  const fondo = (n.any[0]?.relatedNodes ?? []).map((r) => r.target.join(' ')).slice(0, 2).join(', ');
+  return d?.fgColor ? ` [${d.fgColor} sobre ${d.bgColor} = ${d.contrastRatio}${fondo ? `; fondo: ${fondo}` : ''}]` : '';
+};
+const resumen = (v: Violaciones) =>
+  v.map((x) => `${x.id} (${x.impact}): ${x.nodes.map((n) => n.target.join(' ') + medido(n)).join(' | ')}`);
 
 for (const ruta of [...RUTAS, 'sistema/']) {
   test(`${nombre(ruta)}: sin violaciones de axe`, async ({ page }) => {
