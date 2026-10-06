@@ -1,0 +1,123 @@
+---
+// «05 · Proyectos» del home (docs/02-estrategia.md §8): bloque de acento con la foto en gris multiplicada y un
+// corte claro detrás del título, al ángulo del brazo. Mientras no llegue la lista real (pendiente #2), las tarjetas
+// son de muestra y el build de producción falla.
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import TitleWord from '../ui/TitleWord.astro';
+import TarjetaProyecto from '../ui/TarjetaProyecto.astro';
+import Button from '../ui/Button.astro';
+import Pendiente from '../ui/Pendiente.astro';
+import { ruta } from '../../i18n/utils';
+import fondo from '../../assets/img/aereo-terraza.jpg';
+
+const proyectos = (await getCollection('proyectos', (p) => p.data.lang === 'es' && p.data.destacado))
+  .sort((a, b) => a.data.orden - b.data.orden)
+  .slice(0, 2);
+const hayMuestras = proyectos.some((p) => p.data.muestra);
+if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
+  throw new Error('Proyectos de muestra en producción: falta la lista real (pendiente #2).');
+}
+---
+
+<section id="proyectos" class="proyectos" aria-labelledby="proyectos-titulo" data-snap>
+  <Picture
+    src={fondo}
+    alt=""
+    formats={['avif', 'webp']}
+    widths={[640, 960, 1280, 1600]}
+    sizes="100vw"
+    quality={50}
+    class="proyectos__fondo"
+  />
+  <span class="proyectos__papel" aria-hidden="true"></span>
+  <div class="proyectos__fila">
+    <p class="eyebrow proyectos__eyebrow" data-reveal="up">05 · Proyectos</p>
+    <TitleWord texto="Proyectos" id="proyectos-titulo" tono="acento" />
+    {
+      hayMuestras && (
+        <p class="proyectos__nota">
+          <Pendiente texto="Proyectos de muestra: faltan los reales con cliente, ubicación y permiso para publicarlos" />
+        </p>
+      )
+    }
+    <ul class="proyectos__lista" role="list" data-reveal="up">
+      {
+        proyectos.map((p) => (
+          <li>
+            <TarjetaProyecto proyecto={p} />
+          </li>
+        ))
+      }
+    </ul>
+    <Button href={ruta('proyectos')} variante="tinta" tamano="l" icono="flecha" iconoAlFinal class="proyectos__todos">
+      Ver todos los proyectos
+    </Button>
+  </div>
+</section>
+
+<style>
+  @layer components {
+    /* Sin isolation: el ocre de la sección es opaco y la foto se multiplica igual contra él; con isolation,
+       axe mezcla mal la capa y mide el texto de las tarjetas contra el ocre (falso positivo de contraste). */
+    .proyectos {
+      position: relative;
+      overflow: hidden;
+      background: var(--c-accent);
+      color: var(--c-on-accent);
+    }
+    /* Capa de acento: la foto en gris, multiplicada sobre el ocre (docs/03-direccion-de-arte.md §2) */
+    .proyectos :global(.proyectos__fondo) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(1) contrast(1.1) brightness(1.15);
+      mix-blend-mode: multiply;
+      opacity: 0.75;
+    }
+    /* Corte claro detrás del título, al ángulo del brazo (--slope) a cualquier alto de la sección */
+    .proyectos__papel {
+      position: absolute;
+      inset-block: 0;
+      left: 0;
+      width: max(60%, calc(var(--gutter-start) + 31rem));
+      background: var(--c-paper);
+      transform: skewX(calc(-1 * atan(var(--slope))));
+      transform-origin: 0 0;
+    }
+    .proyectos__fila {
+      position: relative;
+      z-index: 1; /* por encima de la foto y del corte, que crean su propio contexto (blend y transform) */
+      max-width: 90rem;
+      margin-inline: auto;
+      padding: clamp(4.5rem, 9vw, 9rem) var(--gutter-end) clamp(4rem, 7vw, 6rem) var(--gutter-start);
+      /* La fila se centra a 90rem: la franja del título suma el margen para llegar al borde de la página */
+      --barra-inicio: calc(var(--gutter-start) + max(0px, (100vw - 90rem) / 2));
+    }
+    .proyectos__eyebrow {
+      margin-bottom: 1.1rem;
+      color: var(--c-ink);
+    }
+    .proyectos__nota {
+      max-width: 26rem; /* se queda sobre el corte claro */
+      margin-top: 1.75rem;
+      color: var(--c-ink);
+    }
+    .proyectos__lista {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 30rem), 1fr));
+      gap: 1.75rem;
+      margin: clamp(2.5rem, 4vw, 3.25rem) 0 0;
+    }
+    .proyectos__fila :global(.proyectos__todos) {
+      margin-top: 2.25rem;
+    }
+    @media (min-width: 64rem) {
+      .proyectos {
+        min-height: var(--section-min);
+      }
+    }
+  }
+</style>

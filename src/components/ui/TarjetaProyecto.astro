@@ -1,0 +1,125 @@
+---
+// Tarjeta de proyecto (home y /proyectos/). Se acomoda a su propio ancho con container queries
+// (modern-web-guidance: size-aware-styling): apilada en angosto, foto al lado cuando hay espacio.
+// «Ver detalles» aparece cuando exista la ficha del proyecto (href).
+import type { CollectionEntry } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Button from './Button.astro';
+
+interface Props {
+  proyecto: CollectionEntry<'proyectos'>;
+  href?: string;
+  nivel?: 'h3' | 'h2';
+}
+const { proyecto, href, nivel: Titulo = 'h3' } = Astro.props;
+const d = proyecto.data;
+
+const NOMBRES = { tierra: 'Movimiento de tierras', acarreo: 'Acarreo', alquiler: 'Maquinaria', obra: 'Obra civil' };
+const POR_CONFIRMAR = '[Por confirmar]';
+const tipo = d.servicios.map((s) => NOMBRES[s]).join(' · ');
+const cliente = d.cliente ? (d.permisoCliente ? d.cliente : 'Cliente privado') : POR_CONFIRMAR;
+---
+
+<article class="proyecto">
+  <div class="proyecto__cuerpo">
+    <Picture
+      src={d.foto}
+      alt={d.fotoAlt}
+      formats={['avif', 'webp']}
+      widths={[320, 480, 640, 800]}
+      sizes="(min-width: 64rem) 13rem, (min-width: 40rem) 45vw, 100vw"
+      class="proyecto__foto"
+      style={`object-position: ${d.fotoPosicion}`}
+    />
+    <div class="proyecto__texto">
+      <Titulo class="proyecto__titulo">{d.titulo}</Titulo>
+      <dl class="proyecto__datos">
+        <div>
+          <dt>Tipo de proyecto</dt>
+          <dd>{tipo}</dd>
+        </div>
+        <div>
+          <dt>Cliente</dt>
+          <dd>{cliente}</dd>
+        </div>
+        <div>
+          <dt>Ubicación</dt>
+          <dd>{d.ubicacion ?? POR_CONFIRMAR}</dd>
+        </div>
+      </dl>
+      {href && <Button href={href} variante="tinta" class="proyecto__accion">Ver detalles</Button>}
+    </div>
+  </div>
+</article>
+
+<style>
+  @layer components {
+    .proyecto {
+      container-type: inline-size;
+      height: 100%;
+      padding: 1.1rem;
+      border: 1px solid var(--c-line);
+      border-radius: var(--radius-m);
+      /* Opaca: el contraste del texto no depende de lo que haya detrás (ocre, foto o el corte claro) */
+      background: var(--c-paper-2);
+      color: var(--c-ink);
+    }
+    .proyecto__cuerpo {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      height: 100%;
+    }
+    .proyecto :global(.proyecto__foto) {
+      display: block;
+      width: 100%;
+      height: auto; /* sin esto, el atributo height de <img> gana y el aspect-ratio no aplica */
+      aspect-ratio: 4 / 3;
+      border-radius: var(--radius-s);
+      object-fit: cover;
+    }
+    .proyecto__texto {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .proyecto__titulo {
+      font-size: var(--step-1);
+      font-weight: var(--weight-display);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .proyecto__datos {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      margin: 0;
+      line-height: 1.35;
+    }
+    .proyecto__datos dt {
+      font-weight: var(--weight-strong);
+    }
+    .proyecto__datos dd {
+      margin: 0;
+      color: var(--c-muted);
+    }
+    .proyecto__texto :global(.proyecto__accion) {
+      align-self: flex-start;
+      margin-top: auto;
+    }
+
+    /* Con espacio, la foto va al lado del texto (como en el artboard) */
+    @container (min-width: 28rem) {
+      .proyecto__cuerpo {
+        flex-direction: row;
+        gap: 1.4rem;
+      }
+      .proyecto :global(.proyecto__foto) {
+        flex: 0 0 auto;
+        width: 12.5rem;
+        aspect-ratio: 4 / 5;
+      }
+    }
+  }
+</style>

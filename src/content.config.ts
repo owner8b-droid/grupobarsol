@@ -53,4 +53,30 @@ const flota = defineCollection({
     }),
 });
 
-export const collections = { servicios, flota };
+const proyectos = defineCollection({
+  loader: glob({ base: './src/content/proyectos', pattern: '**/*.md' }),
+  schema: ({ image }) =>
+    z.object({
+      lang,
+      titulo: z.string(),
+      cliente: z.string().optional(),
+      // El nombre del cliente solo se publica con su permiso (pendiente #2)
+      permisoCliente: z.boolean().default(false),
+      ubicacion: z.string().optional(),
+      fecha: z.coerce.date().optional(),
+      servicios: z.array(z.enum(['tierra', 'alquiler', 'acarreo', 'obra'])).min(1),
+      alcance: z.string().optional(),
+      foto: image(),
+      fotoAlt: z.string(),
+      fotoPosicion: z.string().default('50% 50%'),
+      fotosAntes: z.array(image()).default([]),
+      fotosDespues: z.array(image()).default([]),
+      destacado: z.boolean().default(false),
+      orden: z.number().default(99),
+      // Proyecto de muestra hasta tener la lista real (pendiente #2). No puede llegar a producción.
+      muestra: z.boolean().default(false),
+      traduccionDe: z.string().optional(),
+    }),
+});
+
+export const collections = { servicios, flota, proyectos };

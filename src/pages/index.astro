@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Hero from '../components/sections/Hero.astro';
 import Frente from '../components/sections/Frente.astro';
 import Cotiza from '../components/sections/Cotiza.astro';
+import ProyectosHome from '../components/sections/ProyectosHome.astro';
 import ProgressDots from '../components/global/ProgressDots.astro';
 import DiagonalPanels from '../components/ui/DiagonalPanels.astro';
 import ChevronList from '../components/ui/ChevronList.astro';
@@ -38,6 +39,7 @@ const cotizador = ruta('cotizador');
       { id: 'maquinaria', nombre: 'Maquinaria' },
       { id: 'obra', nombre: 'Obra' },
       { id: 'nosotros', nombre: 'Equipo' },
+      { id: 'proyectos', nombre: 'Proyectos' },
       { id: 'cotizar', nombre: 'Cotizá' },
     ]}
   />
@@ -127,6 +129,8 @@ const cotizador = ruta('cotizador');
       capa={{ img: cimientos, alt: '' }}
     />
   </Frente>
+
+  <ProyectosHome />
 
   <Cotiza />
 </Base>
