@@ -122,6 +122,11 @@ con el GATE indicado.
   hasta tener el texto aprobado: no se publica un inglés provisional.
 - Consecuencias: el canonical, el sitemap y el Open Graph apuntan a GitHub Pages hasta el cambio de dominio.
   Los tests y Lighthouse CI corren contra `/grupobarsol/`.
+- Preview sin indexar (2026-10-06, aprobado por el usuario): es pública y muestra marcadores «[Por confirmar]».
+  `deploy.yml` construye con `PUBLIC_PREVIEW=true` y `<Seo />` agrega `noindex` a todas las páginas. La build del CI
+  no lleva la marca, así que Lighthouse CI sigue midiendo el SEO real y los tests verifican que las rutas sean
+  indexables. Al lanzar: quitar `PUBLIC_PREVIEW` y construir con `PUBLIC_PRODUCCION=true` (falla si queda un
+  pendiente o una unidad de muestra).
 
 ## ADR-014 · Orden de carga: CSS en línea; motor y video después del primer pintado
 - Fecha: 2026-10-05 · Estado: aceptada (evidencia de la Fase 4)
