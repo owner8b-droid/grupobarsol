@@ -3,17 +3,20 @@
 // La franja entra desde el borde de la página y termina con un corte al ángulo del brazo.
 interface Props {
   texto: string;
-  as?: 'h1' | 'h2';
+  // «p»: la palabra se ve grande pero el H1 es otra línea (cabeceras de páginas internas, como el hero)
+  as?: 'h1' | 'h2' | 'p';
   id?: string;
   tono?: 'claro' | 'oscuro' | 'acento';
   desde?: 'izquierda' | 'derecha';
   // El título sube con máscara al entrar (motor). Apagado en títulos visibles al cargar: no deben esperar al JS (LCP).
   revelar?: boolean;
+  // «bloque»: título de bloque de una página interna (--step-3), con la misma franja
+  escala?: 'pantalla' | 'bloque';
 }
-const { texto, as: Tag = 'h2', id, tono = 'claro', desde = 'izquierda', revelar = true } = Astro.props;
+const { texto, as: Tag = 'h2', id, tono = 'claro', desde = 'izquierda', revelar = true, escala = 'pantalla' } = Astro.props;
 ---
 
-<Tag class:list={['palabra', `palabra--${tono}`, `palabra--${desde}`]} id={id}>
+<Tag class:list={['palabra', `palabra--${tono}`, `palabra--${desde}`, { 'palabra--bloque': escala === 'bloque' }]} id={id}>
   <span class="palabra__barra" data-barra aria-hidden="true"></span>
   <span class="palabra__texto" data-split={revelar ? '' : undefined}>{texto}</span>
 </Tag>
@@ -27,6 +30,11 @@ const { texto, as: Tag = 'h2', id, tono = 'claro', desde = 'izquierda', revelar 
       font-weight: var(--weight-display);
       line-height: var(--leading-tight);
       letter-spacing: var(--tracking-display);
+    }
+    .palabra--bloque {
+      font-size: var(--step-3);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
     }
     .palabra--claro {
       color: var(--c-ink);

@@ -1,20 +1,31 @@
 ---
 // Sección «frente de obra» de D: columna de texto + bloque visual diagonal a sangre.
 // Escritorio: pantalla completa con snap por proximidad. Móvil: altura natural.
+// Con h1 es la cabecera de una página interna: el H1 es la frase completa en caja normal sobre la palabra (como el
+// hero, ADR-011), la palabra se ve desde la carga (LCP, sin esperar al motor), las migas van en el slot «migas» y
+// no hay snap (una página para leer no salta).
 import TitleWord from '../ui/TitleWord.astro';
 
 interface Props {
   id: string;
-  eyebrow: string;
+  eyebrow?: string;
   palabra: string;
   bajada: string;
   tono?: 'claro' | 'oscuro';
   invertida?: boolean;
+  h1?: string;
 }
-const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astro.props;
+const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false, h1 } = Astro.props;
+const cabecera = Boolean(h1);
 ---
 
-<section id={id} class:list={['frente', `frente--${tono}`, { 'frente--invertida': invertida }]} aria-labelledby={`${id}-titulo`} data-snap data-entrada>
+<section
+  id={id}
+  class:list={['frente', `frente--${tono}`, { 'frente--invertida': invertida, 'frente--cabecera': cabecera }]}
+  aria-labelledby={cabecera ? `${id}-h1` : `${id}-titulo`}
+  data-snap={cabecera ? undefined : ''}
+  data-entrada
+>
   {
     Astro.slots.has('tira') && (
       <div class="frente__tira">
@@ -23,10 +34,19 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
     )
   }
   <div class="frente__texto">
-    <p class="eyebrow frente__eyebrow" data-reveal="up">{eyebrow}</p>
-    <TitleWord texto={palabra} id={`${id}-titulo`} tono={tono} desde={invertida ? 'derecha' : 'izquierda'} />
-    <p class="bajada frente__bajada" data-reveal="up">{bajada}</p>
-    <div class="frente__cuerpo" data-reveal="up"><slot /></div>
+    <slot name="migas" />
+    {eyebrow && <p class="eyebrow frente__eyebrow" data-reveal={cabecera ? undefined : 'up'}>{eyebrow}</p>}
+    {h1 && <h1 id={`${id}-h1`} class="frente__h1">{h1}</h1>}
+    <TitleWord
+      texto={palabra}
+      as={cabecera ? 'p' : 'h2'}
+      id={cabecera ? undefined : `${id}-titulo`}
+      tono={tono}
+      desde={invertida ? 'derecha' : 'izquierda'}
+      revelar={!cabecera}
+    />
+    <p class="bajada frente__bajada" data-reveal={cabecera ? undefined : 'up'}>{bajada}</p>
+    <div class="frente__cuerpo" data-reveal={cabecera ? undefined : 'up'}><slot /></div>
   </div>
   <div class="frente__visual"><slot name="visual" /></div>
 </section>
@@ -82,6 +102,15 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
     .frente--oscuro .frente__eyebrow {
       color: var(--c-muted-dark);
     }
+    /* La frase completa del H1 sobre la palabra, en caja normal (como .hero__h1) */
+    .frente__h1 {
+      max-width: 30rem;
+      margin-bottom: 1.25rem;
+      font-size: var(--step-1);
+      font-weight: var(--weight-strong);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+    }
     .frente__bajada {
       margin-top: 2rem;
       margin-bottom: 0.75rem;
@@ -118,6 +147,13 @@ const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false } = Astr
     @media (min-width: 64rem) {
       .frente {
         min-height: var(--section-min);
+      }
+      /* La cabecera arranca bajo el encabezado fijo: llena la primera pantalla sin pasarse */
+      .frente--cabecera {
+        min-height: calc(var(--section-min) - 5rem);
+      }
+      .frente--cabecera .frente__texto {
+        padding-block: clamp(3.5rem, 6vw, 5rem);
       }
       .frente__tira {
         padding-left: 38%;

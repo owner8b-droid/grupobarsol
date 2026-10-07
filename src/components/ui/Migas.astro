@@ -1,0 +1,42 @@
+---
+// Migas de pan de las páginas internas, sobre las cabeceras de tinta. La última es la página actual.
+import { ruta, t } from '../../i18n/utils';
+
+interface Miga {
+  nombre: string;
+  href?: string;
+}
+interface Props {
+  migas?: Miga[];
+  actual: string;
+}
+const { migas = [], actual } = Astro.props;
+const todas: Miga[] = [{ nombre: t('es', 'ruta.inicio'), href: ruta('inicio') }, ...migas, { nombre: actual }];
+---
+
+<nav aria-label={t('es', 'ruta.label')} class="migas">
+  <ol role="list">
+    {todas.map((m) => <li>{m.href ? <a href={m.href}>{m.nombre}</a> : <span aria-current="page">{m.nombre}</span>}</li>)}
+  </ol>
+</nav>
+
+<style>
+  @layer components {
+    .migas ol {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 0.6rem;
+      margin: 0 0 1.5rem;
+      color: var(--c-muted-dark);
+      font-size: 0.9375rem;
+      font-weight: 700;
+    }
+    .migas li + li::before {
+      content: '/';
+      margin-right: 0.6rem;
+    }
+    .migas a {
+      color: var(--c-paper-dim);
+    }
+  }
+</style>

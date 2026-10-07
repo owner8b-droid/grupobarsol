@@ -19,8 +19,10 @@ interface Props {
   lado?: 'derecha' | 'izquierda';
   // «capa»: un solo panel de capa de acento a todo el bloque (artboard D, «04 · Equipo», junto a la tira)
   variante?: 'paneles' | 'capa';
+  // En la cabecera de una página la foto principal es el LCP: se pide primero y sin carga diferida
+  prioridad?: boolean;
 }
-const { principal, capa, secundaria, lado = 'derecha', variante = 'paneles' } = Astro.props;
+const { principal, capa, secundaria, lado = 'derecha', variante = 'paneles', prioridad = false } = Astro.props;
 const sizes = '(min-width: 64rem) 50vw, 100vw';
 ---
 
@@ -35,7 +37,15 @@ const sizes = '(min-width: 64rem) 50vw, 100vw';
   {
     variante === 'paneles' && principal && (
       <div class="panel panel--principal" data-panel style={principal.posicion ? `--pos: ${principal.posicion}` : undefined}>
-        <Picture src={principal.img} alt={principal.alt} formats={['avif', 'webp']} widths={[480, 800, 1200]} sizes={sizes} loading="lazy" />
+        <Picture
+          src={principal.img}
+          alt={principal.alt}
+          formats={['avif', 'webp']}
+          widths={[480, 800, 1200]}
+          sizes={sizes}
+          loading={prioridad ? 'eager' : 'lazy'}
+          fetchpriority={prioridad ? 'high' : undefined}
+        />
       </div>
     )
   }
