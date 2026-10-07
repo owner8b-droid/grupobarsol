@@ -13,8 +13,8 @@ import TarjetaProyecto from '../../components/ui/TarjetaProyecto.astro';
 import ArrowLink from '../../components/ui/ArrowLink.astro';
 import Button from '../../components/ui/Button.astro';
 import Pendiente from '../../components/ui/Pendiente.astro';
-import { enlaceWhatsApp, ruta, rutaCotizar } from '../../i18n/utils';
-import { site } from '../../data/site';
+import Cierre from '../../components/sections/Cierre.astro';
+import { ruta, rutaCotizar } from '../../i18n/utils';
 import { migas, servicio as esquemaServicio } from '../../lib/schema';
 
 export async function getStaticPaths() {
@@ -30,7 +30,6 @@ const d = entrada.data;
 const url = new URL(Astro.url.pathname, Astro.site).href;
 const sitio = new URL(import.meta.env.BASE_URL, Astro.site);
 const cotizar = rutaCotizar(d.cotizadorServicio);
-const whatsapp = enlaceWhatsApp(site.whatsapp, `Hola, Grupo Barsol. Quiero información sobre ${d.titulo.toLowerCase()}.`);
 const flota = ruta('flota');
 
 // Alquiler: lo que incluye son las máquinas de la flota, cada una con su filtro y en el orden del home
@@ -171,34 +170,22 @@ const jsonLd = [
     )
   }
 
-  <section class="cierre" aria-labelledby="cierre-titulo">
-    <div class="cierre__texto">
-      <h2 id="cierre-titulo" class="cierre__titulo">¿Arrancamos con tu {d.titulo.toLowerCase()}?</h2>
-      <p class="cierre__bajada">Pre-cotizá en cuatro pasos y seguimos por WhatsApp. Sin costo ni compromiso.</p>
-    </div>
-    <div class="acciones">
-      <Button href={cotizar} variante="tinta" tamano="l" icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion="servicio-cierre">
-        Cotizá este servicio
-      </Button>
-      <Button href={whatsapp} variante="borde" tamano="l" icono="whatsapp" evento="click_whatsapp" ubicacion="servicio-cierre">
-        Escribinos por WhatsApp
-      </Button>
-    </div>
-  </section>
+  <Cierre
+    titulo={`¿Arrancamos con tu ${d.titulo.toLowerCase()}?`}
+    bajada="Pre-cotizá en cuatro pasos y seguimos por WhatsApp. Sin costo ni compromiso."
+    accion={{ href: cotizar, texto: 'Cotizá este servicio' }}
+    ubicacion="servicio-cierre"
+    mensajeWhatsApp={`Hola, Grupo Barsol. Quiero información sobre ${d.titulo.toLowerCase()}.`}
+  />
 </Base>
 
 <style>
   @layer components {
-    .acciones {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.875rem 1rem;
-    }
-
     /* Bloques: el texto arranca en --gutter-start como todas las pantallas; en escritorio, título a la izquierda
        y contenido a la derecha */
     .bloque {
       display: grid;
+      grid-template-columns: minmax(0, 1fr);
       gap: 2.5rem 5rem;
       padding: clamp(4rem, 8vw, 7rem) var(--gutter-end) clamp(4rem, 8vw, 7rem) var(--gutter-start);
     }
@@ -344,33 +331,6 @@ const jsonLd = [
       grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
       gap: 1.5rem;
       margin: 0;
-    }
-
-    /* Cierre en acento: una sola acción principal, con el servicio ya elegido */
-    .cierre {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem 4rem;
-      padding: clamp(3.5rem, 7vw, 6rem) var(--gutter-end) clamp(3.5rem, 7vw, 6rem) var(--gutter-start);
-      background: var(--c-accent);
-      color: var(--c-on-accent);
-    }
-    .cierre__texto {
-      max-width: 40rem;
-    }
-    .cierre__titulo {
-      font-size: var(--step-3);
-      font-weight: var(--weight-display);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-    }
-    .cierre__bajada {
-      margin-top: 1rem;
-      font-size: var(--step-1);
-      font-weight: 700;
-      line-height: 1.35;
     }
   }
 </style>

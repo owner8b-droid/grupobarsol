@@ -1,0 +1,65 @@
+---
+// Cierre en acento de las páginas internas: una pregunta, una bajada y la acción principal, con WhatsApp al lado.
+import Button from '../ui/Button.astro';
+import { enlaceWhatsApp } from '../../i18n/utils';
+import { site } from '../../data/site';
+
+interface Props {
+  titulo: string;
+  bajada: string;
+  accion: { href: string; texto: string };
+  ubicacion: string;
+  mensajeWhatsApp: string;
+}
+const { titulo, bajada, accion, ubicacion, mensajeWhatsApp } = Astro.props;
+---
+
+<section class="cierre" aria-labelledby="cierre-titulo">
+  <div class="cierre__texto">
+    <h2 id="cierre-titulo" class="cierre__titulo">{titulo}</h2>
+    <p class="cierre__bajada">{bajada}</p>
+  </div>
+  <div class="cierre__acciones">
+    <Button href={accion.href} variante="tinta" tamano="l" icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion={ubicacion}>
+      {accion.texto}
+    </Button>
+    <Button href={enlaceWhatsApp(site.whatsapp, mensajeWhatsApp)} variante="borde" tamano="l" icono="whatsapp" evento="click_whatsapp" ubicacion={ubicacion}>
+      Escribinos por WhatsApp
+    </Button>
+  </div>
+</section>
+
+<style>
+  @layer components {
+    .cierre {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem 4rem;
+      padding: clamp(3.5rem, 7vw, 6rem) var(--gutter-end) clamp(3.5rem, 7vw, 6rem) var(--gutter-start);
+      background: var(--c-accent);
+      color: var(--c-on-accent);
+    }
+    .cierre__texto {
+      max-width: 40rem;
+    }
+    .cierre__titulo {
+      font-size: var(--step-3);
+      font-weight: var(--weight-display);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .cierre__bajada {
+      margin-top: 1rem;
+      font-size: var(--step-1);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .cierre__acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.875rem 1rem;
+    }
+  }
+</style>
