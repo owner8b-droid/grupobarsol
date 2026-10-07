@@ -1,0 +1,441 @@
+---
+// Ficha de una unidad (artboard Ficha-escritorio · docs/02-estrategia.md §3 y §6): galería con miniaturas
+// (lib/galeria.ts; sin JS, la primera foto), datos técnicos, las dos acciones con la nota de precio, «Para qué
+// sirve» y otras máquinas. JSON-LD Product sin Offer (no hay precios).
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Migas from '../../components/ui/Migas.astro';
+import TitleWord from '../../components/ui/TitleWord.astro';
+import TarjetaMaquina from '../../components/ui/TarjetaMaquina.astro';
+import ArrowLink from '../../components/ui/ArrowLink.astro';
+import Button from '../../components/ui/Button.astro';
+import Pendiente from '../../components/ui/Pendiente.astro';
+import { ESTADO, OPERADOR, TIPOS, USOS, nombreUnidad, ordenUnidades, slugUnidad, textoAlquiler } from '../../data/flota';
+import { enlaceWhatsApp, ruta, rutaCotizar } from '../../i18n/utils';
+import { site } from '../../data/site';
+import { migas, producto } from '../../lib/schema';
+
+export async function getStaticPaths() {
+  const unidades = await getCollection('flota', (u) => u.data.lang === 'es');
+  return unidades.map((unidad) => ({ params: { maquina: slugUnidad(unidad) }, props: { unidad } }));
+}
+
+interface Props {
+  unidad: CollectionEntry<'flota'>;
+}
+const { unidad } = Astro.props;
+const d = unidad.data;
+if (d.muestra && import.meta.env.PUBLIC_PRODUCCION === 'true') {
+  throw new Error('La flota tiene unidades de muestra: falta el inventario real (pendiente #1).');
+}
+const nombre = nombreUnidad(d);
+const tipo = TIPOS[d.tipo];
+const fotos = d.fotos;
+const altDe = (i: number) => d.fotosAlt[i] ?? (i === 0 && d.fotoAlt ? d.fotoAlt : `${nombre}: foto ${i + 1} de ${fotos.length}`);
+const usos = USOS[d.tipo] ?? [];
+const otras = (await getCollection('flota', (u) => u.data.lang === 'es' && u.id !== unidad.id)).sort(ordenUnidades).slice(0, 3);
+const cotizar = rutaCotizar('alquiler', { maquina: d.tipo });
+const whatsapp = enlaceWhatsApp(site.whatsapp, `Hola, Grupo Barsol. Quiero consultar por la ${nombre.toLowerCase()} de la flota.`);
+
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const flota = ruta('flota');
+const jsonLd = [
+  producto({
+    nombre,
+    url,
+    imagen: fotos[0] ? new URL(fotos[0].src, Astro.site).href : undefined,
+    marca: d.marca,
+    modelo: d.modelo,
+    specs: d.specs.map((s) => ({ label: s.label, valor: s.valor })),
+  }),
+  migas([
+    { nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.site).href },
+    { nombre: 'Flota', url: new URL(flota, Astro.site).href },
+    { nombre, url },
+  ]),
+];
+---
+
+<Base
+  title={`${nombre} en alquiler | Grupo Barsol`}
+  description={`${nombre} en alquiler ${textoAlquiler(d).toLowerCase()} en Cartago: ficha técnica y pre-cotización por WhatsApp.`}
+  imagen={fotos[0]}
+  jsonLd={jsonLd}
+>
+  <div class="ficha">
+    <Migas
+      tono="claro"
+      migas={[
+        { nombre: 'Flota', href: flota },
+        { nombre: tipo.plural, href: `${flota}?tipo=${d.tipo}` },
+      ]}
+      actual={nombre}
+    />
+    <div class="ficha__fila">
+      <section class="galeria" aria-label="Fotos de la unidad" data-galeria>
+        <div class="galeria__marco">
+          {
+            fotos.length ? (
+              fotos.map((f, i) => (
+                <div class="galeria__foto" data-foto hidden={i > 0}>
+                  <Picture
+                    src={f}
+                    alt={altDe(i)}
+                    formats={['avif', 'webp']}
+                    widths={[480, 800, 1200]}
+                    sizes="(min-width: 64rem) 50vw, 100vw"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    fetchpriority={i === 0 ? 'high' : undefined}
+                  />
+                </div>
+              ))
+            ) : (
+              <div class="galeria__sin-foto" role="img" aria-label="Foto de la unidad pendiente">
+                <span aria-hidden="true">[Foto de la unidad]</span>
+              </div>
+            )
+          }
+          {
+            fotos.length > 1 && (
+              <p class="galeria__texto" data-galeria-texto>
+                Foto 1 de {fotos.length}
+              </p>
+            )
+          }
+        </div>
+        {
+          fotos.length > 1 && (
+            <div class="galeria__miniaturas">
+              {fotos.map((f, i) => (
+                <button type="button" class="galeria__miniatura" data-miniatura aria-label={`Ver foto ${i + 1} de ${fotos.length}`} aria-pressed={i === 0 ? 'true' : 'false'}>
+                  <Picture src={f} alt="" formats={['avif', 'webp']} widths={[240]} sizes="10rem" loading="lazy" />
+                </button>
+              ))}
+            </div>
+          )
+        }
+      </section>
+
+      <section class="datos" aria-labelledby="ficha-h1">
+        <p class="eyebrow datos__eyebrow">{tipo.plural} · Alquiler</p>
+        <TitleWord as="h1" escala="bloque" texto={nombre} id="ficha-h1" revelar={false} />
+        {
+          !(d.marca && d.modelo) && (
+            <p class="datos__nota">
+              <Pendiente texto="Marca y modelo de la unidad" />
+            </p>
+          )
+        }
+        <p class="datos__estado">
+          <span class="datos__punto" aria-hidden="true"></span>
+          {ESTADO[d.estado]}
+        </p>
+        <p class="datos__descripcion">
+          <Pendiente texto="Descripción corta de la unidad: año, estado y para qué obras rinde mejor" />
+        </p>
+        <dl class="datos__lista">
+          {
+            d.specs.map((s) => (
+              <div>
+                <dt>{s.label}</dt>
+                <dd>{s.valor}</dd>
+              </div>
+            ))
+          }
+          {
+            d.modalidades.length > 0 && (
+              <div>
+                <dt>Alquiler</dt>
+                <dd>{textoAlquiler(d)}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>Operador</dt>
+            <dd>{d.operador ? OPERADOR[d.operador] : <Pendiente texto="Confirmar si se incluye" />}</dd>
+          </div>
+          <div>
+            <dt>Traslado a la obra</dt>
+            <dd><Pendiente texto="Confirmar condiciones" /></dd>
+          </div>
+        </dl>
+        <div class="datos__acciones">
+          <Button href={cotizar} tamano="l" icono="flecha" iconoAlFinal ancho evento="cotizador_inicio" ubicacion="ficha">Cotizar esta máquina</Button>
+          <Button href={whatsapp} variante="borde" tamano="l" icono="whatsapp" ancho evento="click_whatsapp" ubicacion="ficha">Preguntar por WhatsApp</Button>
+          <p class="datos__precio">El precio depende de la duración y del lugar de la obra: te lo damos al pre-cotizar.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  {
+    usos.length > 0 && (
+      <section class="usos" aria-labelledby="usos-titulo">
+        <TitleWord as="h2" escala="bloque" texto="Para qué sirve" id="usos-titulo" tono="oscuro" />
+        <ul role="list" class="usos__lista" data-reveal="up">
+          {usos.map((u) => (
+            <li>
+              <span class="usos__chevron" aria-hidden="true" />
+              {u}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    otras.length > 0 && (
+      <section class="otras" aria-labelledby="otras-titulo">
+        <div class="otras__titular">
+          <TitleWord as="h2" escala="bloque" texto="Otras máquinas" id="otras-titulo" />
+          <ArrowLink href={flota}>Ver toda la flota</ArrowLink>
+        </div>
+        <ul role="list" class="otras__lista">
+          {otras.map((u) => (
+            <li>
+              <TarjetaMaquina unidad={u} nivel="h3" compacta />
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  @layer components {
+    .ficha {
+      padding: 2rem var(--gutter-end) clamp(4rem, 8vw, 6rem) var(--gutter-start);
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    .ficha__fila {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem 4rem;
+    }
+
+    /* Galería: la esquina inferior derecha de la foto se corta al ángulo del brazo y deja ver el acento */
+    .galeria {
+      flex: 1 1 32rem;
+      min-width: 0;
+    }
+    .galeria__marco {
+      position: relative;
+      height: clamp(16rem, 38vw, 32.5rem);
+      overflow: hidden;
+      border-radius: var(--radius-m);
+      background: var(--c-accent);
+      container-type: size;
+    }
+    .galeria__foto,
+    .galeria__foto :global(picture),
+    .galeria__foto :global(img),
+    .galeria__sin-foto {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .galeria__foto :global(img),
+    .galeria__sin-foto {
+      object-fit: cover;
+      clip-path: polygon(0 0, 100% 0, 100% 78%, calc(100% - var(--slope) * 22cqh) 100%, 0 100%);
+    }
+    .galeria__sin-foto {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--c-line);
+    }
+    .galeria__sin-foto span {
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-s);
+      background: var(--c-paper);
+      color: var(--c-muted);
+      font-weight: 700;
+    }
+    .galeria__texto {
+      position: absolute;
+      left: 1rem;
+      bottom: 1rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-s);
+      background: var(--c-ink);
+      color: var(--c-paper);
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+    /* Las miniaturas solo cambian la foto con JS */
+    :global(html:not(.js)) .galeria__miniaturas {
+      display: none;
+    }
+    .galeria__miniaturas {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+    .galeria__miniatura {
+      height: clamp(4rem, 7vw, 6rem);
+      padding: 0;
+      overflow: hidden;
+      border: 3px solid transparent;
+      border-radius: var(--radius-m);
+      background: var(--c-line);
+      cursor: pointer;
+    }
+    .galeria__miniatura[aria-pressed='true'] {
+      border-color: var(--c-accent);
+    }
+    .galeria__miniatura:focus-visible {
+      outline: 3px solid var(--c-focus);
+      outline-offset: 3px;
+    }
+    .galeria__miniatura :global(picture),
+    .galeria__miniatura :global(img) {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Datos de la unidad */
+    .datos {
+      flex: 1 1 26rem;
+      min-width: 0;
+    }
+    .datos__eyebrow {
+      margin-bottom: 0.875rem;
+      color: var(--c-muted);
+    }
+    .datos :global(.palabra) {
+      margin-bottom: 1.25rem;
+    }
+    .datos__nota {
+      margin-bottom: 0.75rem;
+    }
+    .datos__estado {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      color: var(--c-muted);
+      font-weight: 700;
+    }
+    .datos__punto {
+      flex: none;
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 50%;
+      background: var(--c-accent);
+    }
+    .datos__descripcion {
+      margin-bottom: 1.5rem;
+      color: var(--c-muted);
+    }
+    .datos__lista {
+      margin: 0 0 1.75rem;
+      border-top: 2px solid var(--c-ink);
+    }
+    .datos__lista div {
+      display: grid;
+      grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+      gap: 0.75rem;
+      padding-block: 0.75rem;
+      border-bottom: 1px solid var(--c-line);
+    }
+    .datos__lista dt {
+      font-weight: var(--weight-strong);
+    }
+    .datos__lista dd {
+      margin: 0;
+      color: var(--c-muted);
+    }
+    .datos__acciones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-width: 30rem;
+    }
+    .datos__precio {
+      margin-top: 0.25rem;
+      color: var(--c-muted);
+      font-size: 0.9375rem;
+    }
+
+    /* Para qué sirve: lista con chevrones sobre tinta */
+    .usos {
+      --c-focus: var(--c-accent);
+      display: grid;
+      /* Una columna que no crece con su contenido: la lista interna no puede ensancharla (desborde a 375) */
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem 5rem;
+      padding: clamp(4rem, 8vw, 6rem) var(--gutter-end) clamp(4rem, 8vw, 6rem) var(--gutter-start);
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .usos > :global(.palabra) {
+      align-self: start;
+      justify-self: start;
+    }
+    .usos__lista {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 17.5rem), 1fr));
+      gap: 0 2.5rem;
+      max-width: 56rem;
+      margin: 0;
+      border-top: 2px solid var(--c-paper);
+    }
+    .usos__lista li {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-height: 4rem;
+      border-bottom: 1px solid var(--c-line-dark);
+      font-size: var(--step-1);
+      font-weight: var(--weight-strong);
+    }
+    .usos__chevron {
+      flex: none;
+      width: 1rem;
+      height: 1.125rem;
+      background: var(--c-accent);
+      clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);
+    }
+
+    /* Otras máquinas */
+    .otras {
+      padding: clamp(4rem, 8vw, 6rem) var(--gutter-end) clamp(4rem, 8vw, 6.5rem) var(--gutter-start);
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    .otras__titular {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem 2.5rem;
+      margin-bottom: 2rem;
+    }
+    .otras__lista {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 18.75rem), 1fr));
+      gap: 1.5rem;
+      margin: 0;
+    }
+    @media (min-width: 64rem) {
+      .usos {
+        grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+      }
+    }
+    /* Angosto: el dato va debajo de su etiqueta (a 320 px no entran lado a lado) */
+    @media (max-width: 30rem) {
+      .datos__lista div {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0.15rem;
+      }
+    }
+  }
+</style>

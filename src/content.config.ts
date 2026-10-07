@@ -50,6 +50,8 @@ const flota = defineCollection({
       specs: z.array(spec).default([]),
       fotos: z.array(image()).default([]),
       fotoAlt: z.string().optional(),
+      // Texto alternativo de cada foto de la galería, en el mismo orden (la primera puede usar fotoAlt)
+      fotosAlt: z.array(z.string()).default([]),
       modalidades: z.array(z.enum(['hora', 'dia', 'proyecto', 'viaje'])).default([]),
       operador: z.enum(['si', 'no', 'a-convenir']).optional(),
       estado: z.enum(['disponible', 'consultar', 'mantenimiento']).default('consultar'),

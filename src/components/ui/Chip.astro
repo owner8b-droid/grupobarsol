@@ -1,0 +1,53 @@
+---
+// Chip de filtro u opción: un radio nativo (flechas del teclado) dentro de su etiqueta. Elegido = fondo tinta y
+// texto cal (docs/03-direccion-de-arte.md §8). Los data-* van al input (los lee el JS que filtra).
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = Omit<HTMLAttributes<'input'>, 'type' | 'class'> & {
+  name: string;
+  value: string;
+};
+const { name, value, checked, ...resto } = Astro.props;
+---
+
+<label class="chip">
+  <input type="radio" name={name} value={value} checked={checked} {...resto} />
+  <span><slot /></span>
+</label>
+
+<style>
+  @layer components {
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.625rem;
+      min-height: 3rem;
+      padding: 0 1.125rem;
+      border: 2px solid var(--c-chip-border);
+      border-radius: var(--radius-pill);
+      background: var(--c-paper-2);
+      color: var(--c-ink);
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .chip input {
+      flex: none;
+      width: 1rem;
+      height: 1rem;
+      margin: 0;
+      accent-color: var(--c-accent);
+    }
+    .chip:hover {
+      border-color: var(--c-ink);
+    }
+    .chip:has(input:checked) {
+      border-color: var(--c-ink);
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .chip:has(input:focus-visible) {
+      outline: 3px solid var(--c-focus);
+      outline-offset: 3px;
+    }
+  }
+</style>

@@ -1,0 +1,218 @@
+---
+// Tarjeta de una unidad de la flota (artboard Flota-escritorio): foto con la esquina cortada al ángulo del brazo
+// (cqh), tipo, nombre, datos, estado y las dos acciones. «compacta» (Otras máquinas, en la ficha): solo foto, tipo
+// y nombre, y toda la tarjeta es el enlace a la ficha. Al pasar, la foto se acerca un 3 % (§8).
+import type { CollectionEntry } from 'astro:content';
+import { Picture } from 'astro:assets';
+import Button from './Button.astro';
+import ArrowLink from './ArrowLink.astro';
+import { ESTADO, TIPOS, nombreUnidad, slugUnidad, textoAlquiler } from '../../data/flota';
+import { rutaCotizar, rutaDeUnidad } from '../../i18n/utils';
+
+interface Props {
+  unidad: CollectionEntry<'flota'>;
+  nivel?: 'h2' | 'h3';
+  compacta?: boolean;
+}
+const { unidad, nivel: Titulo = 'h2', compacta = false } = Astro.props;
+const d = unidad.data;
+const nombre = nombreUnidad(d);
+const ficha = rutaDeUnidad(slugUnidad(unidad));
+const foto = d.fotos[0];
+---
+
+<article class:list={['maquina', { 'maquina--compacta': compacta }]}>
+  <div class="maquina__foto">
+    {
+      foto ? (
+        <Picture
+          src={foto}
+          alt={compacta ? '' : (d.fotoAlt ?? '')}
+          formats={['avif', 'webp']}
+          widths={[400, 700]}
+          sizes="(min-width: 64rem) 30vw, (min-width: 40rem) 45vw, 100vw"
+          loading="lazy"
+        />
+      ) : (
+        <div class="maquina__sin-foto" role="img" aria-label="Foto de la unidad pendiente">
+          <span aria-hidden="true">[Foto de la unidad]</span>
+        </div>
+      )
+    }
+  </div>
+  <div class="maquina__texto">
+    <p class="eyebrow maquina__tipo">{TIPOS[d.tipo].plural}</p>
+    <Titulo class="maquina__nombre">
+      {compacta ? <a href={ficha} class="maquina__enlace">{nombre}</a> : nombre}
+    </Titulo>
+    {
+      !compacta && (
+        <>
+          <dl class="maquina__datos">
+            {d.specs.map((s) => (
+              <div>
+                <dt>{s.label}</dt>
+                <dd>{s.valor}</dd>
+              </div>
+            ))}
+            {d.modalidades.length > 0 && (
+              <div>
+                <dt>Alquiler</dt>
+                <dd>{textoAlquiler(d)}</dd>
+              </div>
+            )}
+          </dl>
+          <p class="maquina__estado">
+            <span class="maquina__punto" aria-hidden="true" />
+            {ESTADO[d.estado]}
+          </p>
+          <div class="maquina__acciones">
+            <Button href={rutaCotizar('alquiler', { maquina: d.tipo })} evento="cotizador_inicio" ubicacion="flota">
+              Cotizar esta máquina<span class="visualmente-oculto"> ({nombre})</span>
+            </Button>
+            <ArrowLink href={ficha}>
+              Ver ficha<span class="visualmente-oculto"> de {nombre}</span>
+            </ArrowLink>
+          </div>
+        </>
+      )
+    }
+  </div>
+</article>
+
+<style>
+  @layer components {
+    .maquina {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      border: 2px solid var(--c-line);
+      border-radius: var(--radius-m);
+      background: var(--c-paper-2);
+      color: var(--c-ink);
+    }
+    /* La esquina inferior derecha se corta al ángulo del brazo: el corte avanza --slope × su alto (cqh) */
+    .maquina__foto {
+      height: 14rem;
+      container-type: size;
+      overflow: hidden;
+    }
+    .maquina--compacta .maquina__foto {
+      height: 12rem;
+    }
+    .maquina__foto :global(picture),
+    .maquina__foto :global(img),
+    .maquina__sin-foto {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .maquina__foto :global(img),
+    .maquina__sin-foto {
+      clip-path: polygon(0 0, 100% 0, 100% 62%, calc(100% - var(--slope) * 38cqh) 100%, 0 100%);
+    }
+    .maquina__foto :global(img) {
+      object-fit: cover;
+      transition: transform var(--dur-2) var(--ease-out);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .maquina:hover .maquina__foto :global(img) {
+        transform: scale(1.03);
+      }
+    }
+    .maquina__sin-foto {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--c-line);
+    }
+    .maquina__sin-foto span {
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-s);
+      background: var(--c-paper);
+      color: var(--c-muted);
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+    .maquina__texto {
+      display: flex;
+      flex: 1 1 auto;
+      flex-direction: column;
+      gap: 0.75rem;
+      padding: 1rem 1.375rem 1.375rem;
+    }
+    .maquina__tipo {
+      color: var(--c-muted);
+    }
+    .maquina__nombre {
+      font-size: var(--step-2);
+      font-weight: var(--weight-display);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    /* Compacta: el área del enlace cubre la tarjeta y el foco se ve alrededor */
+    .maquina__enlace {
+      color: inherit;
+      text-decoration: none;
+    }
+    .maquina__enlace::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+    .maquina--compacta:has(.maquina__enlace:focus-visible) {
+      outline: 3px solid var(--c-focus);
+      outline-offset: 3px;
+    }
+    .maquina__enlace:focus-visible {
+      outline: none;
+    }
+    .maquina--compacta:hover {
+      border-color: var(--c-ink);
+    }
+    .maquina__datos {
+      display: grid;
+      gap: 0.35rem;
+      margin: 0.25rem 0 0;
+      font-size: 0.9375rem;
+      line-height: 1.35;
+    }
+    .maquina__datos div {
+      display: grid;
+      grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+      gap: 1rem;
+    }
+    .maquina__datos dt {
+      font-weight: var(--weight-strong);
+    }
+    .maquina__datos dd {
+      margin: 0;
+      color: var(--c-muted);
+    }
+    .maquina__estado {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--c-muted);
+      font-size: 0.9375rem;
+      font-weight: 700;
+    }
+    .maquina__punto {
+      flex: none;
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 50%;
+      background: var(--c-accent);
+    }
+    .maquina__acciones {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1.25rem;
+      margin-top: auto;
+      padding-top: 0.5rem;
+    }
+  }
+</style>

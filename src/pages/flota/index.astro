@@ -1,22 +1,39 @@
 ---
+// Flota (artboard Flota-escritorio · docs/02-estrategia.md §3): cabecera compacta de tinta, filtro por tipo con el
+// conteo anunciado (lib/flota.ts; ?tipo= desde el home y el alquiler, contra la lista cerrada de los radios) y las
+// tarjetas de cada unidad con su ficha. Sin JS se ven todas y el filtro no aparece.
 import { getCollection } from 'astro:content';
-import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import PageHeader from '../../components/sections/PageHeader.astro';
-import Button from '../../components/ui/Button.astro';
+import Frente from '../../components/sections/Frente.astro';
+import Cierre from '../../components/sections/Cierre.astro';
+import DiagonalPanels from '../../components/ui/DiagonalPanels.astro';
+import Migas from '../../components/ui/Migas.astro';
+import Chip from '../../components/ui/Chip.astro';
+import TarjetaMaquina from '../../components/ui/TarjetaMaquina.astro';
 import Pendiente from '../../components/ui/Pendiente.astro';
-import { ruta, rutaCotizar } from '../../i18n/utils';
-import { migas } from '../../lib/schema';
+import { ORDEN_TIPOS, TIPOS, nombreUnidad, ordenUnidades, slugUnidad } from '../../data/flota';
+import { ruta, rutaCotizar, rutaDeUnidad } from '../../i18n/utils';
+import { listaDeUnidades, migas } from '../../lib/schema';
 import nocheLowboy from '../../assets/img/noche-lowboy.jpg';
+import vagonetas from '../../assets/img/vagonetas.jpg';
 
-const unidades = await getCollection('flota', (u) => u.data.lang === 'es');
+const unidades = (await getCollection('flota', (u) => u.data.lang === 'es')).sort(ordenUnidades);
 const hayMuestras = unidades.some((u) => u.data.muestra);
 if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
   throw new Error('La flota tiene unidades de muestra: falta el inventario real (pendiente #1).');
 }
-const modalidad = { hora: 'Hora', dia: 'Día', proyecto: 'Proyecto', viaje: 'Viaje' } as const;
+const tipos = ORDEN_TIPOS.filter((t) => unidades.some((u) => u.data.tipo === t));
+const conteo = (n: number) => (n === 1 ? '1 máquina' : `${n} máquinas`);
+
 const url = new URL(Astro.url.pathname, Astro.site).href;
-const jsonLd = [migas([{ nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.site).href }, { nombre: 'Flota', url }])];
+const jsonLd = [
+  listaDeUnidades(
+    'Flota de maquinaria pesada en alquiler',
+    url,
+    unidades.map((u) => ({ nombre: nombreUnidad(u.data), url: new URL(rutaDeUnidad(slugUnidad(u)), Astro.site).href })),
+  ),
+  migas([{ nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.site).href }, { nombre: 'Flota', url }]),
+];
 ---
 
 <Base
@@ -24,118 +41,122 @@ const jsonLd = [migas([{ nombre: 'Inicio', url: new URL(ruta('inicio'), Astro.si
   description="Excavadoras, compactadoras, niveladoras y vagonetas con su ficha técnica. Filtrá por tipo y cotizá la unidad que necesitás en Cartago."
   jsonLd={jsonLd}
 >
-  <PageHeader
-    titulo="Flota"
-    palabra
-    eyebrow="Alquiler de maquinaria"
+  <Frente
+    id="flota"
+    h1="Flota de maquinaria pesada en alquiler"
+    palabra="Flota"
     bajada="Excavadoras, compactadoras, niveladoras y vagonetas por hora, día o proyecto. Cada ficha trae los datos de la unidad."
-    imagen={nocheLowboy}
-    imagenAlt="Excavadora sobre una carreta durante un traslado nocturno"
-  />
-  <section class="flota contenedor" aria-label="Unidades">
-    {hayMuestras && <p class="aviso"><Pendiente texto="Unidades de muestra: falta el inventario real de la flota" /></p>}
-    <ul role="list">
+    tono="oscuro"
+    compacta
+  >
+    <Migas slot="migas" actual="Flota" />
+    <DiagonalPanels
+      slot="visual"
+      prioridad
+      principal={{ img: nocheLowboy, alt: 'Excavadora sobre una carreta durante un traslado nocturno', posicion: '62% 50%' }}
+      capa={{ img: vagonetas, alt: '' }}
+    />
+  </Frente>
+
+  <section class="unidades" aria-labelledby="unidades-titulo">
+    <h2 id="unidades-titulo" class="visualmente-oculto">Unidades</h2>
+    {
+      hayMuestras && (
+        <p class="unidades__aviso">
+          <Pendiente texto="Unidades de muestra: falta el inventario real de la flota" />
+        </p>
+      )
+    }
+    <div class="unidades__barra">
+      <fieldset class="filtro" data-filtro-flota>
+        <legend class="eyebrow filtro__leyenda">Tipo</legend>
+        <div class="filtro__chips">
+          <Chip name="tipo" value="" checked data-singular="máquina" data-plural="máquinas">Todas</Chip>
+          {
+            tipos.map((t) => (
+              <Chip name="tipo" value={t} data-singular={TIPOS[t].singular.toLowerCase()} data-plural={TIPOS[t].plural.toLowerCase()}>
+                {TIPOS[t].plural}
+              </Chip>
+            ))
+          }
+        </div>
+      </fieldset>
+      <p class="unidades__conteo" data-conteo aria-live="polite">{conteo(unidades.length)}</p>
+    </div>
+    <ul role="list" class="unidades__lista">
       {
         unidades.map((u) => (
-          <li class="unidad" data-reveal="up">
-            {u.data.fotos[0] ? (
-              <Picture src={u.data.fotos[0]} alt={u.data.fotoAlt ?? ''} formats={['avif', 'webp']} widths={[400, 700]} sizes="(min-width: 64rem) 30vw, 100vw" loading="lazy" />
-            ) : (
-              <div class="sin-foto" role="img" aria-label="Foto de la unidad pendiente">
-                <span>[Foto de la unidad]</span>
-              </div>
-            )}
-            <div class="unidad__texto">
-              <p class="eyebrow">{u.data.tipo}</p>
-              <h2>{[u.data.nombre, u.data.marca, u.data.modelo].filter(Boolean).join(' ')}</h2>
-              <dl>
-                {u.data.specs.map((s) => (
-                  <>
-                    <dt>{s.label}</dt>
-                    <dd>{s.valor}</dd>
-                  </>
-                ))}
-                <dt>Alquiler</dt>
-                <dd>{u.data.modalidades.map((m) => modalidad[m]).join(' · ')}</dd>
-              </dl>
-              <Button href={rutaCotizar('alquiler', { maquina: u.data.tipo })} evento="cotizador_inicio" ubicacion="flota">
-                Cotizar esta máquina
-              </Button>
-            </div>
+          <li data-unidad-tipo={u.data.tipo}>
+            <TarjetaMaquina unidad={u} />
           </li>
         ))
       }
     </ul>
   </section>
+
+  <Cierre
+    titulo="¿No sabés qué máquina necesitás?"
+    bajada="Contanos el trabajo y te recomendamos la adecuada."
+    accion={{ href: rutaCotizar(), texto: 'Pre-cotizá tu obra' }}
+    ubicacion="flota-cierre"
+    mensajeWhatsApp="Hola, Grupo Barsol. Necesito una máquina y quiero que me recomienden la adecuada."
+  />
 </Base>
 
 <style>
-  .flota {
-    padding-block: clamp(3rem, 6vw, 5rem) clamp(4rem, 8vw, 6.5rem);
-  }
-  .aviso {
-    margin-bottom: 2rem;
-  }
-  ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 21rem), 1fr));
-    gap: 1.75rem;
-    margin: 0;
-  }
-  .unidad {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1.5px solid var(--c-line);
-    border-radius: var(--radius-m);
-    background: var(--c-paper-2);
-  }
-  .unidad :global(img),
-  .sin-foto {
-    width: 100%;
-    height: 14.5rem;
-    object-fit: cover;
-    clip-path: polygon(0 0, 100% 0, 100% 84%, 0 100%);
-  }
-  .sin-foto {
-    display: grid;
-    place-items: center;
-    background: var(--c-line);
-    color: var(--c-muted);
-    font-weight: 700;
-  }
-  .unidad__texto {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1rem 1.35rem 1.4rem;
-  }
-  .unidad__texto .eyebrow {
-    color: var(--c-muted);
-  }
-  h2 {
-    font-size: 1.5625rem;
-    font-weight: var(--weight-display);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-  }
-  dl {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 0.35rem 1rem;
-    margin: 0 0 0.5rem;
-    font-size: 0.96875rem;
-  }
-  dt {
-    font-weight: var(--weight-strong);
-  }
-  dd {
-    margin: 0;
-    color: var(--c-muted);
-  }
-  .unidad__texto :global(.btn) {
-    margin-top: auto;
-    align-self: flex-start;
+  @layer components {
+    .unidades {
+      padding: clamp(2.5rem, 5vw, 3.5rem) var(--gutter-end) clamp(4rem, 8vw, 6.5rem) var(--gutter-start);
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    .unidades__aviso {
+      margin-bottom: 1.5rem;
+      color: var(--c-muted);
+    }
+    .unidades__barra {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.125rem 2rem;
+      margin-bottom: 2.25rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 2px solid var(--c-ink);
+    }
+    /* El filtro solo existe con JS (lib/flota.ts); sin JS se ven todas las unidades */
+    :global(html:not(.js)) .filtro {
+      display: none;
+    }
+    .filtro {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.625rem 1rem;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      min-width: 0;
+    }
+    .filtro__leyenda {
+      float: left;
+      padding: 0;
+      color: var(--c-muted);
+    }
+    .filtro__chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.625rem;
+    }
+    .unidades__conteo {
+      color: var(--c-muted);
+      font-weight: 700;
+    }
+    .unidades__lista {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+      gap: 1.75rem;
+      margin: 0;
+    }
   }
 </style>

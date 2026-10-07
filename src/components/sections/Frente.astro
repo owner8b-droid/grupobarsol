@@ -14,14 +14,16 @@ interface Props {
   tono?: 'claro' | 'oscuro';
   invertida?: boolean;
   h1?: string;
+  // Cabecera compacta: en una página de listado (la flota) lo que importa empieza en la primera pantalla
+  compacta?: boolean;
 }
-const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false, h1 } = Astro.props;
+const { id, eyebrow, palabra, bajada, tono = 'claro', invertida = false, h1, compacta = false } = Astro.props;
 const cabecera = Boolean(h1);
 ---
 
 <section
   id={id}
-  class:list={['frente', `frente--${tono}`, { 'frente--invertida': invertida, 'frente--cabecera': cabecera }]}
+  class:list={['frente', `frente--${tono}`, { 'frente--invertida': invertida, 'frente--cabecera': cabecera, 'frente--compacta': compacta }]}
   aria-labelledby={cabecera ? `${id}-h1` : `${id}-titulo`}
   data-snap={cabecera ? undefined : ''}
   data-entrada
@@ -154,6 +156,9 @@ const cabecera = Boolean(h1);
       }
       .frente--cabecera .frente__texto {
         padding-block: clamp(3.5rem, 6vw, 5rem);
+      }
+      .frente--compacta {
+        min-height: 34rem;
       }
       .frente__tira {
         padding-left: 38%;

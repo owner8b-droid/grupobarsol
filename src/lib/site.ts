@@ -24,6 +24,9 @@ export function initSite(opciones: { ga4?: string } = {}): void {
   initPestana();
   // El cotizador es la función de su página: se carga apenas hace falta, no después del primer pintado
   if (document.querySelector('[data-cotizador]')) void import('./cotizador').then((m) => m.initCotizador());
+  // El filtro de la flota y la galería de la ficha, igual: solo en sus páginas
+  if (document.querySelector('[data-filtro-flota]')) void import('./flota').then((m) => m.initFiltroFlota());
+  if (document.querySelector('[data-miniatura]')) void import('./galeria').then((m) => m.initGalerias());
   initValidacionAccesible();
   initFormulariosWhatsApp();
   initEventosDeClic();

@@ -38,6 +38,11 @@ export function rutaCotizar(servicio?: string, extra: Record<string, string> = {
   return COTIZADOR_LISTO ? `${ruta('cotizador', idioma)}${consulta}` : `${ruta('contacto', idioma)}${consulta}#cotizar`;
 }
 
+/** Ficha de una unidad de la flota: /flota/<slug>/ (docs/02-estrategia.md §3). */
+export function rutaDeUnidad(slug: string, idioma: Idioma = 'es'): string {
+  return `${ruta('flota', idioma)}${slug}/`;
+}
+
 /** En las páginas que ya tienen el formulario (inicio y contacto), «Pre-cotizá» baja a él sin salir. */
 export function destinoCotizar(paginaActual: string, idioma: Idioma = 'es'): string {
   return [ruta('inicio', idioma), ruta('contacto', idioma)].includes(paginaActual) ? '#cotizar' : rutaCotizar(undefined, {}, idioma);

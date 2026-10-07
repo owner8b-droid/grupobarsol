@@ -1,5 +1,5 @@
 ---
-// Migas de pan de las páginas internas, sobre las cabeceras de tinta. La última es la página actual.
+// Migas de pan de las páginas internas (sobre tinta, o sobre cal en la ficha de máquina). La última es la actual.
 import { ruta, t } from '../../i18n/utils';
 
 interface Miga {
@@ -9,12 +9,13 @@ interface Miga {
 interface Props {
   migas?: Miga[];
   actual: string;
+  tono?: 'oscuro' | 'claro';
 }
-const { migas = [], actual } = Astro.props;
+const { migas = [], actual, tono = 'oscuro' } = Astro.props;
 const todas: Miga[] = [{ nombre: t('es', 'ruta.inicio'), href: ruta('inicio') }, ...migas, { nombre: actual }];
 ---
 
-<nav aria-label={t('es', 'ruta.label')} class="migas">
+<nav aria-label={t('es', 'ruta.label')} class:list={['migas', `migas--${tono}`]}>
   <ol role="list">
     {todas.map((m) => <li>{m.href ? <a href={m.href}>{m.nombre}</a> : <span aria-current="page">{m.nombre}</span>}</li>)}
   </ol>
@@ -27,16 +28,24 @@ const todas: Miga[] = [{ nombre: t('es', 'ruta.inicio'), href: ruta('inicio') },
       flex-wrap: wrap;
       gap: 0.25rem 0.6rem;
       margin: 0 0 1.5rem;
-      color: var(--c-muted-dark);
       font-size: 0.9375rem;
       font-weight: 700;
+    }
+    .migas--oscuro ol {
+      color: var(--c-muted-dark);
+    }
+    .migas--claro ol {
+      color: var(--c-muted);
     }
     .migas li + li::before {
       content: '/';
       margin-right: 0.6rem;
     }
-    .migas a {
+    .migas--oscuro a {
       color: var(--c-paper-dim);
+    }
+    .migas--claro a {
+      color: var(--c-ink);
     }
   }
 </style>
