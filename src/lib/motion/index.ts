@@ -79,7 +79,9 @@ export function initMotion(root: ParentNode = document): void {
   const html = document.documentElement;
   const mm = gsap.matchMedia();
 
-  mm.add({ animar: '(prefers-reduced-motion: no-preference)', escritorio: '(min-width: 64rem)' }, (contexto) => {
+  // matchMedia solo llama cuando se cumple al menos una condición: «siempre» hace que también arranque (y marque
+  // .motion-ready) en móvil con reduced-motion, donde no se cumple ninguna de las otras dos
+  mm.add({ siempre: 'all', animar: '(prefers-reduced-motion: no-preference)', escritorio: '(min-width: 64rem)' }, (contexto) => {
     const { animar, escritorio } = contexto.conditions as { animar: boolean; escritorio: boolean };
     if (!animar) {
       // Con reduced-motion: todo visible y en su lugar
