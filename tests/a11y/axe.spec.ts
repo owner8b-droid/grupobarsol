@@ -9,7 +9,21 @@ import { nombre, RUTAS } from '../rutas';
 test.use({ reducedMotion: 'reduce' });
 
 const ETIQUETAS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
-const analizar = (page: Page) => new AxeBuilder({ page }).withTags(ETIQUETAS).analyze();
+// Se mide con la página quieta: el motor ya arrancó (llega después del primer pintado y siempre deja
+// .motion-ready o .motion-fallback) y las fuentes cargaron. axe guarda dónde está cada elemento al empezar; si algo
+// se reacomoda en medio, el texto queda sin su fondo (en el CI, WebKit/Linux midió el texto de .cotiza sobre #ffffff,
+// sin elemento de fondo, y pasó al reintentar).
+async function quieta(page: Page) {
+  await expect(page.locator('html')).toHaveClass(/\bmotion-(ready|fallback)\b/);
+  await page.evaluate(async () => {
+    await document.fonts.ready;
+    await new Promise((listo) => requestAnimationFrame(() => requestAnimationFrame(listo)));
+  });
+}
+const analizar = async (page: Page) => {
+  await quieta(page);
+  return new AxeBuilder({ page }).withTags(ETIQUETAS).analyze();
+};
 type Violaciones = Awaited<ReturnType<typeof analizar>>['violations'];
 // En contraste, cada nodo dice qué colores midió axe y qué elemento tomó como fondo: sin eso, un fallo que solo
 // aparece en el CI (WebKit en Linux) no se puede diagnosticar desde el log
