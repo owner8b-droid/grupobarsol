@@ -3,6 +3,7 @@ lang: es
 orden: 2
 titulo: Alquiler de maquinaria
 h1: Alquiler de maquinaria pesada en Cartago
+palabra: Maquinaria
 resumen: Excavadoras, compactadoras, niveladoras y vagonetas por hora, día o proyecto.
 bajada: Excavadoras, compactadoras, niveladoras y vagonetas por hora, día o proyecto. Elegí la máquina en la flota y cotizala.
 paraEmpresas:
@@ -18,6 +19,8 @@ incluye:
   - Vagonetas
 foto: ../../../assets/img/noche-lowboy.jpg
 fotoAlt: Excavadora sobre una carreta durante un traslado nocturno
+fotoPosicion: 62% 50%
+fotoCapa: ../../../assets/img/vagonetas.jpg
 cotizadorServicio: alquiler
 seoTitle: Alquiler de maquinaria pesada en Cartago | Grupo Barsol
 seoDescription: Excavadoras, compactadoras, niveladoras y vagonetas por hora, día o proyecto en Cartago. Mirá la flota y cotizá la máquina que necesitás.

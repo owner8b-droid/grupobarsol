@@ -1,7 +1,16 @@
 ---
+// Página de servicio (docs/02-estrategia.md §9) con el sistema de D «Frente de obra»: cabecera como frente de
+// tinta (H1 completo sobre la palabra, paneles diagonales al ángulo del brazo), una idea por bloque con títulos de
+// franja, prueba con proyectos del servicio y cierre para pre-cotizar con el servicio ya elegido.
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
-import PageHeader from '../../components/sections/PageHeader.astro';
+import Frente from '../../components/sections/Frente.astro';
+import DiagonalPanels from '../../components/ui/DiagonalPanels.astro';
+import Migas from '../../components/ui/Migas.astro';
+import TitleWord from '../../components/ui/TitleWord.astro';
+import ChevronList from '../../components/ui/ChevronList.astro';
+import TarjetaProyecto from '../../components/ui/TarjetaProyecto.astro';
+import ArrowLink from '../../components/ui/ArrowLink.astro';
 import Button from '../../components/ui/Button.astro';
 import Pendiente from '../../components/ui/Pendiente.astro';
 import { enlaceWhatsApp, ruta, rutaCotizar } from '../../i18n/utils';
@@ -21,6 +30,23 @@ const d = entrada.data;
 const url = new URL(Astro.url.pathname, Astro.site).href;
 const sitio = new URL(import.meta.env.BASE_URL, Astro.site);
 const cotizar = rutaCotizar(d.cotizadorServicio);
+const whatsapp = enlaceWhatsApp(site.whatsapp, `Hola, Grupo Barsol. Quiero información sobre ${d.titulo.toLowerCase()}.`);
+const flota = ruta('flota');
+
+// Alquiler: lo que incluye son las máquinas de la flota, cada una con su filtro y en el orden del home
+const TIPOS: Record<string, string> = { excavadora: 'Excavadoras', compactadora: 'Compactadoras', niveladora: 'Niveladoras', vagoneta: 'Vagonetas' };
+const presentes = new Set((await getCollection('flota', (u) => u.data.lang === 'es')).map((u): string => u.data.tipo));
+const tipos = d.cotizadorServicio === 'alquiler' ? Object.keys(TIPOS).filter((t) => presentes.has(t)) : [];
+
+// Prueba: los proyectos de este servicio. Mientras sean de muestra (pendiente #2), el build de producción falla.
+const proyectos = (await getCollection('proyectos', (p) => p.data.lang === 'es' && p.data.servicios.includes(d.cotizadorServicio)))
+  .sort((a, b) => a.data.orden - b.data.orden)
+  .slice(0, 2);
+const hayMuestras = proyectos.some((p) => p.data.muestra);
+if (hayMuestras && import.meta.env.PUBLIC_PRODUCCION === 'true') {
+  throw new Error('Proyectos de muestra en producción: falta la lista real (pendiente #2).');
+}
+
 const jsonLd = [
   esquemaServicio(sitio, d.titulo, d.resumen, url),
   migas([
@@ -32,174 +58,319 @@ const jsonLd = [
 ---
 
 <Base title={d.seoTitle} description={d.seoDescription} imagen={d.foto} jsonLd={jsonLd}>
-  <PageHeader
-    titulo={d.h1}
-    eyebrow={d.titulo}
-    bajada={d.bajada}
-    imagen={d.foto}
-    imagenAlt={d.fotoAlt}
-    migas={[{ nombre: 'Servicios', href: ruta('servicios') }]}
-  />
+  <Frente id="servicio" h1={d.h1} palabra={d.palabra} bajada={d.bajada} tono="oscuro">
+    <Migas slot="migas" migas={[{ nombre: 'Servicios', href: ruta('servicios') }]} actual={d.titulo} />
+    <Button href={cotizar} tamano="l" icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion="servicio">Cotizá este servicio</Button>
+    <DiagonalPanels
+      slot="visual"
+      prioridad
+      principal={{ img: d.foto, alt: d.fotoAlt, posicion: d.fotoPosicion }}
+      capa={{ img: d.fotoCapa, alt: '' }}
+      secundaria={d.fotoSecundaria && d.fotoSecundariaAlt ? { img: d.fotoSecundaria, alt: d.fotoSecundariaAlt } : undefined}
+    />
+  </Frente>
 
-  <section class="bloque contenedor" aria-labelledby="para-quien">
-    <h2 id="para-quien" class="bloque__titulo">Para quién</h2>
-    <div class="columnas">
-      <div data-reveal="up">
-        <h3 class="eyebrow">Empresas y desarrolladores</h3>
-        <ul role="list">{d.paraEmpresas.map((x) => <li>{x}</li>)}</ul>
-      </div>
-      <div data-reveal="up">
-        <h3 class="eyebrow">Dueños de lote o casa</h3>
-        <ul role="list">{d.paraParticulares.map((x) => <li>{x}</li>)}</ul>
+  <section class="bloque bloque--claro" aria-labelledby="para-quien">
+    <TitleWord as="h2" escala="bloque" texto="Para quién" id="para-quien" />
+    <div class="bloque__contenido">
+      <div class="publicos">
+        <div class="publico" data-reveal="up">
+          <h3 class="eyebrow publico__titulo">Empresas y desarrolladores</h3>
+          <ul role="list" class="marcas">{d.paraEmpresas.map((x) => <li>{x}</li>)}</ul>
+        </div>
+        <div class="publico" data-reveal="up">
+          <h3 class="eyebrow publico__titulo">Dueños de lote o casa</h3>
+          <ul role="list" class="marcas">{d.paraParticulares.map((x) => <li>{x}</li>)}</ul>
+        </div>
       </div>
     </div>
   </section>
 
   <section class="bloque bloque--oscuro" aria-labelledby="incluye">
-    <div class="contenedor">
-      <h2 id="incluye" class="bloque__titulo">Qué incluye</h2>
-      <ul role="list" class="incluye">{d.incluye.map((x) => <li><span class="chevron" aria-hidden="true" />{x}</li>)}</ul>
-      <p class="nota"><Pendiente texto="Alcance detallado y qué no incluye: por confirmar con el cliente" /></p>
+    <TitleWord as="h2" escala="bloque" texto="Qué incluye" id="incluye" tono="oscuro" />
+    <div class="bloque__contenido" data-reveal="up">
+      {
+        tipos.length ? (
+          <>
+            <ChevronList variante="caja" tono="oscuro" etiqueta="Tipos de máquina" items={tipos.map((t) => ({ texto: TIPOS[t], href: `${flota}?tipo=${t}` }))} />
+            <ArrowLink href={flota} tono="oscuro">Ver toda la flota</ArrowLink>
+          </>
+        ) : (
+          <ul role="list" class="incluye">
+            {d.incluye.map((x) => (
+              <li>
+                <span class="chevron" aria-hidden="true" />
+                {x}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        d.noIncluye.length ? (
+          <p class="nota">No incluye: {d.noIncluye.join(', ')}.</p>
+        ) : (
+          <p class="nota">
+            <Pendiente texto="Alcance detallado y qué no incluye: por confirmar con el cliente" />
+          </p>
+        )
+      }
     </div>
   </section>
 
-  <section class="bloque contenedor" aria-labelledby="como">
-    <h2 id="como" class="bloque__titulo">Cómo trabajamos</h2>
-    <ol class="pasos">
-      <li><strong>Contanos qué necesitás.</strong> Una pre-cotización corta: servicio, lugar y fechas.</li>
-      <li><strong>Lo hablamos por WhatsApp.</strong> Te asesoramos y definimos el alcance con vos.</li>
-      <li><strong>Visita técnica.</strong> <Pendiente texto="Confirmar en qué casos se visita el sitio" /></li>
-      <li><strong>Propuesta y obra.</strong> <Pendiente texto="Plazos y entregables por confirmar" /></li>
-    </ol>
+  <section class="bloque bloque--claro" aria-labelledby="como">
+    <TitleWord as="h2" escala="bloque" texto="Cómo trabajamos" id="como" />
+    <div class="bloque__contenido">
+      <ol role="list" class="pasos" data-reveal="up">
+        <li>
+          <span class="pasos__numero">1</span>
+          <strong>Contanos qué necesitás.</strong>
+          <span>Una pre-cotización corta: servicio, lugar y fechas.</span>
+        </li>
+        <li>
+          <span class="pasos__numero">2</span>
+          <strong>Lo hablamos por WhatsApp.</strong>
+          <span>Te asesoramos y definimos el alcance con vos.</span>
+        </li>
+        <li>
+          <span class="pasos__numero">3</span>
+          <strong>Visita técnica.</strong>
+          <span><Pendiente texto="Confirmar en qué casos se visita el sitio" /></span>
+        </li>
+        <li>
+          <span class="pasos__numero">4</span>
+          <strong>Propuesta y obra.</strong>
+          <span><Pendiente texto="Plazos y entregables por confirmar" /></span>
+        </li>
+      </ol>
+    </div>
   </section>
 
-  <section class="cta" aria-labelledby="cta-titulo">
-    <div class="contenedor cta__fila">
-      <h2 id="cta-titulo">¿Arrancamos con tu {d.titulo.toLowerCase()}?</h2>
-      <div class="cta__acciones">
-        <Button href={cotizar} variante="tinta" tamano="l" evento="cotizador_inicio" ubicacion="servicio">Cotizá este servicio</Button>
-        <Button href={enlaceWhatsApp(site.whatsapp, `Hola, Grupo Barsol. Quiero información sobre ${d.titulo.toLowerCase()}.`)} variante="borde" tamano="l" icono="whatsapp" evento="click_whatsapp" ubicacion="servicio">
-          Escribinos por WhatsApp
-        </Button>
-      </div>
+  {
+    proyectos.length > 0 && (
+      <section class="bloque bloque--papel" aria-labelledby="proyectos-servicio">
+        <div class="bloque__titular">
+          <TitleWord as="h2" escala="bloque" texto="Proyectos" id="proyectos-servicio" />
+          <ArrowLink href={ruta('proyectos')}>Ver todos los proyectos</ArrowLink>
+        </div>
+        <div class="bloque__contenido">
+          {hayMuestras && (
+            <p class="nota nota--claro">
+              <Pendiente texto="Proyectos de muestra: faltan los reales con cliente, ubicación y permiso para publicarlos" />
+            </p>
+          )}
+          <ul role="list" class="tarjetas" data-reveal="up">
+            {proyectos.map((p) => (
+              <li>
+                <TarjetaProyecto proyecto={p} />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="cierre" aria-labelledby="cierre-titulo">
+    <div class="cierre__texto">
+      <h2 id="cierre-titulo" class="cierre__titulo">¿Arrancamos con tu {d.titulo.toLowerCase()}?</h2>
+      <p class="cierre__bajada">Pre-cotizá en cuatro pasos y seguimos por WhatsApp. Sin costo ni compromiso.</p>
+    </div>
+    <div class="acciones">
+      <Button href={cotizar} variante="tinta" tamano="l" icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion="servicio-cierre">
+        Cotizá este servicio
+      </Button>
+      <Button href={whatsapp} variante="borde" tamano="l" icono="whatsapp" evento="click_whatsapp" ubicacion="servicio-cierre">
+        Escribinos por WhatsApp
+      </Button>
     </div>
   </section>
 </Base>
 
 <style>
-  .bloque {
-    padding-block: clamp(3.5rem, 7vw, 6rem);
-  }
-  .bloque--oscuro {
-    --c-focus: var(--c-accent);
-    background: var(--c-ink);
-    color: var(--c-paper);
-  }
-  .bloque__titulo {
-    margin-bottom: 2rem;
-    font-size: var(--step-3);
-    font-weight: var(--weight-display);
-    letter-spacing: -0.03em;
-    line-height: 1;
-  }
-  .columnas {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-    gap: 2.5rem;
-    border-top: 2px solid var(--c-ink);
-    padding-top: 1.75rem;
-  }
-  .columnas h3 {
-    margin-bottom: 1rem;
-    color: var(--c-muted);
-  }
-  .columnas ul {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin: 0;
-  }
-  .columnas li {
-    position: relative;
-    padding-left: 1.6rem;
-    font-size: 1.125rem;
-  }
-  /* Marca ocre con el corte de la franja de los títulos (docs/03-direccion-de-arte.md §5) */
-  .columnas li::before {
-    content: '';
-    position: absolute;
-    top: 0.62em;
-    left: 0;
-    width: 0.9rem;
-    height: var(--bar-height);
-    background: var(--c-accent);
-    clip-path: polygon(0 0, 100% 0, calc(100% - 0.12em) 100%, 0 100%);
-  }
-  .incluye {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-    gap: 0 2.5rem;
-    margin: 0;
-    border-top: 2px solid var(--c-paper);
-  }
-  .incluye li {
-    display: flex;
-    align-items: center;
-    gap: 0.9rem;
-    min-height: 3.5rem;
-    border-bottom: 1px solid var(--c-line-dark);
-    font-size: 1.1875rem;
-    font-weight: var(--weight-strong);
-  }
-  .chevron {
-    flex: none;
-    width: 1rem;
-    height: 1.125rem;
-    background: var(--c-accent);
-    clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);
-  }
-  .nota {
-    margin-top: 1.5rem;
-    color: var(--c-muted-dark);
-  }
-  .pasos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
-    gap: 1.75rem;
-    margin: 0;
-    padding-left: 1.25rem;
-  }
-  .pasos li::marker {
-    color: var(--c-accent);
-    font-weight: var(--weight-display);
-  }
-  .pasos strong {
-    display: block;
-    margin-bottom: 0.3rem;
-    font-size: 1.1875rem;
-  }
-  .cta {
-    background: var(--c-accent);
-    color: var(--c-on-accent);
-  }
-  .cta__fila {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem 3rem;
-    padding-block: clamp(3rem, 6vw, 5rem);
-  }
-  .cta h2 {
-    max-width: 20ch;
-    font-size: var(--step-3);
-    font-weight: var(--weight-display);
-    letter-spacing: -0.03em;
-    line-height: 1;
-  }
-  .cta__acciones {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+  @layer components {
+    .acciones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.875rem 1rem;
+    }
+
+    /* Bloques: el texto arranca en --gutter-start como todas las pantallas; en escritorio, título a la izquierda
+       y contenido a la derecha */
+    .bloque {
+      display: grid;
+      gap: 2.5rem 5rem;
+      padding: clamp(4rem, 8vw, 7rem) var(--gutter-end) clamp(4rem, 8vw, 7rem) var(--gutter-start);
+    }
+    .bloque > :global(.palabra),
+    .bloque__titular {
+      align-self: start;
+      justify-self: start;
+    }
+    .bloque__titular {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.75rem;
+    }
+    .bloque--claro {
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    .bloque--papel {
+      background: var(--c-paper-2);
+      color: var(--c-ink);
+    }
+    .bloque--oscuro {
+      --c-focus: var(--c-accent);
+      background: var(--c-ink);
+      color: var(--c-paper);
+    }
+    .bloque__contenido {
+      min-width: 0;
+      max-width: 56rem;
+    }
+    .bloque__contenido > :global(* + *) {
+      margin-top: 1.75rem;
+    }
+    @media (min-width: 64rem) {
+      .bloque {
+        grid-template-columns: minmax(0, 20rem) minmax(0, 1fr);
+      }
+    }
+
+    /* Para quién: dos públicos, cada uno con su marca de franja */
+    .publicos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr));
+      gap: 2.5rem 3.5rem;
+    }
+    .publico {
+      padding-top: 1.25rem;
+      border-top: 2px solid var(--c-ink);
+    }
+    .publico__titulo {
+      margin-bottom: 1.25rem;
+      color: var(--c-muted);
+    }
+    .marcas {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 0;
+    }
+    .marcas li {
+      position: relative;
+      padding-left: 1.6rem;
+      font-size: var(--step-1);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    /* La marca es la franja del logo, con el corte al ángulo del brazo */
+    .marcas li::before {
+      content: '';
+      position: absolute;
+      top: 0.62em;
+      left: 0;
+      width: 0.9rem;
+      height: var(--bar-height);
+      background: var(--c-accent);
+      clip-path: polygon(0 0, 100% 0, calc(100% - var(--bar-height) * var(--slope)) 100%, 0 100%);
+    }
+
+    /* Qué incluye */
+    .incluye {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+      gap: 0 2.5rem;
+      margin: 0;
+      border-top: 2px solid var(--c-paper);
+    }
+    .incluye li {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+      min-height: 4rem;
+      border-bottom: 1px solid var(--c-line-dark);
+      font-size: var(--step-1);
+      font-weight: var(--weight-strong);
+    }
+    .chevron {
+      flex: none;
+      width: 1rem;
+      height: 1.125rem;
+      background: var(--c-accent);
+      clip-path: polygon(0 0, 50% 0, 100% 50%, 50% 100%, 0 100%, 50% 50%);
+    }
+    .nota {
+      color: var(--c-muted-dark);
+    }
+    .nota--claro {
+      color: var(--c-muted);
+    }
+
+    /* Cómo trabajamos: numerales en acento, como los pasos del cotizador */
+    .pasos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr));
+      gap: 2.25rem 2rem;
+      margin: 0;
+    }
+    .pasos li {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      padding-top: 1.1rem;
+      border-top: 2px solid var(--c-ink);
+      color: var(--c-muted);
+      line-height: 1.45;
+    }
+    .pasos__numero {
+      margin-bottom: 0.5rem;
+      color: var(--c-accent);
+      font-size: var(--step-3);
+      font-weight: var(--weight-display);
+      line-height: 1;
+    }
+    .pasos strong {
+      color: var(--c-ink);
+      font-size: 1.1875rem;
+      line-height: 1.25;
+    }
+
+    /* Proyectos del servicio */
+    .tarjetas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+      gap: 1.5rem;
+      margin: 0;
+    }
+
+    /* Cierre en acento: una sola acción principal, con el servicio ya elegido */
+    .cierre {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem 4rem;
+      padding: clamp(3.5rem, 7vw, 6rem) var(--gutter-end) clamp(3.5rem, 7vw, 6rem) var(--gutter-start);
+      background: var(--c-accent);
+      color: var(--c-on-accent);
+    }
+    .cierre__texto {
+      max-width: 40rem;
+    }
+    .cierre__titulo {
+      font-size: var(--step-3);
+      font-weight: var(--weight-display);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .cierre__bajada {
+      margin-top: 1rem;
+      font-size: var(--step-1);
+      font-weight: 700;
+      line-height: 1.35;
+    }
   }
 </style>

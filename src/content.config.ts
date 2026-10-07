@@ -16,6 +16,8 @@ const servicios = defineCollection({
       orden: z.number(),
       titulo: z.string(),
       h1: z.string(),
+      // Título de una palabra de la cabecera (el mismo del home: Tierra, Maquinaria, Obra…)
+      palabra: z.string(),
       resumen: z.string().max(160),
       bajada: z.string(),
       paraEmpresas: z.array(z.string()).default([]),
@@ -24,6 +26,11 @@ const servicios = defineCollection({
       noIncluye: z.array(z.string()).default([]),
       foto: image(),
       fotoAlt: z.string(),
+      fotoPosicion: z.string().optional(),
+      // Paneles de la cabecera (docs/03-direccion-de-arte.md §5): capa de acento (decorativa) y foto secundaria
+      fotoCapa: image(),
+      fotoSecundaria: image().optional(),
+      fotoSecundariaAlt: z.string().optional(),
       cotizadorServicio: z.enum(['tierra', 'alquiler', 'acarreo', 'obra']),
       seoTitle: z.string().max(60),
       seoDescription: z.string().max(155),

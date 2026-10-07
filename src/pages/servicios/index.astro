@@ -1,13 +1,21 @@
 ---
+// Servicios (docs/02-estrategia.md §3) con el sistema de D: cabecera como frente de tinta y los cuatro servicios en
+// filas alternadas, cada una con su foto cortada en paralelo al brazo (cqh: la pendiente es la misma a cualquier
+// alto) y una sola acción.
 import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
-import PageHeader from '../../components/sections/PageHeader.astro';
+import Frente from '../../components/sections/Frente.astro';
+import DiagonalPanels from '../../components/ui/DiagonalPanels.astro';
+import Migas from '../../components/ui/Migas.astro';
 import ArrowLink from '../../components/ui/ArrowLink.astro';
-import { ruta } from '../../i18n/utils';
+import Button from '../../components/ui/Button.astro';
+import { ruta, rutaCotizar } from '../../i18n/utils';
 import { rutaDeServicio } from '../../i18n/routes';
 import { migas } from '../../lib/schema';
 import aereoLote from '../../assets/img/aereo-lote.jpg';
+import nocheLowboy from '../../assets/img/noche-lowboy.jpg';
+import cimientos from '../../assets/img/cimientos.jpg';
 
 const servicios = (await getCollection('servicios', (s) => s.data.lang === 'es')).sort((a, b) => a.data.orden - b.data.orden);
 const url = new URL(Astro.url.pathname, Astro.site).href;
@@ -24,65 +32,113 @@ const jsonLd = [
   description="Movimiento de tierras, alquiler de maquinaria, acarreo y venta de agregados, y obra civil en Cartago. Elegí el servicio y pre-cotizá sin compromiso."
   jsonLd={jsonLd}
 >
-  <PageHeader
-    titulo="Servicios"
-    palabra
-    eyebrow="Constructora y maquinaria"
+  <Frente
+    id="servicios"
+    h1="Servicios de construcción y maquinaria en Cartago"
+    palabra="Servicios"
     bajada="Cuatro servicios que podés contratar por separado o en conjunto."
-    imagen={aereoLote}
-    imagenAlt="Vista aérea de una terraza conformada junto a una rotonda"
-  />
-  <section class="servicios contenedor" aria-label="Lista de servicios">
-    <ul role="list">
-      {
-        servicios.map((s) => {
-          const id = s.id.split('/').pop()!;
-          const href = ruta(rutaDeServicio[id]);
-          return (
-            <li class="tarjeta" data-reveal="up">
-              <Picture src={s.data.foto} alt={s.data.fotoAlt} formats={['avif', 'webp']} widths={[480, 800]} sizes="(min-width: 64rem) 45vw, 100vw" loading="lazy" />
-              <div class="tarjeta__texto">
-                <h2>{s.data.titulo}</h2>
-                <p>{s.data.resumen}</p>
-                <ArrowLink href={href}>Ver {s.data.titulo.toLowerCase()}</ArrowLink>
-              </div>
-            </li>
-          );
-        })
-      }
-    </ul>
-  </section>
+    tono="oscuro"
+  >
+    <Migas slot="migas" actual="Servicios" />
+    <Button href={rutaCotizar()} tamano="l" icono="flecha" iconoAlFinal evento="cotizador_inicio" ubicacion="servicios">Pre-cotizá tu obra</Button>
+    <DiagonalPanels
+      slot="visual"
+      prioridad
+      principal={{ img: aereoLote, alt: 'Vista aérea de una terraza conformada junto a una rotonda', posicion: '50% 55%' }}
+      capa={{ img: cimientos, alt: '' }}
+      secundaria={{ img: nocheLowboy, alt: 'Excavadora sobre una carreta durante un traslado nocturno', posicion: '62% 50%' }}
+    />
+  </Frente>
+
+  <ol role="list" class="lista" aria-label="Los cuatro servicios">
+    {
+      servicios.map((s, i) => {
+        const id = s.id.split('/').pop()!;
+        const href = ruta(rutaDeServicio[id]);
+        return (
+          <li class:list={['servicio', { 'servicio--invertido': i % 2 === 1 }]}>
+            <div class="servicio__foto" aria-hidden="true">
+              <Picture
+                src={s.data.foto}
+                alt=""
+                formats={['avif', 'webp']}
+                widths={[480, 800, 1200]}
+                sizes="(min-width: 64rem) 48vw, 100vw"
+                loading="lazy"
+                style={s.data.fotoPosicion ? `object-position: ${s.data.fotoPosicion}` : undefined}
+              />
+            </div>
+            <div class="servicio__texto" data-reveal="up">
+              <h2 class="servicio__titulo">{s.data.titulo}</h2>
+              <p class="servicio__bajada">{s.data.bajada}</p>
+              <ArrowLink href={href}>Ver {s.data.titulo.toLowerCase()}</ArrowLink>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ol>
 </Base>
 
 <style>
-  .servicios {
-    padding-block: clamp(3rem, 7vw, 6rem);
-  }
-  ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr));
-    gap: 2.5rem 1.75rem;
-    margin: 0;
-  }
-  .tarjeta :global(img) {
-    width: 100%;
-    height: 18rem;
-    object-fit: cover;
-    clip-path: polygon(0 0, 100% 0, 100% 84%, 0 100%);
-  }
-  .tarjeta__texto {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding-top: 1rem;
-  }
-  h2 {
-    font-size: var(--step-2);
-    font-weight: var(--weight-display);
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-  }
-  .tarjeta__texto p {
-    color: var(--c-muted);
+  @layer components {
+    .lista {
+      margin: 0;
+      background: var(--c-paper);
+      color: var(--c-ink);
+    }
+    .servicio {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 2rem 4.5rem;
+      padding: clamp(3rem, 6vw, 5rem) var(--gutter-end) clamp(3rem, 6vw, 5rem) var(--gutter-start);
+    }
+    .servicio + .servicio {
+      border-top: 2px solid var(--c-line);
+    }
+    /* La foto es un paralelogramo al ángulo del brazo: el corte avanza --slope × su alto (cqh) */
+    .servicio__foto {
+      flex: 1 1 24rem;
+      height: clamp(15rem, 26vw, 24rem);
+      container-type: size;
+    }
+    .servicio__foto :global(picture),
+    .servicio__foto :global(img) {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .servicio__foto :global(img) {
+      object-fit: cover;
+      clip-path: polygon(calc(var(--slope) * 100cqh) 0, 100% 0, calc(100% - var(--slope) * 100cqh) 100%, 0 100%);
+    }
+    .servicio__texto {
+      display: flex;
+      flex: 1 1 22rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      min-width: 0;
+      max-width: 34rem;
+    }
+    .servicio__titulo {
+      font-size: var(--step-3);
+      font-weight: var(--weight-display);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+    .servicio__bajada {
+      margin-bottom: 0.5rem;
+      color: var(--c-muted);
+      font-size: var(--step-1);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    @media (min-width: 64rem) {
+      .servicio--invertido .servicio__foto {
+        order: 2;
+      }
+    }
   }
 </style>
