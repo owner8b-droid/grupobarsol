@@ -33,3 +33,10 @@ test('el cotizador sin JS ofrece WhatsApp directo y el contacto', async ({ page 
   await expect(page.locator('.asistente__sin-js').getByRole('link', { name: 'Escribinos por WhatsApp' })).toHaveAttribute('href', /^https:\/\/wa\.me\//);
   await expect(page.getByRole('heading', { name: '¿Preferís hablar ya?' })).toBeVisible();
 });
+
+test('la flota sin JS muestra todas las unidades y no muestra el filtro', async ({ page }) => {
+  await page.goto('flota/');
+  await expect(page.locator('[data-filtro-flota]')).toBeHidden();
+  await expect(page.locator('[data-unidad-tipo]')).toHaveCount(4);
+  await expect(page.locator('[data-unidad-tipo]:visible')).toHaveCount(4);
+});
